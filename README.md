@@ -1,1 +1,2 @@
-# automated_extract_method_plugin
+# Apeman
+Another Plugin for 'Extract Method' Automatically and Neatly
