@@ -31,11 +31,11 @@ class Classifier:
         return self.model.predict_proba(X)
 
     def serialize_model(self):
-        with open(MODEL_STORE_FILE, 'w') as f:
+        with open(MODEL_STORE_FILE, 'wb') as f:
             pickle.dump(self.model, f)
 
     def deserialize_model(self, filename: str):
-        with open(filename, 'r') as f:
+        with open(filename, 'rb') as f:
             self.model = pickle.load(f)
 
     def _choose_model(self):
@@ -59,20 +59,20 @@ class Dataset:
 
     def append_to_class(self, filename: str, _class: int = 0):
         new_dataset = self._read(filename)
-        positives = np.repeat(a=0, repeats=new_dataset.shape[0])
+        classes = np.repeat(a=_class, repeats=new_dataset.shape[0])
 
         if self.features is None:
             self.features = new_dataset
-            self.classes_of_classifier = positives
+            self.classes_of_classifier = classes
         else:
-            self.features = np.append(self.features, new_dataset)
+            self.features = np.concatenate((self.features, new_dataset))
             self.classes_of_classifier = np.append(self.classes_of_classifier,
-                                                   positives)
+                                                   classes)
 
     def _read(self, filename: str) -> np.ndarray:
         dataset = pd.read_csv(filename)
         dataset = dataset.drop(columns=['Name_Ext_Mtd'])
-        return dataset.values
+        return np.nan_to_num(dataset.values, copy=False)
 
     def store_proba(self, filename: str):
         pd.DataFrame(data=self.classes_of_classifier).to_csv(filename)
@@ -83,7 +83,6 @@ if __name__ == "__main__":
     fit_dataset = Dataset()
 
     fit_dataset.append_positive(str(DATASET_REAL_POSITIVE))
-    fit_dataset.append_positive(str(DATASET_REAL_POSITIVE))
     fit_dataset.append_negative(str(DATASET_REAL_NEGATIVE))
     fit_dataset.append_positive(str(DATASET_AUGMENTED_POSITIVE))
     fit_dataset.append_negative(str(DATASET_AUGMENTED_NEGATIVE))
@@ -91,3 +90,5 @@ if __name__ == "__main__":
     classifier.fit(fit_dataset.features,
                    fit_dataset.classes_of_classifier)
 
+    classifier.serialize_model()
+    exit(0)
