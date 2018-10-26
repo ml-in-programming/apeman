@@ -37,4 +37,24 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
             }
         }
     }
+
+    // start virtual editor, select candidate and check if we can extract it
+    fun isValid(candidate: Candidate): Boolean {
+        val virtualEditor = FileEditorManager.getInstance(sourceMethod.project)
+                .openFile(sourceMethod.containingFile.virtualFile, false)[0]
+
+        if (virtualEditor == null || virtualEditor as? Editor == null)
+            return false
+
+        virtualEditor.selectionModel.setSelection(
+                candidate.start.textOffset,
+                candidate.end.textOffset
+        )
+
+        return ExtractMethodHandler().isAvailableForQuickList(
+                virtualEditor,
+                sourceMethod.containingFile,
+                DataContext.EMPTY_CONTEXT
+        )
+    }
 }
