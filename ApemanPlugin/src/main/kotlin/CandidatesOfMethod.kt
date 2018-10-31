@@ -10,7 +10,6 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
 
     init {
         fillCandidates()
-        candidates.forEach{println(it)}
     }
 
     fun fillCandidates() {
