@@ -1,6 +1,6 @@
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.editor.EditorFactory
 import com.intellij.psi.*
 import com.intellij.refactoring.extractMethod.ExtractMethodHandler
 
@@ -18,8 +18,14 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
 
             override fun visitElement(element: PsiElement?) {
                 super.visitElement(element)
-                if (element is PsiCodeBlock) {
-                    generateCandidatesOfOneBlock(element)
+
+                if (element is PsiJavaToken && element.tokenType == JavaTokenType.LBRACE) {
+                    val codeBlock = element.parent
+
+                    if (codeBlock as? PsiCodeBlock == null)
+                        return
+
+                    generateCandidatesOfOneBlock(codeBlock)
                 }
             }
         })
@@ -38,21 +44,21 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
         }
     }
 
-    // start virtual editor, select candidate and check if we can extract it
+    // get editor, select candidate and check if we can extract it
     fun isValid(candidate: Candidate): Boolean {
-        val virtualEditor = FileEditorManager.getInstance(sourceMethod.project)
-                .openFile(sourceMethod.containingFile.virtualFile, false)[0]
 
-        if (virtualEditor == null || virtualEditor as? Editor == null)
-            return false
+        val document = PsiDocumentManager.getInstance(sourceMethod.project)
+                .getDocument(sourceMethod.containingFile) ?: return false
 
-        virtualEditor.selectionModel.setSelection(
+        val editor = EditorFactory.getInstance().createEditor(document) ?: return false
+
+        editor.selectionModel.setSelection(
                 candidate.start.textOffset,
                 candidate.end.textOffset
         )
 
         return ExtractMethodHandler().isAvailableForQuickList(
-                virtualEditor,
+                editor,
                 sourceMethod.containingFile,
                 DataContext.EMPTY_CONTEXT
         )

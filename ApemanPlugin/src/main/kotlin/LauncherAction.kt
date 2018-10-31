@@ -5,6 +5,12 @@ class LauncherAction : AnAction ("Check current file"){
 
     override fun actionPerformed(e: AnActionEvent?) {
         val project = e?.project
-        Messages.showMessageDialog(project, "Hello from intellij actions!", "Checking methods", Messages.getInformationIcon())
+        val file = e?.getData(LangDataKeys.PSI_FILE)
+
+        if (file == null || project == null) return
+
+        val candidates = CandidatesOfFile(file).candidates
+
+        Messages.showMessageDialog(project, candidates.joinToString(separator = "\n"), "Checking methods", Messages.getInformationIcon())
     }
 }
