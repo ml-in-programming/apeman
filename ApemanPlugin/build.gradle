@@ -1,7 +1,11 @@
 plugins {
-    id 'java'
-    id 'org.jetbrains.intellij' version '0.3.12'
+    id 'org.jetbrains.intellij' version '0.3.12' apply false
     id 'org.jetbrains.kotlin.jvm' version '1.2.51'
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.jetbrains.intellij'
 }
 
 group 'com.snyssfx.apeman'
@@ -15,6 +19,8 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile project(":MetricsReloaded")
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 

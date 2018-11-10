@@ -1,2 +1,3 @@
 rootProject.name = 'plugin'
 
+include 'MetricsReloaded', 'MetricsReloaded:openapi', 'MetricsReloaded:utils', 'MetricsReloaded:stockmetrics'
