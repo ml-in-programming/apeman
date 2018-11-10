@@ -1,0 +1,6 @@
+[submodule "MetricsReloaded"]
+	path = MetricsReloaded
+	url = git@github.com:ml-in-programming/MetricsReloaded-gradle.git
+[submodule "ApemanPlugin/MetricsReloaded"]
+	path = ApemanPlugin/MetricsReloaded
+	url = git@github.com:ml-in-programming/MetricsReloaded-gradle.git
