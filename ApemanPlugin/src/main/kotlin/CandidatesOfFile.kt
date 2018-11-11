@@ -1,7 +1,4 @@
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiRecursiveElementVisitor
+import com.intellij.psi.*
 
 class CandidatesOfFile(val file: PsiFile) {
 
@@ -12,12 +9,11 @@ class CandidatesOfFile(val file: PsiFile) {
     }
 
     fun generateCandidatesForEachMethod() {
-        file.accept(object : PsiRecursiveElementVisitor() {
-            override fun visitElement(element: PsiElement?) {
-                super.visitElement(element)
-                if (element is PsiMethod) {
-                    candidates.addAll(CandidatesOfMethod(element).candidates)
-                }
+        file.accept(object : JavaRecursiveElementVisitor() {
+
+            override fun visitMethod(method: PsiMethod) {
+                super.visitMethod(method)
+                candidates.addAll(CandidatesOfMethod(method).candidates)
             }
         })
     }

@@ -2,7 +2,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiLocalVariable
 import com.intellij.psi.PsiRecursiveElementVisitor
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 interface Features {
     fun generateFeatures(candidate: Candidate)
@@ -86,7 +86,7 @@ class FeaturesGems(val map: SortedMap<String, Double>, val candidate: Candidate)
     var Package_Cohesion2 by map
 
     override fun generateFeatures(candidate: Candidate) {
-        val result = countOfType<PsiLocalVariable>()
+
     }
 
     private inline fun <reified CountedClass>countOfType(): Feature

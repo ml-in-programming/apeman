@@ -13,19 +13,11 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
     }
 
     fun fillCandidates() {
-        sourceMethod.accept(object : PsiRecursiveElementVisitor() {
+        sourceMethod.accept(object : JavaRecursiveElementVisitor() {
 
-            override fun visitElement(element: PsiElement?) {
-                super.visitElement(element)
-
-                if (element is PsiJavaToken && element.tokenType == JavaTokenType.LBRACE) {
-                    val codeBlock = element.parent
-
-                    if (codeBlock as? PsiCodeBlock == null)
-                        return
-
-                    generateCandidatesOfOneBlock(codeBlock)
-                }
+            override fun visitCodeBlock(block: PsiCodeBlock) {
+                super.visitCodeBlock(block)
+                generateCandidatesOfOneBlock(block)
             }
         })
     }
