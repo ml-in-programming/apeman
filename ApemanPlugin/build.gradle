@@ -5,13 +5,14 @@ plugins {
 
 allprojects {
     apply plugin: 'java'
+    sourceCompatibility = 1.8
+
     apply plugin: 'org.jetbrains.intellij'
 }
 
 group 'com.snyssfx.apeman'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
