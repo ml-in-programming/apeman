@@ -17,6 +17,7 @@ class FeaturesForEveryCandidate(project: Project, var analysisScope: AnalysisSco
 
     private val gemsMetrics = listOf<Metric>(
 
+            // method metrics
             NumLocalVarsMetric(),
             NumLiteralsMetric(),
             NumTernaryOperatorsMetric(),
@@ -27,9 +28,10 @@ class FeaturesForEveryCandidate(project: Project, var analysisScope: AnalysisSco
             NumMethodCallsMetric(),
             NumLocalVarsAccessMetric(),
 
-            // candidates metrics
+            // candidate metrics
             NumLiteralsCandidateMetric(candidates),
-            NumTernaryOperatorsCandidateMetric(candidates)
+            NumTernaryOperatorsCandidateMetric(candidates),
+            NumSwitchOperatorsCandidateMetric(candidates)
     )
 
     private val metricsProfile: MetricsProfile = MetricsProfileImpl("Gems metrics",
