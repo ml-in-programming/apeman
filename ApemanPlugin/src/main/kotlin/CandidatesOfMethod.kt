@@ -28,7 +28,7 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
         val statements = block.statements
 
         for (i in 0 until n) {
-            for (j in (i + 1) until n) {
+            for (j in i until n) {
 
                 val candidate = ExtractionCandidate(Arrays.copyOfRange(statements, i, j + 1), sourceMethod)
                 if (isValid(candidate))
@@ -47,7 +47,7 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
 
         editor.selectionModel.setSelection(
                 candidate.start.textOffset,
-                candidate.end.textOffset
+                candidate.end.textRange.endOffset
         )
 
         return ExtractMethodHandler().isAvailableForQuickList(
