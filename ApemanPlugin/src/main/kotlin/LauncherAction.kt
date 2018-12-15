@@ -15,32 +15,13 @@ class LauncherAction : BaseAnalysisAction("check1", "check2") {
         val features = FeaturesForEveryCandidate(project, scope, candidates)
 
         var info = ""
-        val measuredObjects = features.resultsForMethods?.measuredObjects ?: return
-        val metrics = features.resultsForMethods?.metrics ?: return
+        val results = features.results
 
-        val measuredCandidates = features.resultsForCandidates?.measuredObjects ?: return
-        val metricsCandidates = features.resultsForCandidates?.metrics ?: return
-
-        for (obj in measuredObjects) {
-            info += "$obj:\n"
-
-            for (metric in metrics) {
-                val results = features.resultsForMethods?.getValueForMetric(metric, obj) ?: continue
-                info += "${metric.displayName}: $results\n"
-            }
-
-            info += "\n\n"
-        }
-
-        for (obj in measuredCandidates) {
-            info += "$obj:\n"
-
-            for (metric in metricsCandidates) {
-                val results = features.resultsForCandidates?.getValueForMetric(metric, obj) ?: continue
-                info += "${metric.displayName}: $results\n"
-            }
-
-            info += "\n\n"
+        for ((candidate, metrics) in results) {
+            info += "$candidate:\n"
+            for ((metric, name) in metrics.zip(features.metricNames))
+                info += "$name: $metric\n"
+            info += "\n\n\n"
         }
 
         Messages.showInfoMessage(info, "checked")
