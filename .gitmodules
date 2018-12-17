@@ -3,4 +3,4 @@
 	url = git@github.com:ml-in-programming/MetricsReloaded-gradle.git
 [submodule "ApemanPlugin/MetricsReloaded"]
 	path = ApemanPlugin/MetricsReloaded
-	url = git@github.com:ml-in-programming/MetricsReloaded-gradle.git
+	url = https://github.com/ml-in-programming/MetricsReloaded-gradle.git
