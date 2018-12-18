@@ -13,10 +13,12 @@ class LauncherAction : BaseAnalysisAction("check1", "check2") {
 
         val candidates = CandidatesOfScope(project, scope).candidates
         val features = FeaturesForEveryCandidate(project, scope, candidates)
-
-        var info = ""
         val results = features.results
 
+        val model = ModelProvider()
+        //model.
+
+        var info = ""
         for ((candidate, metrics) in results) {
             info += "$candidate:\n"
             for ((metric, name) in metrics.zip(features.featureNames))
