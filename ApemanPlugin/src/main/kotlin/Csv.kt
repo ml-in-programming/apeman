@@ -2,12 +2,11 @@ import org.apache.commons.csv.CSVFormat
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.io.FileReader
 import java.io.FileWriter
-import java.io.IOException
 
 class Csv(header: Collection<String>, data: Collection<Collection<String>>) {
 
-    val header = ArrayList<String>()
-    val data = ArrayList<ArrayList<String>>()
+    private val header = ArrayList<String>()
+    private val data = ArrayList<ArrayList<String>>()
 
     init {
         header.toCollection(this.header)
@@ -22,6 +21,15 @@ class Csv(header: Collection<String>, data: Collection<Collection<String>>) {
 
         printer.printRecord(header)
         printer.printRecords(data)
+    }
+
+    fun addIndicesColumn(columnName: String, indices: Collection<String>) {
+        assert(data.size == indices.size)
+
+        header.add(0, columnName)
+        for ((arr, elemToAdd) in data.zip(indices)) {
+            arr.add(0, elemToAdd)
+        }
     }
 
     fun remainColumns(columnNames: ArrayList<String>) {
@@ -67,13 +75,17 @@ fun importCsvFrom(filepath: String): Csv {
 
 fun importCsvFrom(candToFeatures: HashMap<ExtractionCandidate, FeatureVector>, featureNames: ArrayList<String>): Csv
 {
+
     val data = ArrayList<ArrayList<String>>()
-    for ((cand, features) in candToFeatures) {
 
-        val featureVector = arrayListOf(cand.toString())
-        featureVector.addAll(features.map { it.toString() })
-
-        data.add(featureVector)
+    for (features in candToFeatures.values) {
+        val featuresStr = ArrayList(features.map { it.toString() })
+        data.add(featuresStr)
     }
+    val csv = Csv(featureNames, data)
+    val candidateNames = ArrayList(candToFeatures.keys.map { it.toString() })
+
+    csv.addIndicesColumn("Names", candidateNames)
+
     return Csv(featureNames, data)
 }
