@@ -20,12 +20,14 @@ import com.sixrr.stockmetrics.methodMetrics.NumLiteralsMetric
 import com.sixrr.stockmetrics.methodMetrics.NumTernaryOperatorsMetric
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
+typealias FeatureVector = ArrayList<Double>
+
 class FeaturesForEveryCandidate(
         private val project: Project,
         private val analysisScope: AnalysisScope,
         private val candidates: ArrayList<ExtractionCandidate>
 ) {
-    val metricNames = mutableListOf<String>()
+    val featureNames = mutableListOf<String>()
     private val candidateMetrics = mutableListOf<Metric>()
 
     private data class ComplementCountMetric(val methodMetric: Metric, val candidateMetric: Metric)
@@ -35,7 +37,7 @@ class FeaturesForEveryCandidate(
 
     private var resultsForMethods: MetricsResult? = null
     private var resultsForCandidates: MetricsResult? = null
-    var results = HashMap<ExtractionCandidate, ArrayList<Double>>()
+    var results = HashMap<ExtractionCandidate, FeatureVector>()
 
     init {
         declareMetrics()
@@ -60,13 +62,13 @@ class FeaturesForEveryCandidate(
     }
 
 
-    private fun declareCandidateMetric(metricName: String, metric: Metric) {
-        metricNames.add(metricName)
+    private fun declareCandidateMetric(featureName: String, metric: Metric) {
+        featureNames.add(featureName)
         candidateMetrics.add(metric)
     }
 
-    private fun declareComplementMetric(metricName: String, methodMetric: Metric, candidateMetric: Metric) {
-        metricNames.add(metricName)
+    private fun declareComplementMetric(featureName: String, methodMetric: Metric, candidateMetric: Metric) {
+        featureNames.add(featureName)
         complementMetrics.add(ComplementCountMetric(methodMetric, candidateMetric))
     }
 
@@ -105,7 +107,7 @@ class FeaturesForEveryCandidate(
         }
     }
 
-    private fun getFeatureVector(candidate: ExtractionCandidate): ArrayList<Double> {
+    private fun getFeatureVector(candidate: ExtractionCandidate): FeatureVector {
 
         val candidateStr = candidate.toString()
         val featureVector = ArrayList<Double>()

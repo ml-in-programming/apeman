@@ -19,7 +19,7 @@ class LauncherAction : BaseAnalysisAction("check1", "check2") {
 
         for ((candidate, metrics) in results) {
             info += "$candidate:\n"
-            for ((metric, name) in metrics.zip(features.metricNames))
+            for ((metric, name) in metrics.zip(features.featureNames))
                 info += "$name: $metric\n"
             info += "\n\n\n"
         }

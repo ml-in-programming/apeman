@@ -3,10 +3,10 @@ import pathlib
 from model import Classifier, Dataset, GRADIENT_BOOSTING
 
 
-DATASET_REAL_POSITIVE = pathlib.Path('..', 'GemsDataset', 'real_set', 'con_pos404.csv')
-DATASET_REAL_NEGATIVE = pathlib.Path('..', 'GemsDataset', 'real_set', 'con_neg404.csv')
-DATASET_AUGMENTED_POSITIVE = pathlib.Path('..', 'GemsDataset', 'augmented_set', 'con_pos404.csv')
-DATASET_AUGMENTED_NEGATIVE = pathlib.Path('..', 'GemsDataset', 'augmented_set', 'con_neg404.csv')
+DATASET_REAL_POSITIVE = pathlib.Path('pos_real.csv')
+DATASET_REAL_NEGATIVE = pathlib.Path('neg_real.csv')
+DATASET_AUGMENTED_POSITIVE = pathlib.Path('pos_aug.csv')
+DATASET_AUGMENTED_NEGATIVE = pathlib.Path('neg_aug.csv')
 
 
 if __name__ == "__main__":
