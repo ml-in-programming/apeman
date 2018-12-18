@@ -63,9 +63,19 @@ class Dataset:
             self.classes_of_classifier = np.append(self.classes_of_classifier,
                                                    classes)
 
+    def append_candidates(self, filename: str):
+        new_dataset = self._read(filename)
+        self.features = new_dataset
+
+    def append_proba(self, proba: 'array-like'):
+        self.classes_of_classifier = proba
+
     def _read(self, filename: str) -> np.ndarray:
         dataset = pd.read_csv(filename)
-        dataset = dataset.drop(columns=['Name_Ext_Mtd'])
+        if 'Name_Ext_Method' in dataset.columns:
+            dataset = dataset.drop(columns=['Name_Ext_Mtd'])
+        if 'Names' in dataset.columns:
+            dataset = dataset.drop(columns=['Names'])        
         return np.nan_to_num(dataset.values, copy=False)
 
     def store_proba(self, filename: str):
