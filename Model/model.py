@@ -78,5 +78,6 @@ class Dataset:
             dataset = dataset.drop(columns=['Names'])        
         return np.nan_to_num(dataset.values, copy=False)
 
-    def store_proba(self, filename: str):
-        pd.DataFrame(data=self.classes_of_classifier).to_csv(filename)
+    def store_proba(self, filename: str, proba: 'array-like'):
+        is_cand_proba = proba[:, 1]
+        pd.DataFrame(data=is_cand_proba).to_csv(filename, index=False)
