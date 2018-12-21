@@ -1,12 +1,13 @@
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
+import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
 class Csv(header: Collection<String>, data: Collection<Collection<String>>) {
 
-    private val header = ArrayList<String>()
-    private val data = ArrayList<ArrayList<String>>()
+    val header = ArrayList<String>()
+    val data = ArrayList<ArrayList<String>>()
 
     init {
         header.toCollection(this.header)
@@ -16,11 +17,11 @@ class Csv(header: Collection<String>, data: Collection<Collection<String>>) {
     }
 
     fun export(filepath: String) {
-        val output = FileWriter(filepath)
-        val printer = CSVFormat.DEFAULT.print(output)!!
 
-        printer.printRecord(header)
-        printer.printRecords(data)
+        File(filepath).writer().use { out ->
+            val format = CSVFormat.RFC4180.withHeader(*header.toTypedArray())
+            format.print(out).printRecords(data)
+        }
     }
 
     fun addIndicesColumn(columnName: String, indices: Collection<String>) {
@@ -44,9 +45,8 @@ class Csv(header: Collection<String>, data: Collection<Collection<String>>) {
 
         for (arr in data) {
             val temp = ArrayList<String>()
-            for (i in 0 until arr.size)
-                if (columnsIndices.contains(i))
-                    temp.add(arr[i])
+            for (i in columnsIndices)
+                temp.add(arr[i])
 
             arr.clear()
             arr.addAll(temp)
@@ -57,20 +57,20 @@ class Csv(header: Collection<String>, data: Collection<Collection<String>>) {
 }
 
 fun importCsvFrom(filepath: String): Csv {
-    val input = FileReader(filepath)
-    val records = CSVFormat.DEFAULT.parse(input)
 
-    val header = ArrayList<String>()
-    for ((colName, _) in records.headerMap) {
-        header.add(colName)
+    File(filepath).reader().use { input ->
+        val records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(input)
+
+        val header = ArrayList<String>()
+        header.addAll(records.headerMap.keys)
+
+        val data = ArrayList<ArrayList<String>>()
+        for (record in records) {
+            data.add(ArrayList(record.toMutableList()))
+        }
+
+        return Csv(header, data)
     }
-
-    val data = ArrayList<ArrayList<String>>()
-    for (record in records) {
-        data.add(ArrayList(record.toMutableList()))
-    }
-
-    return Csv(header, data)
 }
 
 fun importCsvFrom(candToFeatures: HashMap<ExtractionCandidate, FeatureVector>, featureNames: ArrayList<String>): Csv
@@ -87,5 +87,5 @@ fun importCsvFrom(candToFeatures: HashMap<ExtractionCandidate, FeatureVector>, f
 
     csv.addIndicesColumn("Names", candidateNames)
 
-    return Csv(featureNames, data)
+    return csv
 }
