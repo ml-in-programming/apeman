@@ -13,17 +13,21 @@ class LauncherAction : BaseAnalysisAction("check1", "check2") {
 
         val candidates = CandidatesOfScope(project, scope).candidates
         val features = FeaturesForEveryCandidate(project, scope, candidates)
-        val results = features.results
+        val candToFeatures = features.results
+        val featureNames = features.featureNames
 
         val model = ModelProvider()
-        //model.
+        model.trainModel(featureNames)
+        val proba = model.predictCandidates(candToFeatures, featureNames)
+
+        val probaToCand = proba.zip(candToFeatures.keys).sortedBy { -it.first }
 
         var info = ""
-        for ((candidate, metrics) in results) {
-            info += "$candidate:\n"
-            for ((metric, name) in metrics.zip(features.featureNames))
-                info += "$name: $metric\n"
-            info += "\n\n\n"
+        for ((proba, cand) in probaToCand) {
+            info += "\n\n$cand:\n proba = $proba\n\n"
+            for ((metric, featureName) in candToFeatures[cand]!!.zip(featureNames)) {
+                info += "$featureName = $metric\n"
+            }
         }
 
         Messages.showInfoMessage(info, "checked")

@@ -27,13 +27,13 @@ class FeaturesForEveryCandidate(
         private val analysisScope: AnalysisScope,
         private val candidates: ArrayList<ExtractionCandidate>
 ) {
-    val featureNames = mutableListOf<String>()
-    private val candidateMetrics = mutableListOf<Metric>()
+    val featureNames = ArrayList<String>()
+    private val candidateMetrics = ArrayList<Metric>()
 
     private data class ComplementCountMetric(val methodMetric: Metric, val candidateMetric: Metric)
-    private val complementMetrics = mutableListOf<ComplementCountMetric>()
+    private val complementMetrics = ArrayList<ComplementCountMetric>()
 
-    private val metricInstances = mutableListOf<MetricInstance>()
+    private val metricInstances = ArrayList<MetricInstance>()
 
     private var resultsForMethods: MetricsResult? = null
     private var resultsForCandidates: MetricsResult? = null
