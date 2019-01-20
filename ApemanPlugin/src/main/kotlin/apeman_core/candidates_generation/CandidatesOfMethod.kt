@@ -11,15 +11,14 @@ import kotlin.collections.ArrayList
 
 class CandidatesOfMethod(val sourceMethod: PsiMethod) {
 
-    var candidates = ArrayList<Candidate>()
+    var candidates = ArrayList<ExtractionCandidate>()
 
     init {
-        fillCandidates()
+        generateCandidates()
     }
 
-    fun fillCandidates() {
+    private fun generateCandidates() {
         sourceMethod.accept(object : JavaRecursiveElementVisitor() {
-
             override fun visitCodeBlock(block: PsiCodeBlock) {
                 super.visitCodeBlock(block)
                 generateCandidatesOfOneBlock(block)
@@ -27,7 +26,7 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
         })
     }
 
-    fun generateCandidatesOfOneBlock(block: PsiCodeBlock) {
+    private fun generateCandidatesOfOneBlock(block: PsiCodeBlock) {
         val n = block.statementCount
         val statements = block.statements
 
@@ -36,13 +35,13 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
 
                 val candidateBlock = ExtractionCandidate(Arrays.copyOfRange(statements, i, j + 1), sourceMethod)
                 if (isValid(candidateBlock))
-                    candidates.add(Candidate(candidateBlock))
+                    candidates.add(candidateBlock)
             }
         }
     }
 
     // get editor, select candidateBlock and check if we can extract it
-    fun isValid(candidateBlock: ExtractionCandidate): Boolean {
+    private fun isValid(candidateBlock: ExtractionCandidate): Boolean {
 
         val editor = getEditor()
 
@@ -65,11 +64,11 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
         return EditorFactory.getInstance().createEditor(document)!!
     }
 
-    fun getTopKCandidates(k: Int, candToProba: Collection<Pair<ExtractionCandidate, Double>>)
+    private fun getTopKCandidates(k: Int, candToProba: Collection<Pair<ExtractionCandidate, Double>>)
             : ArrayList<Pair<ExtractionCandidate, Double>>  {
 
         return ArrayList(candToProba.toMap()
-                .filterKeys { cand -> this.candidates.map { it.candidate }.contains(cand) }
+                .filterKeys { cand -> this.candidates.map { it.sourceMethod }.contains(sourceMethod) }
                 .toList()
                 .sortedBy { candAndProba -> -candAndProba.second }
                 .take(k))

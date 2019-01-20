@@ -1,20 +1,27 @@
 package apeman_core.candidates_generation
 
-import CandidatesOfMethod
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiMethod
+import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
-class CandidatesOfScope(val project: Project, val analysisScope: AnalysisScope) {
+public class CandidatesOfScope(
+        private val project: Project,
+        private val analysisScope: AnalysisScope
+) {
 
-    var candidates = ArrayList<Candidate>()
+    private var candidates = ArrayList<ExtractionCandidate>()
 
     init {
         generateCandidates()
     }
 
-    fun generateCandidates() {
+    public fun getCandidates(): List<ExtractionCandidate> {
+        return candidates.toList()
+    }
+
+    private fun generateCandidates() {
         if (analysisScope.fileCount == 0)
             return
 
