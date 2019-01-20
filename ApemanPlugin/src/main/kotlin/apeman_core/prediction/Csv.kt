@@ -1,8 +1,9 @@
+package apeman_core.prediction
+
+import apeman_core.features_extraction.FeatureVector
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.io.File
-import java.io.FileReader
-import java.io.FileWriter
 
 class Csv(header: Collection<String>, data: Collection<Collection<String>>) {
 

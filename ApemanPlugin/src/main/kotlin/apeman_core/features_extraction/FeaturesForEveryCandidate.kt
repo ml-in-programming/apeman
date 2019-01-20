@@ -1,3 +1,6 @@
+package apeman_core.features_extraction
+
+import apeman_core.candidates_generation.Candidate
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.util.ProgressIndicatorBase
@@ -25,7 +28,7 @@ typealias FeatureVector = ArrayList<Double>
 class FeaturesForEveryCandidate(
         private val project: Project,
         private val analysisScope: AnalysisScope,
-        private val candidates: ArrayList<ExtractionCandidate>
+        val candidates: ArrayList<Candidate>
 ) {
     val featureNames = ArrayList<String>()
     private val candidateMetrics = ArrayList<Metric>()
@@ -37,7 +40,6 @@ class FeaturesForEveryCandidate(
 
     private var resultsForMethods: MetricsResult? = null
     private var resultsForCandidates: MetricsResult? = null
-    var results = HashMap<ExtractionCandidate, FeatureVector>()
 
     init {
         declareMetrics()
@@ -48,10 +50,12 @@ class FeaturesForEveryCandidate(
 
     private fun declareMetrics() {
 
+        val candidatesList = ArrayList(candidates.map { it.candidate })
+
         val candMetrics = mutableListOf(
-                "Num_Literal" to NumLiteralsCandidateMetric(candidates),
-                "Num_Conditional" to NumTernaryOperatorsCandidateMetric(candidates),
-                "Num_Switch" to NumSwitchOperatorsCandidateMetric(candidates)
+                "Num_Literal" to NumLiteralsCandidateMetric(candidatesList),
+                "Num_Conditional" to NumTernaryOperatorsCandidateMetric(candidatesList),
+                "Num_Switch" to NumSwitchOperatorsCandidateMetric(candidatesList)
         )
 
         candMetrics.forEach { declareCandidateMetric(it.first, it.second) }
@@ -60,7 +64,6 @@ class FeaturesForEveryCandidate(
         declareComplementMetric("CON_LITERAL",  NumLiteralsMetric(), namesToMetrics["Num_Literal"]!!)
         declareComplementMetric("CON_CONDITIONAL", NumTernaryOperatorsMetric(), namesToMetrics["Num_Conditional"]!!)
     }
-
 
     private fun declareCandidateMetric(featureName: String, metric: Metric) {
         featureNames.add(featureName)
@@ -103,7 +106,7 @@ class FeaturesForEveryCandidate(
 
     private fun fetchResults() {
         for (candidate in candidates) {
-            results[candidate] = getFeatureVector(candidate)
+            candidate.setFeatures(featureNames.zip(getFeatureVector(candidate.candidate)))
         }
     }
 
