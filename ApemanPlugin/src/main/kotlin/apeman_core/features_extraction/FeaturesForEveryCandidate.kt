@@ -68,12 +68,12 @@ class FeaturesForEveryCandidate(
             cand: ExtractionCandidate,
             candResults: MetricsResult,
             methodResults: MetricsResult
-    ): List<Double> {
+    ): List<Feature> {
 
-        val featureVector = arrayListOf<Double>()
+        val featureVector = arrayListOf<Feature>()
         for (m in metrics) {
             val value = m.calculateResult(cand, candResults, methodResults)
-            featureVector.add(value)
+            featureVector.add(Feature(m.name, value))
         }
         return featureVector
     }
