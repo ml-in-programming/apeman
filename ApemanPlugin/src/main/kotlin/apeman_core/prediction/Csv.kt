@@ -1,8 +1,7 @@
 package apeman_core.prediction
 
-import apeman_core.features_extraction.FeatureVector
+import apeman_core.features_extraction.CandidateWithFeatures
 import org.apache.commons.csv.CSVFormat
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.io.File
 
 class Csv(header: Collection<String>, data: Collection<Collection<String>>) {
@@ -74,19 +73,18 @@ fun importCsvFrom(filepath: String): Csv {
     }
 }
 
-fun importCsvFrom(candToFeatures: HashMap<ExtractionCandidate, FeatureVector>, featureNames: ArrayList<String>): Csv
+fun importCsvFrom(candidates: ArrayList<CandidateWithFeatures>, featureNames: ArrayList<String>): Csv
 {
 
     val data = ArrayList<ArrayList<String>>()
 
-    for (features in candToFeatures.values) {
-        val featuresStr = ArrayList(features.map { it.toString() })
+    for (cand in candidates) {
+        val featuresStr = ArrayList(cand.features.map { it.toString() })
         data.add(featuresStr)
     }
     val csv = Csv(featureNames, data)
-    val candidateNames = ArrayList(candToFeatures.keys.map { it.toString() })
+    val candidateNames = ArrayList(candidates.map {it.candidate.toString()})
 
     csv.addIndicesColumn("Names", candidateNames)
-
     return csv
 }

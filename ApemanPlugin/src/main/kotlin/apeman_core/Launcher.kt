@@ -17,13 +17,12 @@ class Launcher(
     private var featuresOfEveryCandidate: FeaturesForEveryCandidate? = null
     private var model: ModelProvider? = null
 
-    fun getCandidatesWithProba(): ArrayList<CandidateWithFeatures> {
+    fun getCandidatesWithProba(): ArrayList<CandidatesWithFeaturesAndProba> {
+
         val candidates = generateCandidates()
         val candidatesWithFeatures = calculateFeatures(candidates)
-
-
-        return ArrayList(candidatesWithFeatures)
-
+        val candidatesWithProba = predictCandidates(candidatesWithFeatures)
+        return ArrayList(candidatesWithProba)
     }
 
     private fun generateCandidates(): List<ExtractionCandidate> {
@@ -43,7 +42,8 @@ class Launcher(
 
     private fun predictCandidates(candidatesWithFeature: List<CandidateWithFeatures>)
             : List<CandidatesWithFeaturesAndProba> {
-        model = ModelProvider()
+        model = ModelProvider(candidatesWithFeature)
         model!!.trainModel()
+        return model!!.predictCandidates()
     }
 }

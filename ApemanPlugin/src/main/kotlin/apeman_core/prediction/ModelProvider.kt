@@ -1,9 +1,8 @@
 package apeman_core.prediction
 
-import apeman_core.features_extraction.FeatureVector
+import apeman_core.features_extraction.CandidateWithFeatures
 import java.io.*
 import java.lang.ProcessBuilder
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 const val PYTHON_PATH = "python3"
 const val MODEL_DIR = "/home/snyss/Prog/mm/diploma/main/apeman/Model/"
@@ -24,40 +23,55 @@ const val STORE_CANDIDATES = MODEL_DIR + "candidates.csv"
 const val PREDICTED_PROBABILITIES = MODEL_DIR + "probabilities.csv"
 
 
-class ModelProvider {
+class ModelProvider(
+        private val candidates: List<CandidateWithFeatures>
+) {
 
-    fun trainModel(columns: ArrayList<String>) {
-        saveTrainingCsv(from = GEMS_CSV_POSITIVE_REAL, to = TRAINING_CSV_POSITIVE_REAL, columns = columns)
-        saveTrainingCsv(from = GEMS_CSV_NEGATIVE_REAL, to = TRAINING_CSV_NEGATIVE_REAL, columns = columns)
+    fun trainModel() {
+        saveTrainingCsv(from = GEMS_CSV_POSITIVE_REAL, to = TRAINING_CSV_POSITIVE_REAL)
+        saveTrainingCsv(from = GEMS_CSV_NEGATIVE_REAL, to = TRAINING_CSV_NEGATIVE_REAL)
 
-        saveTrainingCsv(from = GEMS_CSV_POSITIVE_AUGMENTED, to = TRAINING_CSV_POSITIVE_AUGMENTED, columns = columns)
-        saveTrainingCsv(from = GEMS_CSV_NEGATIVE_AUGMENTED, to = TRAINING_CSV_NEGATIVE_AUGMENTED, columns = columns)
+        saveTrainingCsv(from = GEMS_CSV_POSITIVE_AUGMENTED, to = TRAINING_CSV_POSITIVE_AUGMENTED)
+        saveTrainingCsv(from = GEMS_CSV_NEGATIVE_AUGMENTED, to = TRAINING_CSV_NEGATIVE_AUGMENTED)
 
         callPythonProcess(scriptName = TRAINING_SCRIPT_NAME)
     }
 
-    private fun saveTrainingCsv(from: String, to: String, columns: ArrayList<String>) {
+    private fun saveTrainingCsv(from: String, to: String) {
         val csv = importCsvFrom(from)
-        csv.remainColumns(columns)
+        csv.remainColumns(ArrayList(getColumnNames()))
         csv.export(to)
     }
 
-    fun predictCandidates(candToFeatures: HashMap<ExtractionCandidate, FeatureVector>,
-                          featureNames: ArrayList<String>): ArrayList<Double> {
-        val csv = importCsvFrom(candToFeatures, featureNames)
-        csv.export(STORE_CANDIDATES)
-        callPythonProcess(PREDICTING_SCRIPT_NAME)
-        return loadProbabilities()
+    private fun getColumnNames(): List<String> {
+        assert(candidates.isNotEmpty())
+        return candidates[0].features.map { it.name }.toList()
     }
 
-    private fun loadProbabilities(): ArrayList<Double> {
+    fun predictCandidates(): List<CandidatesWithFeaturesAndProba> {
+
+        val csv = importCsvFrom(ArrayList(candidates), ArrayList(getColumnNames()))
+        csv.export(STORE_CANDIDATES)
+        callPythonProcess(PREDICTING_SCRIPT_NAME)
+        return loadProbabilities().toList()
+    }
+
+    private fun loadProbabilities(): ArrayList<CandidatesWithFeaturesAndProba> {
+        val result = ArrayList<CandidatesWithFeaturesAndProba>()
 
         val csv = importCsvFrom(PREDICTED_PROBABILITIES)
         if (csv.data.isEmpty())
             return arrayListOf()
 
         assert(csv.data[0].size == 1)
-        return ArrayList(csv.data.map { it[0].toDouble() })
+        for ((probability, cand) in csv.data.zip(candidates)) {
+            result.add(CandidatesWithFeaturesAndProba(
+                    cand.candidate,
+                    cand.features,
+                    probability[0].toDouble()
+            ))
+        }
+        return result
     }
 
     private fun callPythonProcess(scriptName: String) {
