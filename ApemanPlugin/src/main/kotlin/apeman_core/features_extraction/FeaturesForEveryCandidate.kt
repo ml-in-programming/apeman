@@ -3,7 +3,6 @@ package apeman_core.features_extraction
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.sixrr.metrics.metricModel.MetricsResult
-import com.sixrr.metrics.utils.MethodUtils
 import com.sixrr.stockmetrics.candidateMetrics.NumLiteralsCandidateMetric
 import com.sixrr.stockmetrics.candidateMetrics.NumSwitchOperatorsCandidateMetric
 import com.sixrr.stockmetrics.candidateMetrics.NumTernaryOperatorsCandidateMetric
@@ -49,17 +48,17 @@ class FeaturesForEveryCandidate(
         calcRunner!!.calculate()
     }
 
-    fun getCandidatesWithFeatures(): List<CandidatesWithFeatures> {
+    fun getCandidatesWithFeatures(): List<CandidateWithFeatures> {
         calculate()
         val candResults = calcRunner!!.resultsForCandidates!!
         val methodResults = calcRunner!!.resultsForMethods!!
-        val candWithFeatures = arrayListOf<CandidatesWithFeatures>()
+        val candWithFeatures = arrayListOf<CandidateWithFeatures>()
 
         for (cand in candidates) {
             val featureVector =  getFeatureVector(
                     cand, candResults, methodResults
             )
-            candWithFeatures.add(CandidatesWithFeatures(cand, featureVector))
+            candWithFeatures.add(CandidateWithFeatures(cand, featureVector))
         }
         return candWithFeatures
     }

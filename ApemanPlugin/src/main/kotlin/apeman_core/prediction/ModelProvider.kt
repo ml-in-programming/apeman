@@ -27,13 +27,13 @@ const val PREDICTED_PROBABILITIES = MODEL_DIR + "probabilities.csv"
 class ModelProvider {
 
     fun trainModel(columns: ArrayList<String>) {
-        saveTrainingCsv(from= GEMS_CSV_POSITIVE_REAL, to= TRAINING_CSV_POSITIVE_REAL, columns=columns)
-        saveTrainingCsv(from= GEMS_CSV_NEGATIVE_REAL, to= TRAINING_CSV_NEGATIVE_REAL, columns=columns)
+        saveTrainingCsv(from = GEMS_CSV_POSITIVE_REAL, to = TRAINING_CSV_POSITIVE_REAL, columns = columns)
+        saveTrainingCsv(from = GEMS_CSV_NEGATIVE_REAL, to = TRAINING_CSV_NEGATIVE_REAL, columns = columns)
 
-        saveTrainingCsv(from= GEMS_CSV_POSITIVE_AUGMENTED, to= TRAINING_CSV_POSITIVE_AUGMENTED, columns=columns)
-        saveTrainingCsv(from= GEMS_CSV_NEGATIVE_AUGMENTED, to= TRAINING_CSV_NEGATIVE_AUGMENTED, columns=columns)
+        saveTrainingCsv(from = GEMS_CSV_POSITIVE_AUGMENTED, to = TRAINING_CSV_POSITIVE_AUGMENTED, columns = columns)
+        saveTrainingCsv(from = GEMS_CSV_NEGATIVE_AUGMENTED, to = TRAINING_CSV_NEGATIVE_AUGMENTED, columns = columns)
 
-        callPythonProcess(scriptName= TRAINING_SCRIPT_NAME)
+        callPythonProcess(scriptName = TRAINING_SCRIPT_NAME)
     }
 
     private fun saveTrainingCsv(from: String, to: String, columns: ArrayList<String>) {
@@ -43,8 +43,7 @@ class ModelProvider {
     }
 
     fun predictCandidates(candToFeatures: HashMap<ExtractionCandidate, FeatureVector>,
-                          featureNames: ArrayList<String>): ArrayList<Double>
-    {
+                          featureNames: ArrayList<String>): ArrayList<Double> {
         val csv = importCsvFrom(candToFeatures, featureNames)
         csv.export(STORE_CANDIDATES)
         callPythonProcess(PREDICTING_SCRIPT_NAME)

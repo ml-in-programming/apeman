@@ -17,7 +17,7 @@ public class CandidatesOfScope(
         generateCandidates()
     }
 
-    public fun getCandidates(): List<ExtractionCandidate> {
+    fun getCandidates(): List<ExtractionCandidate> {
         return candidates.toList()
     }
 
