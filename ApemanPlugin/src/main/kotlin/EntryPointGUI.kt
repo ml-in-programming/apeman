@@ -1,4 +1,5 @@
-import apeman_core.prediction.ModelProvider
+import apeman_core.Launcher
+import apeman_core.prediction.CandidatesWithFeaturesAndProba
 import com.intellij.analysis.AnalysisScope
 import com.intellij.analysis.BaseAnalysisAction
 import com.intellij.openapi.project.Project
@@ -9,7 +10,7 @@ import java.util.logging.Logger
 private val log = Logger.getLogger("mainAnalyzeClass")
 private val topK = 5
 
-fun analyzeScope(project: Project, scope: AnalysisScope): ArrayList<Pair<ExtractionCandidate, Double>> {
+fun analyzeScope(project: Project, scope: AnalysisScope): ArrayList<CandidatesWithFeaturesAndProba> {
 
     log.info("scope has ${scope.fileCount} files")
 
@@ -18,35 +19,20 @@ fun analyzeScope(project: Project, scope: AnalysisScope): ArrayList<Pair<Extract
         return arrayListOf()
     }
 
-    log.info("get candidates")
-    val candidates = CandidatesOfScope(project, scope).candidates
-
-    log.info("get features")
-    val features = FeaturesForEveryCandidate(project, scope, candidates)
-    val candToFeatures = features.results
-    val featureNames = features.featureNames
-
-    log.info("train model")
-    val model = ModelProvider()
-    model.trainModel(featureNames)
-
-    log.info("predict candidates")
-    val proba = model.predictCandidates(candToFeatures, featureNames)
-
-    var candToProba = ArrayList<Pair<ExtractionCandidate, Double>>()
-    candToProba = candToFeatures.keys.zip(proba).sortedBy { -it.second }.toCollection(candToProba)
+    val launcher = Launcher(project, scope)
+    val candidates = launcher.getCandidatesWithProba()
 
     var info = ""
-    for ((cand, proba) in candToProba) {
+    for ((cand, features, proba) in candidates) {
         info += "\n\n$cand:\n proba = $proba\n\n"
-        for ((metric, featureName) in candToFeatures[cand]!!.zip(featureNames)) {
-            info += "$featureName = $metric\n"
+        for ((name, value) in features) {
+            info += "$name = $value\n"
         }
     }
 
     Messages.showInfoMessage(info, "checked")
     log.info("predicting success!")
-    return candToProba
+    return candidates
 }
 
 

@@ -8,6 +8,9 @@ import apeman_core.prediction.ModelProvider
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
+import java.util.logging.Logger
+
+private val log = Logger.getLogger("Launcher")
 
 class Launcher(
         private val project: Project,
@@ -18,9 +21,13 @@ class Launcher(
     private var model: ModelProvider? = null
 
     fun getCandidatesWithProba(): ArrayList<CandidatesWithFeaturesAndProba> {
-
+        log.info("generate candidates")
         val candidates = generateCandidates()
+
+        log.info("calculate features")
         val candidatesWithFeatures = calculateFeatures(candidates)
+
+        log.info("predict candidates")
         val candidatesWithProba = predictCandidates(candidatesWithFeatures)
         return ArrayList(candidatesWithProba)
     }

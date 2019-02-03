@@ -21,7 +21,7 @@ class ComplementMetric(
         val candStr = candidate.toString()
 
         val methodValue = resultsMethod.getValueForMetric(metric, methodSign)!!
-        val candidateValue = resultsMethod.getValueForMetric(candidateMetric.metric, candStr)!!
+        val candidateValue = resultsCandidate.getValueForMetric(candidateMetric.metric, candStr)!!
 
         return methodValue - candidateValue
     }
