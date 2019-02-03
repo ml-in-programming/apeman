@@ -21,9 +21,9 @@ fun analyzeScope(project: Project, scope: AnalysisScope): ArrayList<CandidatesWi
 
     val launcher = Launcher(project, scope)
     val candidates = launcher.getCandidatesWithProba()
-
+    val sortedCandidates = candidates.sortedBy { -it.probability }
     var info = ""
-    for ((cand, features, proba) in candidates) {
+    for ((cand, features, proba) in sortedCandidates) {
         info += "\n\n$cand:\n proba = $proba\n\n"
         for ((name, value) in features) {
             info += "$name = $value\n"

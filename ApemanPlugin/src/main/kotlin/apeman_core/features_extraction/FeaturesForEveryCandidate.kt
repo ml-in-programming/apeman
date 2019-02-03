@@ -4,10 +4,7 @@ import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.sixrr.metrics.metricModel.MetricsResult
 import com.sixrr.stockmetrics.candidateCalculators.RatioLocCandidateCalculator
-import com.sixrr.stockmetrics.candidateMetrics.NumLiteralsCandidateMetric
-import com.sixrr.stockmetrics.candidateMetrics.NumSwitchOperatorsCandidateMetric
-import com.sixrr.stockmetrics.candidateMetrics.NumTernaryOperatorsCandidateMetric
-import com.sixrr.stockmetrics.candidateMetrics.RatioLocCandidateMetric
+import com.sixrr.stockmetrics.candidateMetrics.*
 import com.sixrr.stockmetrics.methodMetrics.NumLiteralsMetric
 import com.sixrr.stockmetrics.methodMetrics.NumTernaryOperatorsMetric
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
@@ -43,7 +40,11 @@ class FeaturesForEveryCandidate(
         ))
 
         metrics.addAll(listOf(
-                CandidateMetric("ratio_LOC", RatioLocCandidateMetric(candidates))
+                CandidateMetric("ratio_LOC", RatioLocCandidateMetric(candidates)),
+                CandidateMetric("Ratio_Variable_Access", VariableCouplingCandidateMetric(candidates)),
+                CandidateMetric("Ratio_Variable_Access2", VariableCoupling2CandidateMetric(candidates)),
+                CandidateMetric("VarAc_Cohesion", VariableCohesionCandidateMetric(candidates)),
+                CandidateMetric("VarAc_Cohesion2", VariableCohesion2CandidateMetric(candidates))
         ))
     }
 
