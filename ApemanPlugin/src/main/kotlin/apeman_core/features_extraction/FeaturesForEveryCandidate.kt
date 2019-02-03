@@ -3,9 +3,11 @@ package apeman_core.features_extraction
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.sixrr.metrics.metricModel.MetricsResult
+import com.sixrr.stockmetrics.candidateCalculators.RatioLocCandidateCalculator
 import com.sixrr.stockmetrics.candidateMetrics.NumLiteralsCandidateMetric
 import com.sixrr.stockmetrics.candidateMetrics.NumSwitchOperatorsCandidateMetric
 import com.sixrr.stockmetrics.candidateMetrics.NumTernaryOperatorsCandidateMetric
+import com.sixrr.stockmetrics.candidateMetrics.RatioLocCandidateMetric
 import com.sixrr.stockmetrics.methodMetrics.NumLiteralsMetric
 import com.sixrr.stockmetrics.methodMetrics.NumTernaryOperatorsMetric
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
@@ -38,6 +40,10 @@ class FeaturesForEveryCandidate(
         metrics.addAll(listOf(
                 ComplementMetric("CON_LITERAL", NumLiteralsMetric(), namesToMetrics["Num_Literal"]!!),
                 ComplementMetric("CON_CONDITIONAL", NumTernaryOperatorsMetric(), namesToMetrics["Num_Conditional"]!!)
+        ))
+
+        metrics.addAll(listOf(
+                CandidateMetric("ratio_LOC", RatioLocCandidateMetric(candidates))
         ))
     }
 
