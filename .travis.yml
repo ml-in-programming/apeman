@@ -6,4 +6,4 @@ os:
 - linux
 dist: trusty
 
-script: cd ApemanPlugin && ./gradlew build
+script: cd ApemanPlugin && ./gradlew assemble
