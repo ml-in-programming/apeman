@@ -44,6 +44,7 @@ class Launcher(
                 analysisScope,
                 ArrayList(candidates)
         )
+
         return featuresOfEveryCandidate!!.getCandidatesWithFeatures()
     }
 

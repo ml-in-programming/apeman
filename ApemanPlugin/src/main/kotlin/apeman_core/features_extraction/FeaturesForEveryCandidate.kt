@@ -36,15 +36,18 @@ class FeaturesForEveryCandidate(
 
         metrics.addAll(listOf(
                 ComplementMetric("CON_LITERAL", NumLiteralsMetric(), namesToMetrics["Num_Literal"]!!),
-                ComplementMetric("CON_CONDITIONAL", NumTernaryOperatorsMetric(), namesToMetrics["Num_Conditional"]!!)
-        ))
-
-        metrics.addAll(listOf(
+                ComplementMetric("CON_CONDITIONAL", NumTernaryOperatorsMetric(), namesToMetrics["Num_Conditional"]!!),
                 CandidateMetric("ratio_LOC", RatioLocCandidateMetric(candidates)),
                 CandidateMetric("Ratio_Variable_Access", VariableCouplingCandidateMetric(candidates)),
                 CandidateMetric("Ratio_Variable_Access2", VariableCoupling2CandidateMetric(candidates)),
                 CandidateMetric("VarAc_Cohesion", VariableCohesionCandidateMetric(candidates)),
-                CandidateMetric("VarAc_Cohesion2", VariableCohesion2CandidateMetric(candidates))
+                CandidateMetric("VarAc_Cohesion2", VariableCohesion2CandidateMetric(candidates)),
+                CandidateMetric("Ratio_Field_Access", FieldCouplingCandidateMetric(candidates)),
+                CandidateMetric("Ratio_Field_Access2", FieldCoupling2CandidateMetric(candidates)),
+                CandidateMetric("Field_Cohesion", FieldCohesionCandidateMetric(candidates)),
+                CandidateMetric("Field_Cohesion2", FieldCohesion2CandidateMetric(candidates)),
+                MaxFrom2Metric("Ratio_Invocation", InvocationCouplingCandidateMetric(candidates), InvocationNewCouplingCandidateMetric(candidates)),
+                MaxFrom2Metric("Invocation_Cohesion", InvocationCohesionCandidateMetric(candidates), InvocationNewCohesionCandidateMetric(candidates))
         ))
     }
 

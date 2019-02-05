@@ -27,7 +27,7 @@ class FeaturesCalculationRunner(
 
     init {
         metricInstances.addAll(
-                metrics.map { it.createMetricInstance() }
+                metrics.flatMap { it.createMetricInstance() }
         )
     }
 

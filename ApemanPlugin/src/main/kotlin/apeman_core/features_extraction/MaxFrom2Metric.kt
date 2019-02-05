@@ -1,6 +1,8 @@
 package apeman_core.features_extraction
 
 import com.sixrr.metrics.metricModel.MetricsResult
+import com.sixrr.metrics.profile.MetricInstance
+import com.sixrr.metrics.profile.MetricInstanceImpl
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 class MaxFrom2Metric(
@@ -8,6 +10,16 @@ class MaxFrom2Metric(
         override val metric: com.sixrr.metrics.Metric,
         private val metric2: com.sixrr.metrics.Metric
 ): Metric(name, metric) {
+
+    override fun createMetricInstance(): List<MetricInstance> {
+        return listOf(metric, metric2)
+                .map {
+                    MetricInstanceImpl(it).apply {
+                        isEnabled = true
+                    }
+                }.toList()
+    }
+
     override fun calculateResult(
             candidate: ExtractionCandidate,
             resultsCandidate: MetricsResult,

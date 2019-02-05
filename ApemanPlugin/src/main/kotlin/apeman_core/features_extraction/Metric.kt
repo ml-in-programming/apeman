@@ -10,10 +10,10 @@ abstract class Metric(
         open val metric: com.sixrr.metrics.Metric
 ) {
 
-    fun createMetricInstance(): MetricInstance {
-        return MetricInstanceImpl(metric).apply {
+    open fun createMetricInstance(): List<MetricInstance> {
+        return listOf(MetricInstanceImpl(metric).apply {
             isEnabled = true
-        }
+        })
     }
 
     abstract fun calculateResult(

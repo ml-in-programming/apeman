@@ -68,9 +68,9 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
             : ArrayList<Pair<ExtractionCandidate, Double>>  {
 
         return ArrayList(candToProba.toMap()
-                .filterKeys { cand -> this.candidates.map { it.sourceMethod }.contains(sourceMethod) }
+                .filterKeys { _ -> this.candidates.map { it.sourceMethod }.contains(sourceMethod) }
                 .toList()
-                .sortedBy { candAndProba -> -candAndProba.second }
+                .sortedBy { (cand, proba) -> -proba }
                 .take(k))
     }
 }
