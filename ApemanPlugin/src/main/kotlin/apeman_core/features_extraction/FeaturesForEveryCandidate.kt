@@ -7,6 +7,7 @@ import com.sixrr.stockmetrics.candidateCalculators.RatioLocCandidateCalculator
 import com.sixrr.stockmetrics.candidateMetrics.*
 import com.sixrr.stockmetrics.methodMetrics.NumLiteralsMetric
 import com.sixrr.stockmetrics.methodMetrics.NumTernaryOperatorsMetric
+import com.sixrr.stockmetrics.methodMetrics.NumUsedTypesMetric
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 
@@ -27,7 +28,8 @@ class FeaturesForEveryCandidate(
         metrics.addAll(listOf(
                 CandidateMetric("Num_Literal", NumLiteralsCandidateMetric(candidates)),
                 CandidateMetric("Num_Conditional", NumTernaryOperatorsCandidateMetric(candidates)),
-                CandidateMetric("Num_Switch", NumSwitchOperatorsCandidateMetric(candidates))
+                CandidateMetric("Num_Switch", NumSwitchOperatorsCandidateMetric(candidates)),
+                CandidateMetric("Num_Type_Ac", NumTypeAccessesCandidateMetric(candidates))
         ))
 
         val namesToMetrics = metrics.map {
@@ -37,6 +39,7 @@ class FeaturesForEveryCandidate(
         metrics.addAll(listOf(
                 ComplementMetric("CON_LITERAL", NumLiteralsMetric(), namesToMetrics["Num_Literal"]!!),
                 ComplementMetric("CON_CONDITIONAL", NumTernaryOperatorsMetric(), namesToMetrics["Num_Conditional"]!!),
+                ComplementMetric("CON_TYPE_ACC", NumUsedTypesMetric(), namesToMetrics["Num_Type_Ac"]!!),
                 CandidateMetric("ratio_LOC", RatioLocCandidateMetric(candidates)),
                 CandidateMetric("Ratio_Variable_Access", VariableCouplingCandidateMetric(candidates)),
                 CandidateMetric("Ratio_Variable_Access2", VariableCoupling2CandidateMetric(candidates)),
