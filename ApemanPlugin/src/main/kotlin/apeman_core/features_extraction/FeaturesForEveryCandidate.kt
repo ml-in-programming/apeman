@@ -56,7 +56,11 @@ class FeaturesForEveryCandidate(
 //                CandidateMetric("TypeAc_Cohesion", TypeAccessCohesionCandidateMetric(candidates)),
 //                CandidateMetric("TypeAc_Cohesion2", TypeAccessCohesion2CandidateMetric(candidates)),
                 CandidateMetric("Ratio_Typed_Ele", TypeElementCouplingCandidateMetric(candidates)),
-                CandidateMetric("TypedEle_Cohesion", TypeElementCohesionCandidateMetric(candidates))
+                CandidateMetric("TypedEle_Cohesion", TypeElementCohesionCandidateMetric(candidates)),
+                CandidateMetric("Ratio_Package", PackageAccessCouplingCandidateMetric(candidates)),
+                CandidateMetric("Ratio_Package2", PackageAccessCoupling2CandidateMetric(candidates)),
+                CandidateMetric("Package_Cohesion", PackageAccessCohesionCandidateMetric(candidates)),
+                CandidateMetric("Package_Cohesion2", PackageAccessCohesion2CandidateMetric(candidates))
         ))
     }
 
