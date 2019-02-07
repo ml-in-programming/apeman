@@ -50,7 +50,11 @@ class FeaturesForEveryCandidate(
                 CandidateMetric("Field_Cohesion", FieldCohesionCandidateMetric(candidates)),
                 CandidateMetric("Field_Cohesion2", FieldCohesion2CandidateMetric(candidates)),
                 MaxFrom2Metric("Ratio_Invocation", InvocationCouplingCandidateMetric(candidates), InvocationNewCouplingCandidateMetric(candidates)),
-                MaxFrom2Metric("Invocation_Cohesion", InvocationCohesionCandidateMetric(candidates), InvocationNewCohesionCandidateMetric(candidates))
+                MaxFrom2Metric("Invocation_Cohesion", InvocationCohesionCandidateMetric(candidates), InvocationNewCohesionCandidateMetric(candidates)),
+                CandidateMetric("Ratio_Type_Access", TypeAccessCouplingCandidateMetric(candidates)),
+                CandidateMetric("Ratio_Type_Access2", TypeAccessCoupling2CandidateMetric(candidates)),
+                CandidateMetric("TypeAc_Cohesion", TypeAccessCohesionCandidateMetric(candidates)),
+                CandidateMetric("TypeAc_Cohesion2", TypeAccessCohesion2CandidateMetric(candidates))
         ))
     }
 
