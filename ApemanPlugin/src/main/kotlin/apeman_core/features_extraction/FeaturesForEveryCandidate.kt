@@ -3,11 +3,8 @@ package apeman_core.features_extraction
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.sixrr.metrics.metricModel.MetricsResult
-import com.sixrr.stockmetrics.candidateCalculators.RatioLocCandidateCalculator
 import com.sixrr.stockmetrics.candidateMetrics.*
-import com.sixrr.stockmetrics.methodMetrics.NumLiteralsMetric
-import com.sixrr.stockmetrics.methodMetrics.NumTernaryOperatorsMetric
-import com.sixrr.stockmetrics.methodMetrics.NumUsedTypesMetric
+import com.sixrr.stockmetrics.methodMetrics.*
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 
@@ -29,7 +26,11 @@ class FeaturesForEveryCandidate(
                 CandidateMetric("Num_Literal", NumLiteralsCandidateMetric(candidates)),
                 CandidateMetric("Num_Conditional", NumTernaryOperatorsCandidateMetric(candidates)),
                 CandidateMetric("Num_Switch", NumSwitchOperatorsCandidateMetric(candidates)),
-                CandidateMetric("Num_Type_Ac", NumTypeAccessesCandidateMetric(candidates))
+                CandidateMetric("Num_Type_Ac", NumTypeAccessesCandidateMetric(candidates)),
+                CandidateMetric("Num_Invocation", NumInvocationsCandidateMetric(candidates)),
+                CandidateMetric("Num_If", NumIfCandidateMetric(candidates)),
+                CandidateMetric("Num_Assign", NumAssignmentsCandidateMetric(candidates)),
+                CandidateMetric("Num_Typed_Ele", NumTypedElementsCandidateMetric(candidates))
         ))
 
         val namesToMetrics = metrics.map {
@@ -40,6 +41,9 @@ class FeaturesForEveryCandidate(
                 ComplementMetric("CON_LITERAL", NumLiteralsMetric(), namesToMetrics["Num_Literal"]!!),
                 ComplementMetric("CON_CONDITIONAL", NumTernaryOperatorsMetric(), namesToMetrics["Num_Conditional"]!!),
                 ComplementMetric("CON_TYPE_ACC", NumUsedTypesMetric(), namesToMetrics["Num_Type_Ac"]!!),
+                ComplementMetric("CON_INVOCATION", NumMethodCallsMetric(), namesToMetrics["Num_Invocation"]!!),
+                ComplementMetric("CON_IF", NumIfMetric(), namesToMetrics["Num_If"]!!),
+                ComplementMetric("CON_ASSIGN", NumAssignmentsMetric(), namesToMetrics["Num_Assign"]!!),
                 CandidateMetric("ratio_LOC", RatioLocCandidateMetric(candidates)),
                 CandidateMetric("Ratio_Variable_Access", VariableCouplingCandidateMetric(candidates)),
                 CandidateMetric("Ratio_Variable_Access2", VariableCoupling2CandidateMetric(candidates)),
