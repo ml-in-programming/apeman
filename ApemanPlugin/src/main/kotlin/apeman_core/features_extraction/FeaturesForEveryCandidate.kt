@@ -30,7 +30,8 @@ class FeaturesForEveryCandidate(
                 CandidateMetric("Num_Invocation", NumInvocationsCandidateMetric(candidates)),
                 CandidateMetric("Num_If", NumIfCandidateMetric(candidates)),
                 CandidateMetric("Num_Assign", NumAssignmentsCandidateMetric(candidates)),
-                CandidateMetric("Num_Typed_Ele", NumTypedElementsCandidateMetric(candidates))
+                CandidateMetric("Num_Typed_Ele", NumTypedElementsCandidateMetric(candidates)),
+                CandidateMetric("Num_Var_Ac", NumLocalVarsCandidateMetric(candidates))
         ))
 
         val namesToMetrics = metrics.map {
@@ -44,6 +45,8 @@ class FeaturesForEveryCandidate(
                 ComplementMetric("CON_INVOCATION", NumMethodCallsMetric(), namesToMetrics["Num_Invocation"]!!),
                 ComplementMetric("CON_IF", NumIfMetric(), namesToMetrics["Num_If"]!!),
                 ComplementMetric("CON_ASSIGN", NumAssignmentsMetric(), namesToMetrics["Num_Assign"]!!),
+                ComplementMetric("CON_SWITCH", NumSwitchMetric(), namesToMetrics["Num_Switch"]!!),
+                ComplementMetric("CON_VAR_ACC", NumLocalVarsAccessMetric(), namesToMetrics["Num_Var_Ac"]!!),
                 CandidateMetric("ratio_LOC", RatioLocCandidateMetric(candidates)),
                 CandidateMetric("Ratio_Variable_Access", VariableCouplingCandidateMetric(candidates)),
                 CandidateMetric("Ratio_Variable_Access2", VariableCoupling2CandidateMetric(candidates)),
