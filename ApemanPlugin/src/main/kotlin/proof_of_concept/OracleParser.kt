@@ -2,17 +2,21 @@ package proof_of_concept
 
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.util.io.isFile
+import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.test.todo
+import java.util.logging.Logger
 
 class OracleParser(
         dirWithOracle: String,
         private val project: Project,
         private val scope: AnalysisScope
 ) {
+    private val log = Logger.getLogger("OracleParser")
+
     private val oraclePathStr = "$dirWithOracle/oracle.txt"
     private var entries = mutableListOf<OracleEntry>()
 
@@ -20,7 +24,7 @@ class OracleParser(
         parseOracle()
     }
 
-    fun parseOracle() {
+    fun parseOracle(): List<OracleEntry> {
         val oraclePath = Paths.get(oraclePathStr)
 
         assert(oraclePath.isFile())
@@ -29,13 +33,18 @@ class OracleParser(
         }
         findAllMethods()
         createCandidates()
+        return entries
     }
 
     private fun parseLine(line: String) {
         val args = line.split("\t")
         val methodName = "${args[0]}\t${args[1]}"
-        val e = args[2]
-        entries.add(OracleEntry(methodName, e))
+
+        val e = args[2].split(":")
+        val startOffset = e[0].drop(1).toInt()
+        val lengthOffset = e[1].toInt()
+
+        entries.add(OracleEntry(methodName, startOffset, lengthOffset))
     }
 
     private fun findAllMethods() {
@@ -83,7 +92,56 @@ class OracleParser(
     private fun createCandidates() {
         for (entry in entries) {
             assert(entry.method != null)
-            //todo
+            entry.method!!.accept(object : JavaRecursiveElementVisitor() {
+
+                private var currentCodeBlock: PsiCodeBlock? = null
+                private var currentMethod: PsiMethod? = null
+                private var startOffset: Int? = null
+                private var endOffset: Int? = null
+
+                override fun visitMethod(method: PsiMethod?) {
+                    val oldMethod = currentMethod
+                    currentMethod = method
+
+                    super.visitMethod(method)
+                    currentMethod = oldMethod
+                }
+
+                override fun visitCodeBlock(block: PsiCodeBlock?) {
+                    val oldBlock = currentCodeBlock
+                    currentCodeBlock = block
+
+                    super.visitCodeBlock(block)
+                    currentCodeBlock = oldBlock
+                }
+
+                override fun visitComment(comment: PsiComment?) {
+                    super.visitComment(comment)
+                    if (comment == null)
+                        return
+
+                    if (comment.text!! == "{") {
+                        startOffset = comment.textRange.endOffset
+                        log.info("e$startOffset")
+                    }
+
+                    if (comment.text!! == "}") {
+
+                        assert(startOffset != null)
+                        endOffset = comment.textRange.startOffset
+                        val candRange = TextRange(startOffset!!, endOffset!!)
+                        log.info(":" + candRange.length)
+
+                        val candStatements = currentCodeBlock!!.statements
+                                .filter { candRange.contains(it.textRange) }
+                        val cand = ExtractionCandidate(candStatements.toTypedArray(), currentMethod!!)
+                        log.info(cand.toString())
+
+                        entries.find { it.method == currentMethod!! }!!.candidate = cand
+                        startOffset = null
+                    }
+                }
+            })
         }
     }
 }

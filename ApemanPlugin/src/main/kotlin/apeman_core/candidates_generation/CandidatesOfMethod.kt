@@ -9,9 +9,9 @@ import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CandidatesOfMethod(val sourceMethod: PsiMethod) {
+class CandidatesOfMethod(private val sourceMethod: PsiMethod) {
 
-    var candidates = ArrayList<ExtractionCandidate>()
+    val candidates = ArrayList<ExtractionCandidate>()
 
     init {
         generateCandidates()
