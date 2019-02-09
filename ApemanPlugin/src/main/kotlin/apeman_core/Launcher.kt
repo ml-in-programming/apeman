@@ -3,6 +3,7 @@ package apeman_core
 import apeman_core.candidates_generation.CandidatesOfScope
 import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.features_extraction.FeaturesForEveryCandidate
+import apeman_core.grouping.GettingBestCandidates
 import apeman_core.pipes.CandidatesWithFeaturesAndProba
 import apeman_core.prediction.ModelProvider
 import com.intellij.analysis.AnalysisScope
@@ -38,8 +39,11 @@ class Launcher(
         log.info("predict candidates")
         val candidatesWithProba = predictCandidates(candidatesWithFeatures)
 
+        log.info("getting top candidates")
+        val bestCandidates = gettingBestCandidates(candidatesWithProba)
+
         log.info("predicting success!")
-        return ArrayList(candidatesWithProba)
+        return ArrayList(bestCandidates)
     }
 
     private fun generateCandidates(): List<ExtractionCandidate> {
@@ -63,5 +67,12 @@ class Launcher(
         model = ModelProvider(candidatesWithFeature)
         model!!.trainModel()
         return model!!.predictCandidates()
+    }
+
+    private fun gettingBestCandidates(candToProba: List<CandidatesWithFeaturesAndProba>)
+            : List<CandidatesWithFeaturesAndProba> {
+        val filter = GettingBestCandidates(ArrayList(candToProba))
+
+        return filter.getTopKCandidates()
     }
 }
