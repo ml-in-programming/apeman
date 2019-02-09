@@ -63,14 +63,4 @@ class CandidatesOfMethod(val sourceMethod: PsiMethod) {
 
         return EditorFactory.getInstance().createEditor(document)!!
     }
-
-    private fun getTopKCandidates(k: Int, candToProba: Collection<Pair<ExtractionCandidate, Double>>)
-            : ArrayList<Pair<ExtractionCandidate, Double>>  {
-
-        return ArrayList(candToProba.toMap()
-                .filterKeys { _ -> this.candidates.map { it.sourceMethod }.contains(sourceMethod) }
-                .toList()
-                .sortedBy { (cand, proba) -> -proba }
-                .take(k))
-    }
 }

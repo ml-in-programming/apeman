@@ -1,6 +1,6 @@
 package apeman_core.prediction
 
-import apeman_core.features_extraction.CandidateWithFeatures
+import apeman_core.pipes.CandidateWithFeatures
 import org.apache.commons.csv.CSVFormat
 import java.io.File
 

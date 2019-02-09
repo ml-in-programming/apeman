@@ -1,5 +1,7 @@
 package apeman_core.features_extraction
 
+import apeman_core.pipes.CandidateWithFeatures
+import apeman_core.pipes.Feature
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.sixrr.metrics.metricModel.MetricsResult
@@ -114,25 +116,4 @@ class FeaturesForEveryCandidate(
         }
         return featureVector
     }
-
-//    private val gemsMetrics = mutableListOf<Metric>(
-//
-//            // method metrics
-//            NumStatementsMetric(),
-//            NumLocalVarsMetric(),
-//            NumLiteralsMetric(),
-//            NumTernaryOperatorsMetric(),
-//            NumAssertsMetric(),
-//            NumAssignmentsMetric(),
-//            NumUsedTypesMetric(),
-//            NumUsedPackagesMetric(),
-//            NumMethodCallsMetric(),
-//            NumIfMetric(),
-//            NumLocalVarsAccessMetric(),
-//
-//            // candidate metrics
-//            NumLiteralsCandidateMetric(candidates),
-//            NumTernaryOperatorsCandidateMetric(candidates),
-//            NumSwitchOperatorsCandidateMetric(candidates)
-//    )
 }

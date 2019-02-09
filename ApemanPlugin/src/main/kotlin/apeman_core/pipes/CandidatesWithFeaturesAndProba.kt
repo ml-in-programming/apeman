@@ -1,6 +1,5 @@
-package apeman_core.prediction
+package apeman_core.pipes
 
-import apeman_core.features_extraction.Feature
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 data class CandidatesWithFeaturesAndProba(

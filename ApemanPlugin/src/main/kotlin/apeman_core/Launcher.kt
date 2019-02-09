@@ -1,9 +1,9 @@
 package apeman_core
 
 import apeman_core.candidates_generation.CandidatesOfScope
-import apeman_core.features_extraction.CandidateWithFeatures
+import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.features_extraction.FeaturesForEveryCandidate
-import apeman_core.prediction.CandidatesWithFeaturesAndProba
+import apeman_core.pipes.CandidatesWithFeaturesAndProba
 import apeman_core.prediction.ModelProvider
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
@@ -21,6 +21,14 @@ class Launcher(
     private var model: ModelProvider? = null
 
     fun getCandidatesWithProba(): ArrayList<CandidatesWithFeaturesAndProba> {
+
+        log.info("scope has ${analysisScope.fileCount} files")
+
+        if (analysisScope.fileCount == 0) {
+            log.info("return from scope")
+            return arrayListOf()
+        }
+
         log.info("generate candidates")
         val candidates = generateCandidates()
 
@@ -29,6 +37,8 @@ class Launcher(
 
         log.info("predict candidates")
         val candidatesWithProba = predictCandidates(candidatesWithFeatures)
+
+        log.info("predicting success!")
         return ArrayList(candidatesWithProba)
     }
 

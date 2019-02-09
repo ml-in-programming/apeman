@@ -1,6 +1,7 @@
 package apeman_core.prediction
 
-import apeman_core.features_extraction.CandidateWithFeatures
+import apeman_core.pipes.CandidateWithFeatures
+import apeman_core.pipes.CandidatesWithFeaturesAndProba
 import java.io.*
 import java.lang.ProcessBuilder
 
