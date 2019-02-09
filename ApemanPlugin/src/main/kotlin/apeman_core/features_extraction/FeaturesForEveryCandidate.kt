@@ -33,7 +33,8 @@ class FeaturesForEveryCandidate(
                 CandidateMetric("Num_Typed_Ele", NumTypedElementsCandidateMetric(candidates)),
                 CandidateMetric("Num_Var_Ac", NumVarsAccessCandidateMetric(candidates)),
                 CandidateMetric("Num_Field_Ac", NumFieldAccessesCandidateMetric(candidates)),
-                CandidateMetric("Num_local", NumLocalVarsCandidateMetric(candidates))
+                CandidateMetric("Num_local", NumLocalVarsCandidateMetric(candidates)),
+                CandidateMetric("Num_Package", NumPackagesCandidateMetric(candidates))
         ))
 
         val namesToMetrics = metrics.map {
@@ -41,6 +42,7 @@ class FeaturesForEveryCandidate(
         }.toMap()
 
         metrics.addAll(listOf(
+                CandidateMetric("LOC_Extracted_Method", LocCandidateMetric(candidates)),
                 ComplementMetric("CON_LITERAL", NumLiteralsMetric(), namesToMetrics["Num_Literal"]!!),
                 ComplementMetric("CON_CONDITIONAL", NumTernaryOperatorsMetric(), namesToMetrics["Num_Conditional"]!!),
                 ComplementMetric("CON_TYPE_ACC", NumUsedTypesMetric(), namesToMetrics["Num_Type_Ac"]!!),
@@ -52,6 +54,7 @@ class FeaturesForEveryCandidate(
                 ComplementMetric("CON_FIELD_ACC", NumFieldAccessMetric(), namesToMetrics["Num_Field_Ac"]!!),
                 ComplementMetric("CON_LOCAL", NumLocalVarsMetric(), namesToMetrics["Num_local"]!!),
                 ComplementMetric("CON_TYPED_ELE", NumTypedElementsMethodMetric(), namesToMetrics["Num_Typed_Ele"]!!),
+                ComplementMetric("CON_PACKAGE", NumUsedPackagesMetric(), namesToMetrics["Num_Package"]!!),
                 CandidateMetric("ratio_LOC", RatioLocCandidateMetric(candidates)),
                 CandidateMetric("Ratio_Variable_Access", VariableCouplingCandidateMetric(candidates)),
                 CandidateMetric("Ratio_Variable_Access2", VariableCoupling2CandidateMetric(candidates)),
