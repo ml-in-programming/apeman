@@ -11,6 +11,11 @@ allprojects {
     apply plugin: 'org.jetbrains.intellij'
 }
 
+intellij {
+    version '2018.2'
+    updateSinceUntilBuild = false
+}
+
 group 'com.snyssfx.apeman'
 version '1.0-SNAPSHOT'
 
@@ -34,9 +39,6 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-intellij {
-    version '2018.2.3'
-}
 
 patchPluginXml {
     changeNotes """

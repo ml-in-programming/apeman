@@ -101,4 +101,23 @@ public class JavaReposDetecter {
         }
         return getRepoFullNames();
     }
+
+    private void test() {
+        System.out.println("lol");
+        ((Runnable) () -> {
+            System.out.println("run");
+            System.out.println("run2");
+        }).run();
+    }
+
+    private void test2() {
+        System.out.println("lol2");
+        new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("run3");
+                System.out.println("run4");
+            }
+        }.run();
+    }
 }

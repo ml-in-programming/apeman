@@ -78,7 +78,6 @@ class OracleParser(
 
     private fun getMethodSignature(method: PsiMethod): String {
         val methodName = method.name
-        log.info(methodName)
 
         val modifiersString = method.modifierList.children
                 .filter { it is PsiKeyword }
@@ -128,15 +127,20 @@ class OracleParser(
                     if (comment == null)
                         return
 
-                    if (comment.text!! == "{") {
-                        startOffset = comment.textRange.endOffset
+                    if (comment.text!! == "/*{*/") {
+                        assert(currentCodeBlock != null)
+                        assert(currentMethod != null)
+
+                        startOffset = comment.textRange.startOffset
                         log.info("e$startOffset")
                     }
 
-                    if (comment.text!! == "}") {
-
+                    if (comment.text!! == "/*}*/") {
+                        assert(currentCodeBlock != null)
+                        assert(currentMethod != null)
                         assert(startOffset != null)
-                        endOffset = comment.textRange.startOffset
+
+                        endOffset = comment.textRange.endOffset
                         val candRange = TextRange(startOffset!!, endOffset!!)
                         log.info(":" + candRange.length)
 
