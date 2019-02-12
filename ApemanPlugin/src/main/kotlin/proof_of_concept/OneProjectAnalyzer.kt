@@ -3,6 +3,10 @@ package proof_of_concept
 import apeman_core.Launcher
 import apeman_core.pipes.CandidatesWithFeaturesAndProba
 import com.intellij.analysis.AnalysisScope
+import com.intellij.openapi.application.Application
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ApplicationStarter
+import com.intellij.openapi.application.impl.ApplicationImpl
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import java.nio.file.Files
@@ -21,8 +25,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         log.info("analyze project")
         loadProjectAndScope()
         parseOracleFile()
-        launchApeman()
-
+        //launchApeman()
     }
 
     private fun loadProjectAndScope() {
@@ -35,6 +38,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         assert(listOfFiles.joinToString(" ").contains("oracle.txt"))
 
         log.info("open project")
+
         project = ProjectManager.getInstance().loadAndOpenProject(dirOfProject)!!
 
         log.info("create scope")

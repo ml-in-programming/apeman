@@ -4,10 +4,12 @@ import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
+import com.intellij.psi.impl.PsiSubstitutorImpl
 import com.intellij.util.io.isFile
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.logging.Level
 import java.util.logging.Logger
 
 class OracleParser(
@@ -16,33 +18,37 @@ class OracleParser(
         private val scope: AnalysisScope
 ) {
     private val log = Logger.getLogger("OracleParser")
+    init {
+        log.level = Level.FINE
+    }
 
     private val oraclePathStr = "$dirWithOracle/oracle.txt"
     private var entries = mutableListOf<OracleEntry>()
 
-    init {
-        parseOracle()
-    }
-
     fun parseOracle(): List<OracleEntry> {
+        log.info("begin parsing")
         val oraclePath = Paths.get(oraclePathStr)
 
         assert(oraclePath.isFile())
         Files.lines(oraclePath).forEach {
             parseLine(it)
         }
+        log.info("find all methods from oracle")
         findAllMethods()
+
+        log.info("create candidates")
         createCandidates()
         return entries
     }
 
     private fun parseLine(line: String) {
-        val args = line.split("\t")
+
+        val args = line.split("\t").map { it.trim() }
         val methodName = "${args[0]}\t${args[1]}"
 
         val e = args[2].split(":")
         val startOffset = e[0].drop(1).toInt()
-        val lengthOffset = e[1].toInt()
+        val lengthOffset = e[1].dropLast(1).toInt()
 
         entries.add(OracleEntry(methodName, startOffset, lengthOffset))
     }
@@ -54,38 +60,40 @@ class OracleParser(
 
         scope.accept(object : JavaRecursiveElementVisitor() {
             override fun visitMethod(method: PsiMethod?) {
+                super.visitMethod(method)
                 if (method == null)
                     return
 
                 val methodName = getMethodSignature(method)
-                val className = method.containingClass!!.qualifiedName!!
+                val className = method.containingClass!!.qualifiedName ?: ""
                 val ind = methodsStr.indexOf("$className\t$methodName")
                 if (ind != -1) {
+                    assert(entries[ind].method == null)
                     entries[ind].method = method
                 }
-                super.visitMethod(method)
             }
         })
+        assert(entries.all { it.method != null })
     }
 
     private fun getMethodSignature(method: PsiMethod): String {
         val methodName = method.name
+        log.info(methodName)
 
-        val modifiers = method.modifierList
-        val modifiersString = modifiers.children
+        val modifiersString = method.modifierList.children
                 .filter { it is PsiKeyword }
                 .map{ it.text }
                 .joinToString(separator = " ")
 
-        val returnType = method.returnTypeElement!!.text!!
-        val parameters = method.parameterList.parameters
-        val parametersStr = parameters.joinToString { it.typeElement!!.text }
+        val returnType = method.returnType?.canonicalText ?: ""
+        val parametersStr = method.parameterList.parameters
+                .joinToString { it.type.canonicalText }
 
-        var throws = method.throwsTypes.joinToString { it.name }
+        var throws = method.throwsList.referencedTypes.joinToString { it.canonicalText }
         if (throws.isNotBlank())
             throws = "throws $throws"
 
-        val line = "$modifiersString $returnType $methodName($parametersStr) $throws"
+        val line = "$modifiersString $returnType $methodName($parametersStr) $throws".trim()
         return line
     }
 
