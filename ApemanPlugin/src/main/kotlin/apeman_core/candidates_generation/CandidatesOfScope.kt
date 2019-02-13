@@ -3,6 +3,7 @@ package apeman_core.candidates_generation
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaRecursiveElementVisitor
+import com.intellij.psi.PsiLambdaExpression
 import com.intellij.psi.PsiMethod
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
@@ -26,9 +27,16 @@ public class CandidatesOfScope(
             return
 
         analysisScope.accept(object : JavaRecursiveElementVisitor() {
+
+            private var nestingDepth = 0
+
             override fun visitMethod(method: PsiMethod) {
+                nestingDepth++
                 super.visitMethod(method)
-                candidates.addAll(CandidatesOfMethod(method).candidates)
+                if (nestingDepth == 1)
+                    candidates.addAll(CandidatesOfMethod(method).candidates)
+
+                nestingDepth--
             }
         })
     }

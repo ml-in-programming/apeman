@@ -105,13 +105,20 @@ class OracleParser(
                 private var currentMethod: PsiMethod? = null
                 private var startOffset: Int? = null
                 private var endOffset: Int? = null
+                private var nestingDepth = 0
 
                 override fun visitMethod(method: PsiMethod?) {
-                    val oldMethod = currentMethod
-                    currentMethod = method
+                    nestingDepth++
+                    if (nestingDepth == 1) {
+                        currentMethod = method
+                    }
 
                     super.visitMethod(method)
-                    currentMethod = oldMethod
+
+                    if (nestingDepth == 1) {
+                        currentMethod = null
+                    }
+                    nestingDepth--
                 }
 
                 override fun visitCodeBlock(block: PsiCodeBlock?) {
