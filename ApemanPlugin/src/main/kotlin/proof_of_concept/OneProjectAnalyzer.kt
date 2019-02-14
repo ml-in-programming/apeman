@@ -3,10 +3,6 @@ package proof_of_concept
 import apeman_core.Launcher
 import apeman_core.pipes.CandidatesWithFeaturesAndProba
 import com.intellij.analysis.AnalysisScope
-import com.intellij.openapi.application.Application
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.ApplicationStarter
-import com.intellij.openapi.application.impl.ApplicationImpl
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import java.nio.file.Files
@@ -23,12 +19,12 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
 
     fun analyze() {
         log.info("analyze project")
-        loadProjectAndScope()
+        loadProject()
         parseOracleFile()
-        //launchApeman()
+        launchApemanOnNeededMethods()
     }
 
-    private fun loadProjectAndScope() {
+    private fun loadProject() {
 
         val dirpath = Paths.get(dirOfProject)
         log.info("path: ${dirpath.toUri()}")
@@ -40,19 +36,19 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         log.info("open project")
 
         project = ProjectManager.getInstance().loadAndOpenProject(dirOfProject)!!
-
-        log.info("create scope")
-        scope = AnalysisScope(project!!)
     }
 
     private fun parseOracleFile() {
-        val parser = OracleParser(dirOfProject, project!!, scope!!)
+        val parser = OracleParser(dirOfProject, project!!)
         oracleEntries.addAll(parser.parseOracle())
     }
 
-    private fun launchApeman() {
+    private fun launchApemanOnNeededMethods() {
+        log.info("create scope")
+        val methods = oracleEntries.map { it.method!!}.distinct()
+
+        log.info("launch apeman")
         val launcher = Launcher(project!!, scope!!)
         apemanCandidates.addAll(launcher.getCandidatesWithProba())
     }
 }
-

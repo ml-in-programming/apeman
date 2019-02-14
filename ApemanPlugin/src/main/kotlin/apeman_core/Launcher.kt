@@ -8,6 +8,7 @@ import apeman_core.pipes.CandidatesWithFeaturesAndProba
 import apeman_core.prediction.ModelProvider
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiMethod
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.util.logging.Logger
 
@@ -15,7 +16,8 @@ private val log = Logger.getLogger("Launcher")
 
 class Launcher(
         private val project: Project,
-        private val analysisScope: AnalysisScope
+        private val analysisScope: AnalysisScope,
+        private val analysisMethods: List<PsiMethod> = arrayListOf()
 ) {
     private var candidatesOfScope: CandidatesOfScope? = null
     private var featuresOfEveryCandidate: FeaturesForEveryCandidate? = null
@@ -25,7 +27,7 @@ class Launcher(
 
         log.info("scope has ${analysisScope.fileCount} files")
 
-        if (analysisScope.fileCount == 0) {
+        if (analysisScope.fileCount == 0 && analysisMethods.isEmpty()) {
             log.info("return from scope")
             return arrayListOf()
         }
@@ -47,7 +49,11 @@ class Launcher(
     }
 
     private fun generateCandidates(): List<ExtractionCandidate> {
-        candidatesOfScope = CandidatesOfScope(project, analysisScope)
+        candidatesOfScope = if (analysisMethods.isNotEmpty())
+            CandidatesOfScope(project, analysisMethods)
+        else
+            CandidatesOfScope(project, analysisScope)
+
         return candidatesOfScope!!.getCandidates()
     }
 

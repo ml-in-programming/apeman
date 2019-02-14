@@ -14,14 +14,11 @@ import java.util.logging.Logger
 
 class OracleParser(
         dirWithOracle: String,
-        private val project: Project,
-        private val scope: AnalysisScope
+        private val project: Project
 ) {
     private val log = Logger.getLogger("OracleParser")
-    init {
-        log.level = Level.FINE
-    }
 
+    private val scope = AnalysisScope(project)
     private val oraclePathStr = "$dirWithOracle/oracle.txt"
     private var entries = mutableListOf<OracleEntry>()
 
