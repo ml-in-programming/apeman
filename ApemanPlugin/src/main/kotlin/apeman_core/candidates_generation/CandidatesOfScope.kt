@@ -1,5 +1,6 @@
 package apeman_core.candidates_generation
 
+import apeman_core.scopeToTopMethods
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaRecursiveElementVisitor
@@ -52,21 +53,6 @@ public class CandidatesOfScope(
 public fun CandidatesOfScope(project: Project, analysisScope: AnalysisScope): CandidatesOfScope {
     log.info(analysisScope.fileCount.toString())
 
-    val methods = arrayListOf<PsiMethod>()
-
-    // add all methods from analysis scope
-    analysisScope.accept(object : JavaRecursiveElementVisitor() {
-        private var nestingDepth = 0
-
-        override fun visitMethod(method: PsiMethod) {
-            nestingDepth++
-            super.visitMethod(method)
-
-            if (nestingDepth == 1)
-                methods.add(method)
-
-            nestingDepth--
-        }
-    })
+    val methods = scopeToTopMethods(analysisScope)
     return CandidatesOfScope(project, methods)
 }

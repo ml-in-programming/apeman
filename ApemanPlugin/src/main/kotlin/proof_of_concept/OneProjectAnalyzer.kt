@@ -1,6 +1,7 @@
 package proof_of_concept
 
 import apeman_core.Launcher
+import apeman_core.methodsToScope
 import apeman_core.pipes.CandidatesWithFeaturesAndProba
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
@@ -48,7 +49,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         val methods = oracleEntries.map { it.method!!}.distinct()
 
         log.info("launch apeman")
-        val launcher = Launcher(project!!, scope!!)
+        val launcher = Launcher(project!!, analysisScope = methodsToScope(methods), analysisMethods = methods)
         apemanCandidates.addAll(launcher.getCandidatesWithProba())
     }
 }
