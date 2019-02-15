@@ -14,7 +14,6 @@ import kotlin.streams.toList
 class OneProjectAnalyzer(private val dirOfProject: String) {
     private val log = Logger.getLogger("OneProjectAnalyzer")
     private var project: Project? = null
-    private var scope: AnalysisScope? = null
     private val apemanCandidates = arrayListOf<CandidatesWithFeaturesAndProba>()
     private val oracleEntries = arrayListOf<OracleEntry>()
 
@@ -23,6 +22,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         loadProject()
         parseOracleFile()
         launchApemanOnNeededMethods()
+        calculateResults()
     }
 
     private fun loadProject() {
@@ -51,5 +51,26 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         log.info("launch apeman")
         val launcher = Launcher(project!!, analysisScope = methodsToScope(methods), analysisMethods = methods)
         apemanCandidates.addAll(launcher.getCandidatesWithProba())
+    }
+
+    private fun calculateResults() {
+        assert(apemanCandidates.isNotEmpty())
+        assert(oracleEntries.isNotEmpty())
+
+        val apemanSet = apemanCandidates.map { it.toString() }.toSet()
+        val oracleSet = oracleEntries.map{ it.candidate.toString() }.toSet()
+
+        val truePositives = apemanSet.intersect(oracleSet)
+
+        val precision = truePositives.size.toDouble() / apemanSet.size
+        val recall = truePositives.size.toDouble() / oracleSet.size
+        val fMeasure = 2 * precision * recall / (precision + recall)
+
+        log.info("oracle = ${oracleSet.size},\n" +
+                "apeman = ${apemanSet.size},\n" +
+                "precision = $precision,\n" +
+                "recall = $recall,\n" +
+                "f-measure = $fMeasure"
+        )
     }
 }

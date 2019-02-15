@@ -4,7 +4,6 @@ import apeman_core.scopeToTopMethods
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaRecursiveElementVisitor
-import com.intellij.psi.PsiLambdaExpression
 import com.intellij.psi.PsiMethod
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.util.logging.Logger
