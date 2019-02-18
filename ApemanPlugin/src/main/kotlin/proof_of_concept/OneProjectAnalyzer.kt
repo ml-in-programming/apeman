@@ -3,7 +3,6 @@ package proof_of_concept
 import apeman_core.Launcher
 import apeman_core.methodsToScope
 import apeman_core.pipes.CandidatesWithFeaturesAndProba
-import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import java.nio.file.Files
@@ -17,12 +16,12 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
     private val apemanCandidates = arrayListOf<CandidatesWithFeaturesAndProba>()
     private val oracleEntries = arrayListOf<OracleEntry>()
 
-    fun analyze() {
+    fun analyze(): List<Results> {
         log.info("analyze project")
         loadProject()
         parseOracleFile()
         launchApemanOnNeededMethods()
-        calculateResults()
+        return calculateResults()
     }
 
     private fun loadProject() {
@@ -46,31 +45,57 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
 
     private fun launchApemanOnNeededMethods() {
         log.info("create scope")
-        val methods = oracleEntries.map { it.method!!}.distinct()
+        val methods = oracleEntries.map { it.method!! }.distinct()
 
         log.info("launch apeman")
         val launcher = Launcher(project!!, analysisScope = methodsToScope(methods), analysisMethods = methods)
         apemanCandidates.addAll(launcher.getCandidatesWithProba())
     }
 
-    private fun calculateResults() {
+    private fun calculateResults(): List<Results> {
         assert(apemanCandidates.isNotEmpty())
         assert(oracleEntries.isNotEmpty())
 
-        val apemanSet = apemanCandidates.map { it.toString() }.toSet()
-        val oracleSet = oracleEntries.map{ it.candidate.toString() }.toSet()
+        val listOfResults = mutableListOf<Results>()
+        val apemanSet = apemanCandidates.toSet()
+        val oracleSet = oracleEntries.toSet()
 
-        val truePositives = apemanSet.intersect(oracleSet)
+        for (tolerance in 1..3) {
+            val truePositives = calculateTruePositivesForTolerance(tolerance)
 
-        val precision = truePositives.size.toDouble() / apemanSet.size
-        val recall = truePositives.size.toDouble() / oracleSet.size
-        val fMeasure = 2 * precision * recall / (precision + recall)
+            val precision = truePositives.toDouble() / apemanSet.size
+            val recall = truePositives.toDouble() / oracleSet.size
+            val results = Results(tolerance, apemanSet.size, oracleSet.size, precision, recall)
 
-        log.info("oracle = ${oracleSet.size},\n" +
-                "apeman = ${apemanSet.size},\n" +
-                "precision = $precision,\n" +
-                "recall = $recall,\n" +
-                "f-measure = $fMeasure"
-        )
+            log.info("oracle = ${oracleSet.size},\n" +
+                    "apeman = ${apemanSet.size},\n" +
+                    "precision = $precision,\n" +
+                    "recall = $recall,\n" +
+                    "f-measuapemanCanre = ${results.fMeasure}"
+            )
+            listOfResults.add(results)
+        }
+        return listOfResults
+    }
+
+    private fun calculateTruePositivesForTolerance(tolerance: Int): Int {
+        var truePositives = 0
+
+        for (oracleCand in oracleEntries) {
+            val candSameMethod = apemanCandidates.filter { (cand, _, _) ->
+                cand.sourceMethod == oracleCand.method
+            }
+            val oracleLines = oracleCand.candidate.toString()
+
+            val isThereSameCand = candSameMethod.any { (cand, _, _) ->
+                cand.toString()
+                        .split("\n")
+                        .filterNot { line -> oracleLines.contains(line) }
+                        .count() <= 2 * tolerance
+            }
+            if (isThereSameCand)
+                truePositives++
+        }
+        return truePositives
     }
 }

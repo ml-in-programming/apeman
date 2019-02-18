@@ -39,7 +39,6 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-
 patchPluginXml {
     changeNotes """
       Add change notes here.<br>
@@ -54,10 +53,3 @@ gradle.taskGraph.whenReady { graph ->
         runIde.jvmArgs '-Djava.awt.headless=true', '-Xmx2048m'
     }
 }
-
-
-//
-//task runProofOfConcept(type: JavaExec) {
-//    classpath sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath
-//    main = "proof_of_concept.ProofOfConceptLauncher"
-//}
