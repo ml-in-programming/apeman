@@ -1,15 +1,14 @@
 package proof_of_concept
 
 import com.intellij.analysis.AnalysisScope
+import com.intellij.openapi.fileTypes.StdFileTypes
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
-import com.intellij.psi.impl.PsiSubstitutorImpl
 import com.intellij.util.io.isFile
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.logging.Level
 import java.util.logging.Logger
 
 class OracleParser(
@@ -27,6 +26,7 @@ class OracleParser(
         val oraclePath = Paths.get(oraclePathStr)
 
         assert(oraclePath.isFile())
+
         Files.lines(oraclePath).forEach {
             parseLine(it)
         }
@@ -43,45 +43,60 @@ class OracleParser(
         val args = line.split("\t").map { it.trim() }
         val methodName = "${args[0]}\t${args[1]}"
 
-        val e = args[2].split(":")
-        val startOffset = e[0].drop(1).toInt()
-        val lengthOffset = e[1].dropLast(1).toInt()
+        val startOffsets = arrayListOf<Int>()
+        val lengths = arrayListOf<Int>()
 
-        entries.add(OracleEntry(methodName, startOffset, lengthOffset))
+        for (methodRange in args[2].split(';')) {
+            if (methodRange.isNotBlank()) {
+                val e = methodRange.split(":")
+                val startOffset = e[0].drop(1).toInt()
+                val lengthOffset = e[1].dropLast(1).toInt()
+                startOffsets.add(startOffset)
+                lengths.add(lengthOffset)
+            }
+        }
+
+        entries.add(OracleEntry(methodName, startOffsets, lengths))
     }
 
     private fun findAllMethods() {
         assert(entries.isNotEmpty())
 
-        val methodsStr = entries.map { it.methodName }
+        val methodsStr = entries.mapIndexed { i, entry -> i to entry.methodName }
 
         scope.accept(object : JavaRecursiveElementVisitor() {
             override fun visitMethod(method: PsiMethod?) {
                 super.visitMethod(method)
-                if (method == null)
+                if (method == null || method.containingFile.fileType != StdFileTypes.JAVA)
                     return
 
                 val methodName = getMethodSignature(method)
                 val className = method.containingClass!!.qualifiedName ?: ""
-                val ind = methodsStr.indexOf("$className\t$methodName")
-                if (ind != -1) {
-                    assert(entries[ind].method == null)
-                    entries[ind].method = method
-                }
+                val indices = methodsStr
+                        .filter { (_, entry) -> entry == "$className\t$methodName" }
+                        .forEach { (i, _) ->
+                            assert(entries[i].method == null)
+                            log.info(i.toString())
+                            entries[i].method = method
+                        }
             }
         })
         assert(entries.all { it.method != null })
+        entries.forEach {
+            log.info("${it.methodName}, ${it.method!!.containingFile}")
+            val doc = PsiDocumentManager.getInstance(project).getDocument(it.method!!.containingFile)
+            it.startOffsets.zip(it.lengthOffsets).forEach { (start, length) ->
+                log.info(doc!!.getText(TextRange(start, start + length)))
+            }
+            log.info("\n\n\n")
+        }
     }
 
     private fun getMethodSignature(method: PsiMethod): String {
         val methodName = method.name
-
-        val modifiersString = method.modifierList.children
-                .filter { it is PsiKeyword }
-                .map{ it.text }
-                .joinToString(separator = " ")
-
+        val modifiersString = method.modifierList.text.split("\n").last { it.isNotBlank() }.trim()
         val returnType = method.returnType?.canonicalText ?: ""
+
         val parametersStr = method.parameterList.parameters
                 .joinToString { it.type.canonicalText }
 

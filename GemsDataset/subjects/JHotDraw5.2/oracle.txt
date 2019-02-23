@@ -1,7 +1,7 @@
 CH.ifa.draw.util.StorableOutput	public void writeStorable(CH.ifa.draw.util.Storable) 	e1044:114;
 CH.ifa.draw.util.StandardStorageFormat	public java.lang.String store(java.lang.String, CH.ifa.draw.framework.Drawing) throws java.io.IOException	e4536:130;
 CH.ifa.draw.util.Iconkit	public java.awt.Image getImage(java.lang.String) 	e3959:89;
-CH.ifa.draw.util.Geom	public static java.awt.Point angleToPoint(java.awt.Rectangle, double) 	e3632:134;
+CH.ifa.draw.util.Geom	static public java.awt.Point angleToPoint(java.awt.Rectangle, double) 	e3632:134;
 CH.ifa.draw.standard.StandardDrawingView	public void setDrawing(CH.ifa.draw.framework.Drawing) 	e4631:453;
 CH.ifa.draw.standard.StandardDrawingView	public CH.ifa.draw.framework.Handle findHandle(int, int) 	e10344:437;
 CH.ifa.draw.standard.StandardDrawingView	protected java.awt.Point constrainPoint(java.awt.Point) 	e11889:254;
@@ -10,7 +10,7 @@ CH.ifa.draw.standard.FigureChangeEventMulticaster	protected java.util.EventListe
 CH.ifa.draw.standard.ConnectionTool	public void mouseDrag(java.awt.event.MouseEvent, int, int) 	e3351:593;
 CH.ifa.draw.standard.CompositeFigure	public CH.ifa.draw.framework.Figure findFigureWithout(int, int, CH.ifa.draw.framework.Figure) 	e6679:209;
 CH.ifa.draw.standard.CompositeFigure	public CH.ifa.draw.framework.Figure findFigure(java.awt.Rectangle, CH.ifa.draw.framework.Figure) 	e7517:245;
-CH.ifa.draw.standard.BoxHandleKit	public static void addHandles(CH.ifa.draw.framework.Figure, Vector#RAW) 	e955:144;
+CH.ifa.draw.standard.BoxHandleKit	static public void addHandles(CH.ifa.draw.framework.Figure, java.util.Vector) 	e955:144;
 CH.ifa.draw.samples.pert.PertFigure	public void update(CH.ifa.draw.framework.FigureChangeEvent) 	e6118:116;
 CH.ifa.draw.samples.pert.PertFigure	public void updateDurations() 	e6862:128;
 CH.ifa.draw.samples.pert.PertFigure	public void write(CH.ifa.draw.util.StorableOutput) 	e7654:155;

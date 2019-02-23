@@ -10,10 +10,15 @@ class ProofOfConceptLauncher : ApplicationStarter {
 
     override fun main(args: Array<String>) {
 
+//        val subjectDir = "/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/subjects/"
         val subjectDir = "/home/snyss/Prog/mm/diploma/gems_datasets/subjects/"
+//        val junit = OneProjectAnalyzer(subjectDir + "junit3.8")
+//        junit.analyze()
+//
+//        val jHotDraw = OneProjectAnalyzer(subjectDir + "JHotDraw5.2")
+//        jHotDraw.analyze()
 
-        val junit = OneProjectAnalyzer(subjectDir + "junit3.8")
-        junit.analyze()
-
+        val myWebMarker = OneProjectAnalyzer(subjectDir + "MyWebMarket")
+        myWebMarker.analyze()
     }
 }

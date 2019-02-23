@@ -71,7 +71,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
                     "apeman = ${apemanSet.size},\n" +
                     "precision = $precision,\n" +
                     "recall = $recall,\n" +
-                    "f-measuapemanCanre = ${results.fMeasure}"
+                    "f-measure = ${results.fMeasure}"
             )
             listOfResults.add(results)
         }
