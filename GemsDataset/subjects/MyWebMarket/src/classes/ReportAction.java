@@ -74,7 +74,7 @@ public class ReportAction extends ExampleSupport {
 		parameters.put( "ReportTitle", "List of Products" ); //f:jr
 		parameters.put( "DataFile", new Date().toString() ); //f:jr
 
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 
 		Criteria criteria = sess.createCriteria( Product.class ); //f:hibernate
@@ -86,7 +86,7 @@ public class ReportAction extends ExampleSupport {
 		List<Object[]> l = (List<Object[]>) criteria.list(); //f:hibernate
 
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close(); /*}*/
 
 		HibernateQueryResultDataSource ds = new HibernateQueryResultDataSource(l, new String[] { "Id", "Name", "Price" }); //f:jr
 
@@ -113,7 +113,7 @@ public class ReportAction extends ExampleSupport {
 		parameters.put( "ReportTitle", "List of Customers" ); //f:jr
 		parameters.put( "DataFile", new Date().toString() ); //f:jr
 
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 
 		Criteria criteria = sess.createCriteria( Customer.class ); //f:hibernate
@@ -125,7 +125,7 @@ public class ReportAction extends ExampleSupport {
 		List<Object[]> l = (List<Object[]>) criteria.list(); //f:hibernate
 
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close(); /*}*/
 
 		HibernateQueryResultDataSource ds = new HibernateQueryResultDataSource(l, new String[] { "Id", "Name", "Phone" }); //f:jr
 

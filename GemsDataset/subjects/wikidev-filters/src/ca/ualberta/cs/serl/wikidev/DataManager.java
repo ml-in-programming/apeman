@@ -252,7 +252,7 @@ public class DataManager {
 		IArtifact artifact = null;
 		res = statement.executeQuery(sqlStmt);
 		while (res.next()) {
-			if (anArtifact.getType().equals("ChangeSet")) {
+			/*{*/if (anArtifact.getType().equals("ChangeSet")) {
 				artifact = new ChangeSet(res.getInt("id"), res
 						.getString("comment"), res
 						.getString("externalauthor"), res
@@ -272,10 +272,10 @@ public class DataManager {
             	artifact = new Message(res.getString("address"), res.getString("author"), res.getString("body"), res.getInt("id"),
 						res.getInt("deleted"), res.getString("mid_header"), 
 						res.getInt("project_id"),  res.getString("subject"), res.getTimestamp("date"), res.getString("user_name"), res.getString("refid_header"));;
-            }
+            }/*}*/
 		}
 		if(res !=null) res.close();
-			if (artifact instanceof ChangeSet) {
+		/*{*/if (artifact instanceof ChangeSet) {
 				ChangeSet changeSet = (ChangeSet)artifact;
 				changeSet.setOwner(getUserByUserName(changeSet.getExternalAuthorUserName()));
 				changeSet.setProject(project);
@@ -287,31 +287,31 @@ public class DataManager {
 				changeSet.setType("ChangeSet");
 				project.addChangeset(changeSet);
 			} else if (artifact instanceof Ticket) {
-				Ticket ticket = (Ticket)artifact;
+			/*{*/Ticket ticket = (Ticket)artifact;
 				ticket.setOwner(getUserByUserName(ticket.getOwnerName()));
 				ticket.setReporter(getUserByUserName(ticket.getReporterName()));
 				ticket.setTicketChanges(getTicketChangesByTicketID(ticket
 						.getTicketID()));
 				ticket.setProject(project);
 				ticket.setType("Ticket");
-				project.addTicket(ticket);
+				project.addTicket(ticket);/*}*/
 			} else if (artifact instanceof Message) {
-				Message communication = (Message)artifact;
+			/*{*/Message communication = (Message)artifact;
 				User user = getUserByUserName(communication
 						.getUser_name());
 				communication.setOwner(user);
 				user.setUserRealName(communication.getAuthor());
 				communication.setProject(project);
 				communication.setType("Message");
-				project.addMessage(communication);
+				project.addMessage(communication);/*}*/
 			}
 			else if(artifact instanceof Wiki) {
-	        	Wiki wiki = (Wiki)artifact;
+			/*{*/Wiki wiki = (Wiki)artifact;
 	        	wiki.setRevisions(getRevisionsByWikiID(wiki.getPage_id()));
 	        	wiki.setProject(DataManager.getProjectByName(getProjectNamespaceByNamespaceID(wiki.getPage_namespace_id())));
 	        	wiki.setProjectID(wiki.getProject().getProjectID());
-	        	wiki.setType("Wiki");
-	        }
+	        	wiki.setType("Wiki");/*}*/
+	        }/*}*/
 		return artifact;
     }
     

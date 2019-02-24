@@ -97,7 +97,7 @@ public class RelationshipMiner {
 
 	public void getRelationships() throws SQLException {
 		ArrayList<String> buffers = new ArrayList<String>();
-		for(IArtifact artifact : artifacts) {
+		/*{*/for(IArtifact artifact : artifacts) {
 			
 			if(artifact instanceof Ticket) {
 				TextParser parser = new TextParser();
@@ -134,9 +134,9 @@ public class RelationshipMiner {
 					documents.add(new Document(parser.getWords(), wiki.toString()));
 					wiki.setDocument(new Document(parser.getWords(), wiki.toString()));
 			}
-		}
-		
-		for(IArtifact artifact : artifacts) {
+		}/*}*/
+
+		/*{*/for(IArtifact artifact : artifacts) {
 			
 			if(artifact instanceof Ticket) {
 				TextParser parser = new TextParser(documents);
@@ -168,9 +168,9 @@ public class RelationshipMiner {
 					parser.parseTextInWords(text.toLowerCase());
 					wiki.getDocument().setTfidf(parser.calculateTFIDF());
 			}
-		}
-		
-		for(IArtifact artifact : artifacts) {
+		}/*}*/
+
+		/*{*/for(IArtifact artifact : artifacts) {
 			System.out.println("Relationships: "+artifact.toString());
 			
 			sourceArtifact = artifact;
@@ -223,7 +223,7 @@ public class RelationshipMiner {
 					buffers.add(text.toLowerCase());
 					mineRelationshipsFromText();
 			}
-		}
+		}/*}*/
 		//saveResults(buffers, project.toString());
 		//System.out.println("done");
 	}
@@ -292,7 +292,7 @@ public class RelationshipMiner {
 		String comment = changeset.getComment();
 		String ticketid = "";
 		String pattern = "[0-9]";
-		for(int i=0;i<comment.length(); i++) {
+		/*{*/for(int i=0;i<comment.length(); i++) {
 			if(comment.charAt(i) == '#') {
 				int j=i+1;
 				String ch = comment.substring(j, j+1);
@@ -309,7 +309,7 @@ public class RelationshipMiner {
 				ids.add(ticketid);
 				ticketid = "";
 			}
-		}
+		}/*}*/
 		for (String ticket_id : ids) {
 			if (!ticket_id.equals("")) {
 				int id = Integer.parseInt(ticket_id);

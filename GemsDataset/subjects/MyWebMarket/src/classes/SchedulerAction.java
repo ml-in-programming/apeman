@@ -53,14 +53,14 @@ public class SchedulerAction extends ExampleSupport {
 	@Override
 	public String input() throws Exception {
 		logger.info( "Starting input()" ); //f:log
-		SchedulerFactory sf = new StdSchedulerFactory(); //f:quartz
+		/*{*/SchedulerFactory sf = new StdSchedulerFactory(); //f:quartz
 		Scheduler sc = sf.getScheduler(); //f:quartz
 
 		JobDetail job = sc.getJobDetail( JobKey.jobKey( "supplyMailJob", "group" ) ); //f:quartz
 
 		if ( job != null ) { //f:quartz
 			this.timeInterval = job.getJobDataMap().getIntValue( "timeInterval" ); //f:quartz
-		} //f:quartz
+		} /*}*/
 
 		logger.info( "Finishing input()" ); //f:log
 		return super.input();
@@ -69,7 +69,7 @@ public class SchedulerAction extends ExampleSupport {
 	public String schedule() throws Exception {
 		logger.info( "Starting schedule()" ); //f:log
 
-		SchedulerFactory sf = new StdSchedulerFactory(); //f:quartz
+		/*{*/SchedulerFactory sf = new StdSchedulerFactory(); //f:quartz
 		Scheduler sc = sf.getScheduler(); //f:quartz
 
 		JobDetail job = sc.getJobDetail( JobKey.jobKey( "supplyMailJob", "group" ) ); //f:quartz
@@ -84,7 +84,7 @@ public class SchedulerAction extends ExampleSupport {
 		Trigger trigger = newTrigger().withIdentity( "supplyMailTrigger", "group" ).startNow().withSchedule( CronScheduleBuilder.cronSchedule( "0 0/"
 				+ (this.timeInterval * 60) + " * * * ?" ) ).build(); //f:quartz
 
-		sc.scheduleJob( job, trigger ); //f:quartz
+		sc.scheduleJob( job, trigger ); /*}*/
 
 		logger.info( "Finishing schedule()" ); //f:log
 		return INPUT;

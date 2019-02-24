@@ -87,7 +87,7 @@ public class ProductAction extends ExampleSupport implements RequestAware,
 
 	public String find() throws Exception {
 		logger.info( "Starting find()" ); //f:log
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 
 		Criteria criteria = sess.createCriteria( Product.class ); //f:hibernate
@@ -98,10 +98,10 @@ public class ProductAction extends ExampleSupport implements RequestAware,
 		} //f:hibernate
 
 		@SuppressWarnings("unchecked")
-		List<Product> l = (List<Product>) criteria.list(); //f:hibernate
+		List<Product> l = (List<Product>) criteria.list(); /*}*/
 		request.put( "list", l );
-		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		/*{*/t.commit(); //f:hibernate
+		sess.close(); /*}*/
 		
 		this.task = SystemConstants.CR_MODE;
 		logger.info( "Finishing find()" ); //f:log
@@ -110,13 +110,13 @@ public class ProductAction extends ExampleSupport implements RequestAware,
 
 	public String save() throws Exception {
 		logger.info( "Starting save()" ); //f:log
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 		
 		sess.save( this.product ); //f:hibernate
 		
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close(); /*}*/
 
 		this.task = SystemConstants.UD_MODE;
 		this.addActionMessage( this.getText( "saveSuccessful", new String[]{"product"})  );
@@ -127,13 +127,13 @@ public class ProductAction extends ExampleSupport implements RequestAware,
 
 	public String update() throws Exception {
 		logger.info( "Starting update()" ); //f:log
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 		
 		sess.update( this.product ); //f:hibernate
 		
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close();/*}*/
 
 		this.task = SystemConstants.UD_MODE;
 		this.addActionMessage( this.getText( "updateSuccessful", new String[]{"product"})  );
@@ -144,13 +144,13 @@ public class ProductAction extends ExampleSupport implements RequestAware,
 
 	public String delete() throws Exception {
 		logger.info( "Starting delete()" ); //f:log
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 		
 		sess.delete( this.product ); //f:hibernate
 		
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close(); /*}*/
 
 		this.task = SystemConstants.CR_MODE;
 		this.addActionMessage( this.getText( "deleteSuccessful", new String[]{"product"})  );
@@ -163,15 +163,15 @@ public class ProductAction extends ExampleSupport implements RequestAware,
 		logger.info( "Starting edit()" ); //f:log
 		Integer id = Integer.valueOf( this.parameters.get( "id" )[0] );
 
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 
-		Product p = (Product) sess.get( Product.class, id ); //f:hibernate
+		Product p = (Product) sess.get( Product.class, id ); /*}*/
 
 		this.setProduct( p );
 
-		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		/*{*/t.commit(); //f:hibernate
+		sess.close(); /*}*/
 		
 		this.task = SystemConstants.UD_MODE;
 		logger.info( "Finishing edit()" ); //f:log

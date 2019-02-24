@@ -85,21 +85,21 @@ public class PurchaseOrderAction extends ExampleSupport implements
 
 		this.purchaseOrder = null;
 
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
-		Transaction t = sess.beginTransaction(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		Transaction t = sess.beginTransaction(); /*}*/
 
-		Criteria criteria = sess.createCriteria( Customer.class ); //f:hibernate
+		/*{*/Criteria criteria = sess.createCriteria( Customer.class ); //f:hibernate
 		@SuppressWarnings("unchecked")
-		List<Customer> lc = (List<Customer>) criteria.list(); //f:hibernate
+		List<Customer> lc = (List<Customer>) criteria.list(); /*}*/
 		ActionContext.getContext().getSession().put( "listCustomer", lc );
 
-		criteria = sess.createCriteria( Product.class ); //f:hibernate
+		/*{*/criteria = sess.createCriteria( Product.class ); //f:hibernate
 		@SuppressWarnings("unchecked")
-		List<Product> lp = (List<Product>) criteria.list(); //f:hibernate
-		ActionContext.getContext().getSession().put( "listProduct", lp ); 
+		List<Product> lp = (List<Product>) criteria.list(); /*}*/
+		ActionContext.getContext().getSession().put( "listProduct", lp );
 
-		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		/*{*/t.commit(); //f:hibernate
+		sess.close(); /*}*/
 
 		logger.info( "Finishing input()" ); //f:log
 		return INPUT;
@@ -107,7 +107,7 @@ public class PurchaseOrderAction extends ExampleSupport implements
 
 	public String find() throws Exception {
 		logger.info( "Starting find()" ); //f:log
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 
 		Criteria criteria = sess.createCriteria( PurchaseOrder.class ); //f:hibernate
@@ -123,10 +123,10 @@ public class PurchaseOrderAction extends ExampleSupport implements
 
 		criteria.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY ); //f:hibernate
 		@SuppressWarnings("unchecked")
-		List<PurchaseOrder> l = (List<PurchaseOrder>) criteria.list(); //f:hibernate
+		List<PurchaseOrder> l = (List<PurchaseOrder>) criteria.list(); /*}*/
 		request.put( "list", l );
-		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		/*{*/t.commit(); //f:hibernate
+		sess.close(); /*}*/
 
 		this.task = SystemConstants.CR_MODE;
 		logger.info( "Finishing input()" ); //f:log
@@ -135,19 +135,19 @@ public class PurchaseOrderAction extends ExampleSupport implements
 
 	public String save() throws Exception {
 		logger.info( "Starting save()" ); //f:log
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
-		Transaction t = sess.beginTransaction(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		Transaction t = sess.beginTransaction(); /*}*/
 
 		this.purchaseOrder.setOrderDate( new Date() ); 
 
 		for (PurchaseOrderItem item : this.purchaseOrder.getPurchaseOrderItems()) {  
 			item.setPurchaseOrder( this.purchaseOrder );
 		}
-		
-		sess.save( this.purchaseOrder ); //f:hibernate
+
+		/*{*/sess.save( this.purchaseOrder ); //f:hibernate
 
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close();/*}*/
 
 		this.task = SystemConstants.UD_MODE;
 		this.addActionMessage( this.getText( "saveSuccessful", new String[] { "order" } ) );
@@ -158,17 +158,17 @@ public class PurchaseOrderAction extends ExampleSupport implements
 
 	public String update() throws Exception {
 		logger.info( "Starting update()" ); //f:log
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
-		Transaction t = sess.beginTransaction(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		Transaction t = sess.beginTransaction(); /*}*/
 
 		for (PurchaseOrderItem item : this.purchaseOrder.getPurchaseOrderItems()){
 			item.setPurchaseOrder( this.purchaseOrder );
 		}
-		
-		sess.update( this.purchaseOrder ); //f:hibernate
+
+		/*{*/sess.update( this.purchaseOrder ); //f:hibernate
 
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close();/*}*/
 
 		this.task = SystemConstants.UD_MODE;
 		this.addActionMessage( this.getText( "updateSuccessful", new String[] { "order" } ) );
@@ -179,13 +179,13 @@ public class PurchaseOrderAction extends ExampleSupport implements
 
 	public String delete() throws Exception {
 		logger.info( "Starting delete()" ); //f:log
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 
 		sess.delete( this.purchaseOrder ); //f:hibernate
 
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close(); /*}*/
 
 		this.task = SystemConstants.CR_MODE;
 		this.addActionMessage( this.getText( "deleteSuccessful", new String[] { "order" } ) );
@@ -197,15 +197,15 @@ public class PurchaseOrderAction extends ExampleSupport implements
 		logger.info( "Starting edit()" ); //f:log
 		Integer id = Integer.valueOf( this.parameters.get( "id" )[0] );
 
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 
-		PurchaseOrder po = (PurchaseOrder) sess.get( PurchaseOrder.class, id ); //f:hibernate
+		PurchaseOrder po = (PurchaseOrder) sess.get( PurchaseOrder.class, id ); /*}*/
 
 		this.setPurchaseOrder( po );
 
-		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		/*{*/t.commit(); //f:hibernate
+		sess.close(); /*}*/
 
 		this.task = SystemConstants.UD_MODE;
 		logger.info( "Finishing edit()" ); //f:log

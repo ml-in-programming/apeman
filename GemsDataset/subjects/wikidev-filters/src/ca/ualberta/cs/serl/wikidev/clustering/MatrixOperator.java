@@ -22,10 +22,10 @@ public class MatrixOperator {
 	private static double[][] adjacencyMatrix;
 
 	public static double[] getFiedlerVector(double[][] A) {
-        //D - degree matrix
+        /*{*/ //D - degree matrix
         double[][] D = new double[A.length][A[0].length];
         //L - Laplacian matrix
-        double[][] L = new double[A.length][A[0].length];
+        double[][] L = new double[A.length][A[0].length]; /*}*/
 
         //sumRow is row matrix, each column i in sumRow contains
         //the sum value of column i in the adjacency matrix
@@ -44,9 +44,9 @@ public class MatrixOperator {
         //eigenvector matrix
         Matrix eigenVectors = LEigenDec.getV();
 
-        //keys are the Eigen values sorted in ascending order 
+		/*{*/ //keys are the Eigen values sorted in ascending order
         //values are the corresponding positions in eigenValues matrix
-        TreeMap<Double,Integer> sortedEigenValues = new TreeMap<Double,Integer>();
+        TreeMap<Double,Integer> sortedEigenValues = new TreeMap<Double,Integer>(); /*}*/
 
         for(int i = 0; i <eigenValues.getColumnDimension(); i++) {
             //\E1\EB\EB\DC\E6\EF\F5\EC\E5 \F0\F1\FC\F3\E7\EC\EF \F3\F4\E9\F2 \E1\F1\ED\E7\F4\E9\EA\DD\F2 \F4\E9\EC\DD\F2
@@ -59,7 +59,7 @@ public class MatrixOperator {
             sortedEigenValues.put(value,i);
         }
 
-        Set<Double> keySet = sortedEigenValues.keySet();
+		/*{*/Set<Double> keySet = sortedEigenValues.keySet();
         Iterator<Double> keyIt = keySet.iterator();
         int minIndex = 0;
         double threshold = 0.00001;
@@ -69,13 +69,13 @@ public class MatrixOperator {
                 minIndex = sortedEigenValues.get(key);
                 break;
             }
-        }
-        double[][] eigenVectors2=new double[eigenVectors.getRowDimension()][eigenVectors.getColumnDimension()];
+        }/*}*/
+		/*{*/double[][] eigenVectors2=new double[eigenVectors.getRowDimension()][eigenVectors.getColumnDimension()];
         for(int i=0;i<eigenVectors.getRowDimension();i++) {
         	for(int j=0;j<eigenVectors.getColumnDimension();j++) {
         		eigenVectors2[i][j] = eigenVectors.get(i,j);
         	}
-        }
+        }/*}*/
         return DoubleArray.getColumnCopy(eigenVectors2,minIndex);
     }
 	
@@ -266,7 +266,7 @@ public class MatrixOperator {
 	}
 
 	public static TreeMap<Integer, ArrayList<Integer>> getConnectedComponents() {
-	       int[] component = new int[adjacencyMatrix.length];
+		/*{*/int[] component = new int[adjacencyMatrix.length];
 	       int cn = 0;
 
 	       for(int i=0; i<component.length; i++) {
@@ -274,7 +274,7 @@ public class MatrixOperator {
 	               cn++;
 	               dfs(component,i,cn);
 	           }
-	       }
+	       }/*}*/
 
 	       TreeMap<Integer, ArrayList<Integer>> map = new TreeMap<Integer, ArrayList<Integer>>();
 	       for(int i=0; i<component.length; i++) {

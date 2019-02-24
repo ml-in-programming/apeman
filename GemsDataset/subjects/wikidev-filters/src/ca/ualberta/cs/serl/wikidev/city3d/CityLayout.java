@@ -208,7 +208,7 @@ public class CityLayout extends Layout {
 		out.newLine();
 		for (CityBlock block : blocks) {
 			for (IArtifact artifact : block.getArtifacts().keySet()) {
-				String type = ""+index+"\t";
+				/*{*/String type = ""+index+"\t";
 				int height = 0;
 				String line = "";
 				if (artifact instanceof Ticket) {
@@ -229,7 +229,7 @@ public class CityLayout extends Layout {
 				+ block.getArtifacts().get(artifact)+"\t"+height+"\t";
 				for(User user : artifact.getAssociatedUsers()) {
 					line += "<"+user.getUserName()+", "+user.getColor().getRed()+", "+user.getColor().getGreen()+", "+user.getColor().getBlue()+"> \t";
-				}
+				}/*}*/
 				out.write(line);
 				out.newLine();
 				index++;

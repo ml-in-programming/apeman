@@ -30,7 +30,7 @@ public class SupplyMailJob implements Job {
 			throws JobExecutionException {
 		logger.info( "Starting execute() in job" ); //f:log
 
-		org.hibernate.Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/org.hibernate.Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 
 		Criteria criteria = sess.createCriteria( Product.class ); //f:hibernate
@@ -39,13 +39,13 @@ public class SupplyMailJob implements Job {
 		@SuppressWarnings("unchecked")
 		List<Product> l = (List<Product>) criteria.list(); //f:hibernate
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close(); /*}*/
 
 		if ( !l.isEmpty() ) {
 			StringBuilder str = new StringBuilder();
 			str.append( "The following products are getting over:\n" );
 
-			Properties props = new Properties(); //f:mail
+			/*{*/Properties props = new Properties(); //f:mail
 			props.setProperty( "mail.smtp.submitter", "terra" ); //f:mail
 			props.setProperty( "mail.smtp.auth", "false" ); //f:mail
 			props.setProperty( "mail.smtp.host", this.host ); //f:mail
@@ -71,7 +71,7 @@ public class SupplyMailJob implements Job {
 				Transport.send( msg ); //f:mail
 			} catch (MessagingException mex) {
 				mex.printStackTrace();
-			}
+			} /*}*/
 		}
 
 		logger.info( "Finishing execute() in job" ); //f:log

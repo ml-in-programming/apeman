@@ -23,12 +23,12 @@ public class Hierarchical extends Clustering {
 	}
 
 	public ArrayList<Cluster> clustering(ArrayList<IArtifact> artifacts) {
-		ArrayList<Cluster> clusters = new ArrayList<Cluster>();
+		/*{*/ArrayList<Cluster> clusters = new ArrayList<Cluster>();
 		for(IArtifact artifact : artifacts) {
 			Cluster cluster = new Cluster();
 			cluster.addArtifact(artifact);
 			clusters.add(cluster);
-		}
+		}/*}*/
 		while(clusters.size()>2) {
 			double minVal = 2.0;
 			int minRow = 0;
@@ -47,7 +47,7 @@ public class Hierarchical extends Clustering {
 			if(minVal >= THRESHOLD) break;
 			
 			if(minRow < minCol) {
-				clusters.get(minRow).addArtifacts(clusters.get(minCol).getArtifacts());
+				/*{*/clusters.get(minRow).addArtifacts(clusters.get(minCol).getArtifacts());
 				double[] newDistances = new double[distanceMatrix.length-1];
 				for(int i=0;i<distanceMatrix.length;i++) {
 						if (i != minCol) {
@@ -78,10 +78,10 @@ public class Hierarchical extends Clustering {
 				distanceMatrix = insertRows(distanceMatrix, minRow, newDistances);
 				distanceMatrix = deleteColumns(distanceMatrix, minRow);
 				distanceMatrix = insertColumns(distanceMatrix, minRow, newDistances);
-				clusters.remove(minCol);
+				clusters.remove(minCol);/*}*/
 			}
 			else {
-				clusters.get(minCol).addArtifacts(clusters.get(minRow).getArtifacts());
+				/*{*/clusters.get(minCol).addArtifacts(clusters.get(minRow).getArtifacts());
 				double[] newDistances = new double[distanceMatrix.length-1];
 				for(int i=0;i<distanceMatrix.length;i++) {
 					if (i != minRow) {
@@ -112,7 +112,7 @@ public class Hierarchical extends Clustering {
 				distanceMatrix = deleteColumns(distanceMatrix, minRow);
 				distanceMatrix = insertColumns(distanceMatrix, minCol, newDistances);
 				clusters.remove(minRow);
-			}
+			}/*}*/
 		}
 		return clusters;
 	}

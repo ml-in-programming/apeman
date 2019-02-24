@@ -122,7 +122,7 @@ public class Geom {
     static public double pointToAngle(Rectangle r, Point p) {
         int px = p.x - (r.x+r.width/2);
         int py = p.y - (r.y+r.height/2);
-        return Math.atan2(py*r.width, px*r.height);
+         return Math.atan2(py*r.width, px*r.height);
     }
 
     /**

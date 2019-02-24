@@ -63,7 +63,7 @@ public class ClusteringMain {
 					ArrayList<Cluster> clusters = clustering
 							.clustering(newArtifacts);
 					if (clusters != null) {
-						ArrayList<Cluster> finalClusters = new ArrayList<Cluster>();
+						/*{*/ArrayList<Cluster> finalClusters = new ArrayList<Cluster>();
 						for (Cluster cluster : clusters) {
 							if (cluster.getArtifacts().size() > 1) {
 								if (!totalClusters.contains(cluster)) {
@@ -71,7 +71,7 @@ public class ClusteringMain {
 									totalClusters.add(cluster);
 								}
 							}
-						}
+						}/*}*/
 						if (distanceMatrix.length > 0 && !finalClusters.isEmpty()) {
 							MultidimensionalScaling mds = new MultidimensionalScaling(
 									distanceMatrix);
@@ -82,7 +82,7 @@ public class ClusteringMain {
 						}
 						int index = 1;
 						int clustered = 0;
-						for (Cluster cluster : finalClusters) {
+						/*{*/for (Cluster cluster : finalClusters) {
 							for(IArtifact artifact : cluster.getArtifacts()) {
 								int j = newArtifacts.indexOf(artifact);
 								cluster.addCoordinate(artifact, new ClusterPoint(coords[j][0], coords[j][1]));
@@ -98,7 +98,7 @@ public class ClusteringMain {
 							index++;
 							//System.out.println("Writing cluster");
 							DataManager.writeCluster(cluster);
-						}
+						}/*}*/
 						DataManager.writeClusterPerProject(project,clustered, newArtifacts.size(), previousWeek.toString() ,nextWeek.toString(), window, threshold);
 						//printClusters(finalClusters, week+threshold);
 					}

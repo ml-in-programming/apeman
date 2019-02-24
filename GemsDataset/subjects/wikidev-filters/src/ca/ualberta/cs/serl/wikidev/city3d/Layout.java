@@ -31,7 +31,7 @@ public class Layout {
 	public static final String URLprefix = "http://hypatia.cs.ualberta.ca/ucosp/index.php/";
 
 	protected void getLayout(ArrayList<IArtifact> newArtifacts, double[][] distanceMatrix) throws IOException {
-		double[][] coords = null;
+		/*{*/double[][] coords = null;
 		if (distanceMatrix.length > 0) {
 			MultidimensionalScaling mds = new MultidimensionalScaling(
 					distanceMatrix);
@@ -39,7 +39,7 @@ public class Layout {
 			SammonsProjection sammon = new SammonsProjection(mdsCoords, 2, 1000);
 			sammon.CreateMapping();
 			coords = sammon.getProjection();
-		}
+		}/*}*/
 		for (int i = 0; i < newArtifacts.size(); i++) {
 			newArtifacts.get(i).setCoords(coords[i]);
 		}
@@ -70,14 +70,14 @@ public class Layout {
 		}
 		System.out.println(")");
 
-		double rangeX = Math.ceil(maxX - minX);
+		/*{*/double rangeX = Math.ceil(maxX - minX);
 		double rangeY = Math.ceil(maxY - minY);
 		double range = 0;
 		if (rangeX > rangeY) {
 			range = rangeX;
 		} else {
 			range = rangeY;
-		}
+		}/*}*/
 		double blocks = Math.ceil(Math
 				.sqrt(Math.ceil(newArtifacts.size() / 16))) + 2;
 
@@ -94,7 +94,7 @@ public class Layout {
 	private void cityBlockInitialization(ArrayList<IArtifact> newArtifacts,
 			double[][] coords, double minX, double minY, double range,
 			double blocks) {
-		this.cityBlocks = new ArrayList<CityBlock>();
+		/*{*/this.cityBlocks = new ArrayList<CityBlock>();
 		for (int i = 0; i < blocks; i++) {
 			for (int j = 0; j < blocks; j++) {
 				double[] center = { minX + i * (range / 16) + (range / 16) / 2,
@@ -103,7 +103,7 @@ public class Layout {
 				cityblock.setCenter(center);
 				cityBlocks.add(cityblock);
 			}
-		}
+		}/*}*/
 		double r = range / blocks;
 		for (int i = 0; i < newArtifacts.size(); i++) {
 			assignArtifactToCityBlock(newArtifacts.get(i), coords[i][0],
@@ -121,15 +121,15 @@ public class Layout {
 				double blockMinY = minY + block.getIndex().y * (range / 16);
 				double blockMaxY = minY + (block.getIndex().y + 1)
 						* (range / 16);
-				double rX = Math.ceil(blockMaxX - blockMinX);
+				/*{*/double rX = Math.ceil(blockMaxX - blockMinX);
 				double rY = Math.ceil(blockMaxY - blockMinY);
 				double blockR = 0;
 				if (rX > rY) {
 					blockR = rX;
 				} else {
 					blockR = rY;
-				}
-				double[][] subblockCenters = new double[16][3];
+				}/*}*/
+				/*{*/double[][] subblockCenters = new double[16][3];
 				for (int i = 0; i < 4; i++) {
 					for (int j = 0; j < 4; j++) {
 						double[] subCenter = {
@@ -137,7 +137,7 @@ public class Layout {
 								blockMinY + j * blockR + blockR / 2, 0 };
 						subblockCenters[j + i * 4] = subCenter;
 					}
-				}
+				}/*}*/
 				redistributeArtifactsInBlock(block, subblockCenters);
 			}
 		}

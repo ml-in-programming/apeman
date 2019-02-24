@@ -43,7 +43,7 @@ public class LoginAction extends ExampleSupport {
 
 	public String execute() throws Exception {
 		logger.info( "Starting execute()" ); //f:log
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 
 		Criteria criteria = sess.createCriteria( User.class ); //f:hibernate
@@ -54,7 +54,7 @@ public class LoginAction extends ExampleSupport {
 		User user = (User) criteria.uniqueResult(); //f:hibernate
 
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close(); /*}*/
 
 		if ( user != null ) {
 			ActionContext.getContext().getSession().put( SystemConstants.AUTHENTICATED_USER, user );

@@ -56,7 +56,7 @@ public class Assert {
 	 * Asserts that two objects are equal. If they are not
 	 * an AssertionFailedError is thrown with the given message.
 	 */
-	static public void assertEquals1(String message, Object expected, Object actual) {
+	static public void assertEquals(String message, Object expected, Object actual) {
 		if (expected == null && actual == null)
 			return;
 		if (expected != null && expected.equals(actual))
@@ -94,7 +94,7 @@ public class Assert {
 	 * an AssertionFailedError is thrown with the given message.  If the expected
 	 * value is infinity then the delta value is ignored.
 	 */
-	static public void assertEquals2(String message, double expected, double actual, double delta) {
+	static public void assertEquals(String message, double expected, double actual, double delta) {
 		// handle infinity specially since subtracting to infinite values gives NaN and the
 		// the following test fails
 		if (Double.isInfinite(expected)) {
@@ -119,7 +119,7 @@ public class Assert {
 	 * an AssertionFailedError is thrown with the given message.  If the expected
 	 * value is infinity then the delta value is ignored.
 	 */
-	static public void assertEquals3(String message, float expected, float actual, float delta) {
+	static public void assertEquals(String message, float expected, float actual, float delta) {
  		// handle infinity specially since subtracting to infinite values gives NaN and the
 		// the following test fails
 		if (Float.isInfinite(expected)) {

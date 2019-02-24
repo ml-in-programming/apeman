@@ -12,7 +12,7 @@ public class PurchaseOrderAjax {
 	
 	public Double getProductPrice(Integer idProduct){
 		logger.info( "Starting getProductPrice()" ); //f:log
-		Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
+		/*{*/Session sess = HibernateUtil.getSessionFactory().openSession(); //f:hibernate
 		Transaction t = sess.beginTransaction(); //f:hibernate
 
 		Criteria criteria = sess.createCriteria( Product.class ); //f:hibernate
@@ -25,7 +25,7 @@ public class PurchaseOrderAjax {
 		Double price = (Double) criteria.uniqueResult(); //f:hibernate
 		
 		t.commit(); //f:hibernate
-		sess.close(); //f:hibernate
+		sess.close(); /*}*/
 		logger.info( "Finishing getProductPrice()" ); //f:log
 		return price;
 	}
