@@ -20,7 +20,11 @@ class ProofOfConceptLauncher : ApplicationStarter {
 
 //        val myWebMarker = OneProjectAnalyzer(subjectDir + "MyWebMarket")
 //        myWebMarker.analyze()
-        val wikidevFilters = OneProjectAnalyzer(subjectDir + "wikidev-filters")
-        wikidevFilters.analyze()
+
+//        val wikidevFilters = OneProjectAnalyzer(subjectDir + "wikidev-filters")
+//        wikidevFilters.analyze()
+
+        val myPlanner = OneProjectAnalyzer(subjectDir + "myplanner-data-src")
+        myPlanner.analyze()
     }
 }

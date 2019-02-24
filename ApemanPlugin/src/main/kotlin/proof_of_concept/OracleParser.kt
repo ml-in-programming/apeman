@@ -70,9 +70,11 @@ class OracleParser(
                 super.visitMethod(method)
                 if (method == null || method.containingFile.fileType != StdFileTypes.JAVA)
                     return
+                if (method.containingClass?.isInterface != false)
+                    return
 
+                val className = method.containingClass?.qualifiedName ?: ""
                 val methodName = getMethodSignature(method)
-                val className = method.containingClass!!.qualifiedName ?: ""
                 val indices = methodsStr
                         .filter { (_, entry) -> entry == "$className\t$methodName" }
                         .forEach { (i, _) ->

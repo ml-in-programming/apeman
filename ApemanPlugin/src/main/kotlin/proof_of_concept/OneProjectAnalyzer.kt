@@ -19,7 +19,10 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
     fun analyze(): List<Results> {
         log.info("analyze project")
         loadProject()
-        parseOracleFile()
+
+        val parser = OracleParser(dirOfProject, project!!)
+        oracleEntries.addAll(parser.parseOracle())
+
         launchApemanOnNeededMethods()
         return calculateResults()
     }
@@ -36,11 +39,6 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         log.info("open project")
 
         project = ProjectManager.getInstance().loadAndOpenProject(dirOfProject)!!
-    }
-
-    private fun parseOracleFile() {
-        val parser = OracleParser(dirOfProject, project!!)
-        oracleEntries.addAll(parser.parseOracle())
     }
 
     private fun launchApemanOnNeededMethods() {
