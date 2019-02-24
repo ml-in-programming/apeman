@@ -1,0 +1,4 @@
+gr.uom.csse.ai.myplanner.data.Domain	public Object clone()	e0:0;
+gr.uom.csse.ai.myplanner.data.TaskManager	public static gr.uom.csse.ai.myplanner.data.Task[] getPeriodicPartsOf(gr.uom.csse.ai.myplanner.data.Task, gr.uom.csse.ai.myplanner.data.Task[])	e0:0;
+gr.uom.csse.ai.myplanner.data.TaskManager	public Object clone()	e0:0;
+gr.uom.csse.ai.myplanner.data.TaskManager	public static gr.uom.csse.ai.myplanner.data.Task[] sortTasks(gr.uom.csse.ai.myplanner.data.Task[])	e0:0;
