@@ -9,6 +9,7 @@ import com.intellij.util.io.isFile
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
 import java.util.logging.Logger
 
 class OracleParser(
@@ -50,7 +51,7 @@ class OracleParser(
             if (methodRange.isNotBlank()) {
                 val e = methodRange.split(":")
                 val startOffset = e[0].drop(1).toInt()
-                val lengthOffset = e[1].dropLast(1).toInt()
+                val lengthOffset = e[1].toInt()
                 startOffsets.add(startOffset)
                 lengths.add(lengthOffset)
             }
@@ -115,8 +116,8 @@ class OracleParser(
 
                 private var currentCodeBlock: PsiCodeBlock? = null
                 private var currentMethod: PsiMethod? = null
-                private var startOffset: Int? = null
-                private var endOffset: Int? = null
+                private var startOffset = Stack<Int>()
+                private var endOffset = Stack<Int>()
                 private var nestingDepth = 0
 
                 override fun visitMethod(method: PsiMethod?) {
@@ -150,17 +151,17 @@ class OracleParser(
                         assert(currentCodeBlock != null)
                         assert(currentMethod != null)
 
-                        startOffset = comment.textRange.startOffset
+                        startOffset.push(comment.textRange.startOffset)
                         log.info("e$startOffset")
                     }
 
                     if (comment.text!! == "/*}*/") {
                         assert(currentCodeBlock != null)
                         assert(currentMethod != null)
-                        assert(startOffset != null)
+                        assert(startOffset.isNotEmpty())
 
-                        endOffset = comment.textRange.endOffset
-                        val candRange = TextRange(startOffset!!, endOffset!!)
+                        endOffset.push(comment.textRange.endOffset)
+                        val candRange = TextRange(startOffset.pop(), endOffset.pop())
                         log.info(":" + candRange.length)
 
                         val candStatements = currentCodeBlock!!.statements
@@ -169,7 +170,6 @@ class OracleParser(
                         log.info(cand.toString())
 
                         entries.find { it.method == currentMethod!! }!!.candidate = cand
-                        startOffset = null
                     }
                 }
             })
