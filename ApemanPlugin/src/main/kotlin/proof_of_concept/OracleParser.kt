@@ -79,25 +79,25 @@ class OracleParser(
                         .filter { (_, entry) -> entry == "$className\t$methodName" }
                         .forEach { (i, _) ->
                             assert(entries[i].method == null)
-                            log.info(i.toString())
+//                            log.info(i.toString())
                             entries[i].method = method
                         }
             }
         })
         assert(entries.all { it.method != null })
-        entries.forEach {
-            log.info("${it.methodName}, ${it.method!!.containingFile}")
-            val doc = PsiDocumentManager.getInstance(project).getDocument(it.method!!.containingFile)
-            it.startOffsets.zip(it.lengthOffsets).forEach { (start, length) ->
-                log.info(doc!!.getText(TextRange(start, start + length)))
-            }
-            log.info("\n\n\n")
-        }
+//        entries.forEach {
+//            log.info("${it.methodName}, ${it.method!!.containingFile}")
+//            val doc = PsiDocumentManager.getInstance(project).getDocument(it.method!!.containingFile)
+//            it.startOffsets.zip(it.lengthOffsets).forEach { (start, length) ->
+//                log.info(doc!!.getText(TextRange(start, start + length)))
+//            }
+//            log.info("\n\n\n")
+//        }
     }
 
     private fun getMethodSignature(method: PsiMethod): String {
         val methodName = method.name
-        val modifiersString = method.modifierList.text.split("\n").last { it.isNotBlank() }.trim()
+        val modifiersString = method.modifierList.text.split("\n").lastOrNull { it.isNotBlank() }?.trim() ?: ""
         val returnType = method.returnType?.canonicalText ?: ""
 
         val parametersStr = method.parameterList.parameters
@@ -154,7 +154,7 @@ class OracleParser(
                         assert(currentMethod != null)
 
                         startOffset.push(comment.textRange.startOffset)
-                        log.info("e$startOffset")
+//                        log.info("e$startOffset")
                     }
 
                     if (comment.text!! == "/*}*/") {
@@ -164,12 +164,12 @@ class OracleParser(
 
                         endOffset.push(comment.textRange.endOffset)
                         val candRange = TextRange(startOffset.pop(), endOffset.pop())
-                        log.info(":" + candRange.length)
+//                        log.info(":" + candRange.length)
 
                         val candStatements = currentCodeBlock!!.statements
                                 .filter { candRange.contains(it.textRange) }
                         val cand = ExtractionCandidate(candStatements.toTypedArray(), currentMethod!!)
-                        log.info(cand.toString())
+//                        log.info(cand.toString())
 
                         entries.find { it.method == currentMethod!! }!!.candidate = cand
                     }
