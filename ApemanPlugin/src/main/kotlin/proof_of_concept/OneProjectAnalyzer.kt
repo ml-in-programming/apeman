@@ -61,9 +61,9 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         for (tolerance in 1..3) {
             val truePositives = calculateTruePositivesForTolerance(tolerance)
 
-            val precision = truePositives.toDouble() / apemanSet.size
-            val recall = truePositives.toDouble() / oracleSet.size
-            val results = Results(tolerance, apemanSet.size, oracleSet.size, precision, recall)
+            val precision = truePositives.count().toDouble() / apemanSet.size
+            val recall = truePositives.count().toDouble() / oracleSet.size
+            val results = Results(tolerance, apemanSet.size, oracleSet.size, precision, recall, oracleEntries.map { it.candidate!! }, truePositives)
 
             log.info("oracle = ${oracleSet.size},\n" +
                     "apeman = ${apemanSet.size},\n" +
@@ -76,23 +76,27 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         return listOfResults
     }
 
-    private fun calculateTruePositivesForTolerance(tolerance: Int): Int {
-        var truePositives = 0
+    private fun calculateTruePositivesForTolerance(tolerance: Int): List<CandidatesWithFeaturesAndProba> {
+        val truePositives = arrayListOf<CandidatesWithFeaturesAndProba>()
 
         for (oracleCand in oracleEntries) {
             val candSameMethod = apemanCandidates.filter { (cand, _, _) ->
                 cand.sourceMethod == oracleCand.method
             }
-            val oracleLines = oracleCand.candidate.toString()
+            val oracleLines = oracleCand.candidate.toString().split("\n")
 
-            val isThereSameCand = candSameMethod.any { (cand, _, _) ->
-                cand.toString()
+            val sameCand = candSameMethod.firstOrNull { (cand, _, _) ->
+                val (same, notSame) = cand.toString()
                         .split("\n")
-                        .filterNot { line -> oracleLines.contains(line) }
-                        .count() <= 2 * tolerance
+                        .partition { line -> oracleLines.contains(line) }
+                val maxDiff = 2 * tolerance
+                return@firstOrNull notSame.count() <= maxDiff && same.count() > oracleLines.count() - maxDiff
+
             }
-            if (isThereSameCand)
-                truePositives++
+            if (sameCand != null) {
+                truePositives.add(sameCand)
+
+            }
         }
         return truePositives
     }
