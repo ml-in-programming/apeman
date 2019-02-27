@@ -7,7 +7,11 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.logging.Logger
+import java.sql.Date
+import java.sql.Time
+import java.time.LocalDateTime
+import java.util.*
+import java.util.logging.*
 import kotlin.streams.toList
 
 class OneProjectAnalyzer(private val dirOfProject: String) {
@@ -17,9 +21,12 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
     private val oracleEntries = arrayListOf<OracleEntry>()
 
     fun analyze(): List<Results> {
-        log.info("analyze project")
-        loadProject()
+        val fileHandler = FileHandler("./logs_" + LocalDateTime.now() + ".txt")
+        log.addHandler(fileHandler)
+        log.level = Level.ALL
 
+        log.fine("analyze project")
+        loadProject()
         val parser = OracleParser(dirOfProject, project!!)
         oracleEntries.addAll(parser.parseOracle())
 
@@ -30,22 +37,22 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
     private fun loadProject() {
 
         val dirpath = Paths.get(dirOfProject)
-        log.info("path: ${dirpath.toUri()}")
+        log.fine("path: ${dirpath.toUri()}")
 
         assert(Files.isDirectory(dirpath))
         val listOfFiles = Files.list(dirpath).toList()
         assert(listOfFiles.joinToString(" ").contains("oracle.txt"))
 
-        log.info("open project")
+        log.fine("open project")
 
         project = ProjectManager.getInstance().loadAndOpenProject(dirOfProject)!!
     }
 
     private fun launchApemanOnNeededMethods() {
-        log.info("create scope")
-        val methods = oracleEntries.map { it.method!! }.distinct()
+        log.fine("create scope")
+        val methods = oracleEntries.map { it.method }.distinct()
 
-        log.info("launch apeman")
+        log.fine("launch apeman")
         val launcher = Launcher(project!!, analysisScope = methodsToScope(methods), analysisMethods = methods)
         apemanCandidates.addAll(launcher.getCandidatesWithProba())
     }
@@ -63,9 +70,9 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
 
             val precision = truePositives.count().toDouble() / apemanSet.size
             val recall = truePositives.count().toDouble() / oracleSet.size
-            val results = Results(tolerance, apemanSet.size, oracleSet.size, precision, recall, oracleEntries.map { it.candidate!! }, truePositives)
+            val results = Results(tolerance, apemanSet.size, oracleSet.size, precision, recall, oracleEntries.map { it.candidate }, truePositives)
 
-            log.info("oracle = ${oracleSet.size},\n" +
+            log.info("tolerance = $tolerance,\noracle = ${oracleSet.size},\n" +
                     "apeman = ${apemanSet.size},\n" +
                     "precision = $precision,\n" +
                     "recall = $recall,\n" +
