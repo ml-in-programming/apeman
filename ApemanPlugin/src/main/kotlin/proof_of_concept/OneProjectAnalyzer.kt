@@ -21,7 +21,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
     private val oracleEntries = arrayListOf<OracleEntry>()
 
     fun analyze(): List<Results> {
-        val fileHandler = FileHandler("./logs_" + LocalDateTime.now() + ".txt")
+        val fileHandler = FileHandler("/home/snyss/Prog/mm/diploma/main/logs_" + LocalDateTime.now() + ".txt")
         log.addHandler(fileHandler)
         log.level = Level.ALL
 
