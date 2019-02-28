@@ -25,9 +25,9 @@ class MaxFrom2Metric(
             resultsCandidate: MetricsResult,
             resultsMethod: MetricsResult
     ): Double {
-        val candStr = candidate.toString()
-        val res1 = resultsCandidate.getValueForMetric(metric, candStr)!!
-        val res2 = resultsCandidate.getValueForMetric(metric2, candStr)!!
+        val candId = candidate.id
+        val res1 = resultsCandidate.getValueForMetric(metric, candId)!!
+        val res2 = resultsCandidate.getValueForMetric(metric2, candId)!!
 
         return Math.max(res1, res2)
     }

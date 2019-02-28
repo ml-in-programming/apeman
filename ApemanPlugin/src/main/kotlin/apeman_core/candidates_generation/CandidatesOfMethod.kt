@@ -29,13 +29,20 @@ class CandidatesOfMethod(private val sourceMethod: PsiMethod) {
     private fun generateCandidatesOfOneBlock(block: PsiCodeBlock) {
         val n = block.statementCount
         val statements = block.statements
+        var uniqueId = 0
 
         for (i in 0 until n) {
             for (j in i until n) {
 
-                val candidateBlock = ExtractionCandidate(Arrays.copyOfRange(statements, i, j + 1), sourceMethod)
-                if (isValid(candidateBlock))
+                val candidateBlock = ExtractionCandidate(
+                        Arrays.copyOfRange(statements, i, j + 1),
+                        sourceMethod,
+                        uniqueId
+                )
+                if (isValid(candidateBlock)) {
                     candidates.add(candidateBlock)
+                    uniqueId++
+                }
             }
         }
     }

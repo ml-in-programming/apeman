@@ -25,7 +25,7 @@ class Launcher(
 
     fun getCandidatesWithProba(): ArrayList<CandidatesWithFeaturesAndProba> {
 
-        log.info("scope has ${analysisScope.fileCount} files")
+        log.fine("scope has ${analysisScope.fileCount} files")
 
         if (analysisScope.fileCount == 0 && analysisMethods.isEmpty()) {
             log.info("return from scope")

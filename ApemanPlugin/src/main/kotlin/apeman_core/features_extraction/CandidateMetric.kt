@@ -14,6 +14,6 @@ class CandidateMetric(
             candidate: ExtractionCandidate,
             resultsCandidate: MetricsResult,
             resultsMethod: MetricsResult): Double {
-        return resultsCandidate.getValueForMetric(metric, candidate.toString())!!
+        return resultsCandidate.getValueForMetric(metric, candidate.id)!!
     }
 }

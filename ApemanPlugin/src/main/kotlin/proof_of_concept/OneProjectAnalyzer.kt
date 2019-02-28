@@ -12,6 +12,7 @@ import java.sql.Time
 import java.time.LocalDateTime
 import java.util.*
 import java.util.logging.*
+import java.util.logging.Formatter
 import kotlin.streams.toList
 
 class OneProjectAnalyzer(private val dirOfProject: String) {
@@ -22,6 +23,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
 
     fun analyze(): List<Results> {
         val fileHandler = FileHandler("/home/snyss/Prog/mm/diploma/main/logs_" + LocalDateTime.now() + ".txt")
+        fileHandler.formatter = SimpleFormatter()
         log.addHandler(fileHandler)
         log.level = Level.ALL
 

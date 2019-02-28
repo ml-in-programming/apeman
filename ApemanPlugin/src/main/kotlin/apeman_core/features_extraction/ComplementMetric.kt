@@ -18,10 +18,10 @@ class ComplementMetric(
     ): Double {
 
         val methodSign = MethodUtils.calculateSignature(candidate.sourceMethod)!!
-        val candStr = candidate.toString()
+        val candId = candidate.id
 
         val methodValue = resultsMethod.getValueForMetric(metric, methodSign)!!
-        val candidateValue = resultsCandidate.getValueForMetric(candidateMetric.metric, candStr)!!
+        val candidateValue = resultsCandidate.getValueForMetric(candidateMetric.metric, candId)!!
 
         return methodValue - candidateValue
     }
