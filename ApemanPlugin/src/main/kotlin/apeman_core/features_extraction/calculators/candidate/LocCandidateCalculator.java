@@ -1,11 +1,11 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.utils.BlocksUtils;
+import apeman_core.utils.CandidateUtils;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.sixrr.stockmetrics.execution.BaseMetricsCalculator;
-import com.sixrr.stockmetrics.utils.BlocksUtils;
-import com.sixrr.stockmetrics.utils.CandidateUtils;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;

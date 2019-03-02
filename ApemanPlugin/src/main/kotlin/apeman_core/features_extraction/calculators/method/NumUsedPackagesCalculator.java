@@ -3,7 +3,6 @@ package apeman_core.features_extraction.calculators.method;
 import com.intellij.psi.*;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.MethodUtils;
-import com.sixrr.stockmetrics.methodCalculators.MethodCalculator;
 
 import java.util.Arrays;
 import java.util.HashSet;

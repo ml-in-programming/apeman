@@ -1,7 +1,6 @@
 package apeman_core.features_extraction.calculators.method;
 
 import com.intellij.psi.*;
-import com.sixrr.stockmetrics.methodCalculators.NumSimpleElementCalculator;
 
 public class NumFieldAccessCalculator extends NumSimpleElementCalculator {
 

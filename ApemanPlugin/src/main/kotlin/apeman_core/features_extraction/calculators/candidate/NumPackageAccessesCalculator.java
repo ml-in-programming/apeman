@@ -1,7 +1,7 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.utils.ClassUtils;
 import com.intellij.psi.*;
-import com.sixrr.metrics.utils.ClassUtils;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;

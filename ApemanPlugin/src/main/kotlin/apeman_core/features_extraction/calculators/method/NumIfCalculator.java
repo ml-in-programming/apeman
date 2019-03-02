@@ -1,7 +1,6 @@
 package apeman_core.features_extraction.calculators.method;
 
 import com.intellij.psi.PsiIfStatement;
-import com.sixrr.stockmetrics.methodCalculators.NumSimpleElementCalculator;
 
 public class NumIfCalculator extends NumSimpleElementCalculator {
 

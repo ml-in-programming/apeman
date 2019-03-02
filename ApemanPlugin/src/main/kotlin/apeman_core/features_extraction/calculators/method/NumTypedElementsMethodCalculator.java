@@ -18,7 +18,6 @@ package apeman_core.features_extraction.calculators.method;
 
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiTypeElement;
-import com.sixrr.stockmetrics.methodCalculators.NumSimpleElementCalculator;
 
 public class NumTypedElementsMethodCalculator extends NumSimpleElementCalculator {
 

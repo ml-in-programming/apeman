@@ -19,7 +19,6 @@ package apeman_core.features_extraction.calculators.method;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
-import com.sixrr.stockmetrics.methodCalculators.NumSimpleElementCalculator;
 
 public class NumMethodCallsCalculator extends NumSimpleElementCalculator {
 

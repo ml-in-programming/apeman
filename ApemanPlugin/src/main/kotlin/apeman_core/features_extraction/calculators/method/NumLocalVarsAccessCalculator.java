@@ -2,7 +2,6 @@ package apeman_core.features_extraction.calculators.method;
 
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.sixrr.stockmetrics.methodCalculators.NumSimpleElementCalculator;
 
 public class NumLocalVarsAccessCalculator extends NumSimpleElementCalculator {
 

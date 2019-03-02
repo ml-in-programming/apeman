@@ -1,10 +1,10 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.utils.TypeUtils;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiType;
-import com.sixrr.stockmetrics.utils.TypeUtils;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;

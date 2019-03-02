@@ -1,8 +1,8 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.utils.BlocksUtils;
+import apeman_core.utils.TypeUtils;
 import com.intellij.psi.*;
-import com.sixrr.stockmetrics.utils.BlocksUtils;
-import com.sixrr.stockmetrics.utils.TypeUtils;
 import org.jetbrains.research.groups.ml_methods.utils.BlockOfMethod;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 

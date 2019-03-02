@@ -1,9 +1,8 @@
 package apeman_core.features_extraction.calculators.method;
 
+import apeman_core.utils.MethodUtils;
+import apeman_core.utils.TypeUtils;
 import com.intellij.psi.*;
-import com.sixrr.metrics.utils.MethodUtils;
-import com.sixrr.stockmetrics.methodCalculators.MethodCalculator;
-import com.sixrr.stockmetrics.utils.TypeUtils;
 
 import java.util.HashSet;
 import java.util.Set;
