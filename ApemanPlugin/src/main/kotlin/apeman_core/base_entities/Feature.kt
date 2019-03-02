@@ -1,8 +1,8 @@
-package apeman_core.pipes
+package apeman_core.base_entities
 
 import java.util.*
 
-enum class FeatureName {
+enum class FeatureType {
     NUM_LITERAL,
     NUM_CONDITIONAL,
     NUM_SWITCH,
@@ -60,5 +60,5 @@ enum class FeatureName {
 }
 
 class Features {
-    val features = EnumMap<FeatureName, Double>(FeatureName::class.java)
+    val features = EnumMap<FeatureType, Double>(FeatureType::class.java)
 }

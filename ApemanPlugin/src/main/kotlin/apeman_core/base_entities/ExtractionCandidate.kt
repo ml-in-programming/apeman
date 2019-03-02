@@ -1,4 +1,4 @@
-package apeman_core.utils
+package apeman_core.base_entities
 
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiStatement
