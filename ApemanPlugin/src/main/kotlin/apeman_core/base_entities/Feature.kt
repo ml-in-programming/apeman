@@ -16,6 +16,8 @@ enum class FeatureType {
     NUM_LOCAL,
     NUM_PACKAGE,
 
+    // there aren't CON_LOC!
+    // also CON_ASSERT
     LOC_CANDIDATE,
     LOC_RATIO,
 

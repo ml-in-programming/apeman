@@ -1,18 +1,14 @@
 package proof_of_concept
 
 import apeman_core.Launcher
-import apeman_core.methodsToScope
+import apeman_core.utils.methodsToScope
 import apeman_core.pipes.CandidatesWithFeaturesAndProba
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.sql.Date
-import java.sql.Time
 import java.time.LocalDateTime
-import java.util.*
 import java.util.logging.*
-import java.util.logging.Formatter
 import kotlin.streams.toList
 
 class OneProjectAnalyzer(private val dirOfProject: String) {

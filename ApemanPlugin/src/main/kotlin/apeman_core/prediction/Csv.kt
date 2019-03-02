@@ -79,12 +79,12 @@ fun importCsvFrom(candidates: ArrayList<CandidateWithFeatures>, featureNames: Ar
     val data = ArrayList<ArrayList<String>>()
 
     for (cand in candidates) {
-        val featuresStr = ArrayList(cand.features.map { it.value.toString() })
+        val featuresStr = ArrayList(cand.features.features.map { it.value.toString() })
         data.add(featuresStr)
     }
     val csv = Csv(featureNames, data)
     val candidateNames = ArrayList(candidates.map {it.candidate.toString()})
 
-    csv.addIndicesColumn("Names", candidateNames)
+    csv.addIndicesColumn("NAME_CANDIDATE", candidateNames)
     return csv
 }

@@ -1,4 +1,4 @@
-package apeman_core
+package apeman_core.utils
 
 import com.intellij.analysis.AnalysisScope
 import com.intellij.psi.JavaRecursiveElementVisitor
