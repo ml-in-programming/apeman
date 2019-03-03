@@ -27,8 +27,8 @@ class FeaturesForEveryCandidate(
 
     init {
         for ((_, feat) in this.candidates) {
-            for (f in FeatureType.values()) {
-                feat.features[f] = -1.0
+            for (type in FeatureType.values()) {
+                feat[type] = -1.0
             }
         }
         declareMetrics()

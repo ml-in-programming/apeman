@@ -2,15 +2,16 @@ package apeman_core.features_extraction.calculators.method;
 
 import apeman_core.base_entities.FeatureType;
 import apeman_core.pipes.CandidateWithFeatures;
+import apeman_core.utils.CandidateUtils;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.List;
 
 abstract class NumSimpleElementMethodCalculator extends MethodCalculator {
 
-    public NumSimpleElementMethodCalculator(ArrayList<CandidateWithFeatures> candidates, FeatureType neededFeature) {
+    public NumSimpleElementMethodCalculator(List<CandidateWithFeatures> candidates, FeatureType neededFeature) {
         super(candidates, neededFeature);
     }
 
@@ -33,7 +34,9 @@ abstract class NumSimpleElementMethodCalculator extends MethodCalculator {
             super.visitMethod(method);
             nestingDepth--;
             if (nestingDepth == 0) {
-             //   postMetric(method, elementsCounter);
+                for (CandidateWithFeatures cand : CandidateUtils.getCandidatesOfMethod(method, getCandidates())) {
+                    getResults().set(cand, getFirstFeature(), elementsCounter);
+                }
             }
         }
     }

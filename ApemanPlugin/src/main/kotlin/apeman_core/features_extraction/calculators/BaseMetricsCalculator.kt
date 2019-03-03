@@ -5,10 +5,17 @@ import apeman_core.pipes.CandidateWithFeatures
 import com.intellij.psi.JavaRecursiveElementVisitor
 
 abstract class BaseMetricsCalculator @JvmOverloads constructor(
-        protected val candidates: ArrayList<CandidateWithFeatures>,
+        protected val candidates: List<CandidateWithFeatures>,
         feature: FeatureType? = null,
-        features: ArrayList<FeatureType>? = null
+        features: List<FeatureType>? = null
 ) {
-    protected val features = features ?: arrayListOf(feature)
+    init {
+        assert((feature != null) xor (features != null))
+    }
+
+    protected val features = features ?: arrayListOf(feature!!)
+    protected val firstFeature= this.features[0]
+    protected val results = Results(features!!, candidates)
+
     abstract fun createVisitor(): JavaRecursiveElementVisitor
 }

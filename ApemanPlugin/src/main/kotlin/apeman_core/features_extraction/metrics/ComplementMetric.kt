@@ -1,4 +1,4 @@
-package apeman_core.features_extraction
+package apeman_core.features_extraction.metrics
 
 import com.sixrr.metrics.metricModel.MetricsResult
 import com.sixrr.metrics.utils.MethodUtils

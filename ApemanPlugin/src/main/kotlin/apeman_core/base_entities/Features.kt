@@ -61,6 +61,4 @@ enum class FeatureType {
     PACKAGE_COHESION_2
 }
 
-class Features {
-    val features = EnumMap<FeatureType, Double>(FeatureType::class.java)
-}
+typealias Features = EnumMap<FeatureType, Double>

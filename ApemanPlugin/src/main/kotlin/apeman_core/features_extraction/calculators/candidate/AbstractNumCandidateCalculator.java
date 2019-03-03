@@ -8,9 +8,9 @@ import apeman_core.utils.MethodUtils;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiStatement;
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 abstract class AbstractNumCandidateCalculator extends BaseMetricsCalculator {
 
@@ -20,8 +20,8 @@ abstract class AbstractNumCandidateCalculator extends BaseMetricsCalculator {
 
     public class CandidateVisitor extends JavaRecursiveElementVisitor {
         protected int methodNestingDepth = 0;
-        ArrayList<CandidateWithFeatures> methodCandidates;
-        ArrayList<Integer> counts = new ArrayList<>();
+        List<CandidateWithFeatures> methodCandidates;
+        List<Integer> counts = new ArrayList<>();
         boolean isInsideMethod = false;
 
         @Override
@@ -38,7 +38,7 @@ abstract class AbstractNumCandidateCalculator extends BaseMetricsCalculator {
 
             if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
                 for (int i = 0; i < methodCandidates.size(); i++) {
-//                    postMetric(methodCandidates.get(i), getCounterForCand(i));
+                    getResults().set(methodCandidates.get(i), getFirstFeature(), getCounterForCand(i));
                 }
                 getCandidates().removeAll(methodCandidates);
                 isInsideMethod = false;

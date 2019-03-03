@@ -6,6 +6,7 @@ import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.utils.BlocksUtils
 import apeman_core.utils.CandidateUtils
+import com.intellij.openapi.application.invokeAndWaitIfNeed
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiMethod
 
@@ -28,14 +29,14 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
     override fun createVisitor() = CandidateVisitor()
 
     open inner class CandidateVisitor : JavaRecursiveElementVisitor() {
-        private var methodCandidates: ArrayList<CandidateWithFeatures>? = null
+        private var methodCandidates: List<CandidateWithFeatures>? = null
 
         override fun visitMethod(method: PsiMethod) {
             super.visitMethod(method)
             methodCandidates = CandidateUtils.getCandidatesOfMethod(method, candidates)
             for (candidate in methodCandidates!!) {
                 calculateCouplingCohesion(candidate)
-                candidate.features.features[features[0]!!] = result()
+                results.set(candidate, firstFeature, result())
             }
         }
     }

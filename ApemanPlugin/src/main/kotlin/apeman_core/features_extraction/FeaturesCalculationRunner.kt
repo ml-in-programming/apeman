@@ -1,5 +1,6 @@
 package apeman_core.features_extraction
 
+import apeman_core.features_extraction.metrics.Metric
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.util.ProgressIndicatorBase
@@ -10,7 +11,6 @@ import com.sixrr.metrics.metricModel.MetricsResult
 import com.sixrr.metrics.metricModel.MetricsRunImpl
 import com.sixrr.metrics.metricModel.TimeStamp
 import com.sixrr.metrics.profile.MetricInstance
-import com.sixrr.metrics.profile.MetricInstanceImpl
 import com.sixrr.metrics.profile.MetricsProfile
 import com.sixrr.metrics.profile.MetricsProfileImpl
 

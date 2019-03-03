@@ -6,22 +6,23 @@ import com.intellij.psi.PsiStatement;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class CandidateUtils {
 
-    public static ArrayList<CandidateWithFeatures> getCandidatesOfMethod(
+    public static List<CandidateWithFeatures> getCandidatesOfMethod(
             PsiMethod method,
-            ArrayList<CandidateWithFeatures> allCandidates)
+            List<CandidateWithFeatures> allCandidates)
     {
         return allCandidates.stream()
                 .filter(elem -> elem.getCandidate().getSourceMethod().equals(method))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toList());
     }
 
     public static void checkStartOfCandidates(
             PsiStatement statement,
-            ArrayList<CandidateWithFeatures> candidates
+            List<CandidateWithFeatures> candidates
     ) {
         for (CandidateWithFeatures candidate: candidates) {
             if (candidate.getCandidate().getStart().equals(statement))
@@ -31,7 +32,7 @@ public class CandidateUtils {
 
     public static void checkEndOfCandidates(
             PsiStatement statement,
-            ArrayList<CandidateWithFeatures> candidates
+            List<CandidateWithFeatures> candidates
     ) {
         for (CandidateWithFeatures candidate: candidates) {
             if (candidate.getCandidate().getEnd().equals(statement))

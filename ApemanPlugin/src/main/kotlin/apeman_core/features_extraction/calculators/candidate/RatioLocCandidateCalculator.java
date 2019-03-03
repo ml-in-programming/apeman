@@ -11,15 +11,12 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiMethod;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RatioLocCandidateCalculator extends BaseMetricsCalculator {
 
     public RatioLocCandidateCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.LOC_RATIO);
-    }
-
-    void postMetric(ExtractionCandidate candidate, int numerator, int denominator) {
-//        resultsHolder.postCandidateMetric(metric, candidate, (double) numerator, (double) denominator);
     }
 
     @Override
@@ -32,16 +29,13 @@ public class RatioLocCandidateCalculator extends BaseMetricsCalculator {
                 if (method.getBody() == null) // abstract method or interface
                     return;
                 BlockOfMethod blockOfMethod = BlocksUtils.getBlockFromMethod(method);
-                ArrayList<CandidateWithFeatures> candidatesOfMethod =
+                List<CandidateWithFeatures> candidatesOfMethod =
                         CandidateUtils.getCandidatesOfMethod(method, getCandidates());
                 int numStatementsMethod = BlocksUtils.getNumStatementsRecursively(blockOfMethod);
 
                 for (CandidateWithFeatures cand: candidatesOfMethod) {
-                    postMetric(
-                            cand.getCandidate(),
-                            BlocksUtils.getNumStatementsRecursively(cand.getCandidate().getBlock()),
-                            numStatementsMethod
-                    );
+                    int candStatements = BlocksUtils.getNumStatementsRecursively(cand.getCandidate().getBlock());
+                    getResults().set(cand, getFirstFeature(),  candStatements / (double)numStatementsMethod);
                 }
             }
         };

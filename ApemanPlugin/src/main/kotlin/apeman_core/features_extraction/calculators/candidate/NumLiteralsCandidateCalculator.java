@@ -4,7 +4,6 @@ import apeman_core.base_entities.FeatureType;
 import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiLiteralExpression;
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;
 
