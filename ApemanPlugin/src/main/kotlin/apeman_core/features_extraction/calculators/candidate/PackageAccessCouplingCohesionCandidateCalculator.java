@@ -22,7 +22,7 @@ public class PackageAccessCouplingCohesionCandidateCalculator extends AbstractCo
     }
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public CandidateVisitor createVisitor() {
         return new PackageAccessCouplingCohesionCandidateCalculator.Visitor();
     }
 

@@ -1,13 +1,15 @@
 package apeman_core.features_extraction
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.pipes.CandidateWithFeatures
-import apeman_core.pipes.Feature
+import apeman_core.base_entities.Features
+import apeman_core.features_extraction.calculators.BaseMetricsCalculator
+import apeman_core.features_extraction.calculators.candidate.NumLiteralsCandidateCalculator
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.sixrr.metrics.metricModel.MetricsResult
 import com.sixrr.stockmetrics.candidateMetrics.*
 import com.sixrr.stockmetrics.methodMetrics.*
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 
 class FeaturesForEveryCandidate(
@@ -15,7 +17,7 @@ class FeaturesForEveryCandidate(
         private val analysisScope: AnalysisScope,
         private val candidates: ArrayList<ExtractionCandidate>
 ) {
-    private val metrics: MutableList<Metric> = arrayListOf()
+    private val metrics: MutableList<BaseMetricsCalculator> = arrayListOf()
     private var calcRunner: FeaturesCalculationRunner? = null
 
     init {
@@ -25,18 +27,19 @@ class FeaturesForEveryCandidate(
     private fun declareMetrics() {
 
         metrics.addAll(listOf(
-                CandidateMetric("Num_Literal", NumLiteralsCandidateMetric(candidates)),
-                CandidateMetric("Num_Conditional", NumTernaryOperatorsCandidateMetric(candidates)),
-                CandidateMetric("Num_Switch", NumSwitchOperatorsCandidateMetric(candidates)),
-                CandidateMetric("Num_Type_Ac", NumTypeAccessesCandidateMetric(candidates)),
-                CandidateMetric("Num_Invocation", NumInvocationsCandidateMetric(candidates)),
-                CandidateMetric("Num_If", NumIfCandidateMetric(candidates)),
-                CandidateMetric("Num_Assign", NumAssignmentsCandidateMetric(candidates)),
-                CandidateMetric("Num_Typed_Ele", NumTypedElementsCandidateMetric(candidates)),
-                CandidateMetric("Num_Var_Ac", NumVarsAccessCandidateMetric(candidates)),
-                CandidateMetric("Num_Field_Ac", NumFieldAccessesCandidateMetric(candidates)),
-                CandidateMetric("Num_local", NumLocalVarsCandidateMetric(candidates)),
-                CandidateMetric("Num_Package", NumPackagesCandidateMetric(candidates))
+                NumLiteralsCandidateCalculator()
+//                CandidateMetric("Num_Literal", NumLiteralsCandidateCalculator(candidates)),
+//                CandidateMetric("Num_Conditional", NumTernaryOperatorsCandidateMetric(candidates)),
+//                CandidateMetric("Num_Switch", NumSwitchOperatorsCandidateMetric(candidates)),
+//                CandidateMetric("Num_Type_Ac", NumTypeAccessesCandidateMetric(candidates)),
+//                CandidateMetric("Num_Invocation", NumInvocationsCandidateMetric(candidates)),
+//                CandidateMetric("Num_If", NumIfCandidateMetric(candidates)),
+//                CandidateMetric("Num_Assign", NumAssignmentsCandidateMetric(candidates)),
+//                CandidateMetric("Num_Typed_Ele", NumTypedElementsCandidateMetric(candidates)),
+//                CandidateMetric("Num_Var_Ac", NumVarsAccessCandidateMetric(candidates)),
+//                CandidateMetric("Num_Field_Ac", NumFieldAccessesCandidateMetric(candidates)),
+//                CandidateMetric("Num_local", NumLocalVarsCandidateMetric(candidates)),
+//                CandidateMetric("Num_Package", NumPackagesCandidateMetric(candidates))
         ))
 
         val namesToMetrics = metrics.map {
@@ -107,12 +110,12 @@ class FeaturesForEveryCandidate(
             cand: ExtractionCandidate,
             candResults: MetricsResult,
             methodResults: MetricsResult
-    ): List<Feature> {
+    ): List<Features> {
 
-        val featureVector = arrayListOf<Feature>()
+        val featureVector = arrayListOf<Features>()
         for (m in metrics) {
             val value = m.calculateResult(cand, candResults, methodResults)
-            featureVector.add(Feature(m.name, value))
+            featureVector.add(Features(m.name, value))
         }
         return featureVector
     }

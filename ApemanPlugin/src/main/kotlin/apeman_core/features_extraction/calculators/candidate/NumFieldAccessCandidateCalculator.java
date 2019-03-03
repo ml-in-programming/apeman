@@ -12,7 +12,7 @@ public class NumFieldAccessCandidateCalculator extends AbstractNumCandidateCalcu
     }
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new NumFieldAccessCandidateCalculator.Visitor();
     }
 

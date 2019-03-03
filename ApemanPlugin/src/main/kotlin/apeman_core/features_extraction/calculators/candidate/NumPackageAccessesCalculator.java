@@ -16,7 +16,7 @@ public class NumPackageAccessesCalculator extends AbstractNumCandidateCalculator
     }
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new NumPackageAccessesCalculator.Visitor();
     }
 

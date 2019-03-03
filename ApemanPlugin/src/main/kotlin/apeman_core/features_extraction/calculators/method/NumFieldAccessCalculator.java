@@ -5,7 +5,7 @@ import com.intellij.psi.*;
 public class NumFieldAccessCalculator extends NumSimpleElementCalculator {
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new NumFieldAccessCalculator.Visitor();
     }
 

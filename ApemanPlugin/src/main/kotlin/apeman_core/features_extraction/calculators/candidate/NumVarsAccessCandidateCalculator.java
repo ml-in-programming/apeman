@@ -13,7 +13,7 @@ public class NumVarsAccessCandidateCalculator extends AbstractNumCandidateCalcul
     }
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new NumVarsAccessCandidateCalculator.Visitor();
     }
 

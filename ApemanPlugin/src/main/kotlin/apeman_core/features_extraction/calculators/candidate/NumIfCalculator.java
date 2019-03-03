@@ -1,6 +1,6 @@
 package apeman_core.features_extraction.calculators.candidate;
 
-import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiIfStatement;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
@@ -13,7 +13,7 @@ public class NumIfCalculator extends AbstractNumCandidateCalculator {
     }
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new NumIfCalculator.Visitor();
     }
 

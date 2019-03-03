@@ -12,7 +12,7 @@ public class NumUsedTypesCalculator extends MethodCalculator {
     private Set<PsiType> typeSet = null;
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new Visitor();
     }
 
@@ -29,7 +29,7 @@ public class NumUsedTypesCalculator extends MethodCalculator {
             super.visitMethod(method);
             methodNestingDepth--;
             if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                postMetric(method, typeSet.size());
+//                postMetric(method, typeSet.size());
             }
         }
 

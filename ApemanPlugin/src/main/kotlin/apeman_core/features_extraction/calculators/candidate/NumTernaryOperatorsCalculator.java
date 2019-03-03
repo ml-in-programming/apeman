@@ -1,7 +1,7 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiConditionalExpression;
-import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class NumTernaryOperatorsCalculator extends AbstractNumCandidateCalculato
     }
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new NumTernaryOperatorsCalculator.Visitor();
     }
 

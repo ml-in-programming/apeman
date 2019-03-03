@@ -1,11 +1,11 @@
 package apeman_core.features_extraction.calculators.method;
 
+import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiAssignmentExpression;
-import com.intellij.psi.PsiElementVisitor;
 
 public class NumAssignmentsCalculator extends NumSimpleElementCalculator {
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new Visitor();
     }
 

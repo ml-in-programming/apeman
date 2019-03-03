@@ -24,7 +24,7 @@ public class TypeAccessCouplingCohesionCandidateCalculator extends AbstractCoupl
     }
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public CandidateVisitor createVisitor() {
         return new Visitor();
     }
 

@@ -1,9 +1,8 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.features_extraction.calculators.BaseMetricsCalculator;
 import com.intellij.psi.JavaRecursiveElementVisitor;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
-import com.sixrr.stockmetrics.execution.BaseMetricsCalculator;
 import com.sixrr.stockmetrics.utils.BlocksUtils;
 import com.sixrr.stockmetrics.utils.CandidateUtils;
 import org.jetbrains.research.groups.ml_methods.utils.BlockOfMethod;
@@ -20,11 +19,11 @@ public class RatioLocCandidateCalculator extends BaseMetricsCalculator {
     }
 
     void postMetric(ExtractionCandidate candidate, int numerator, int denominator) {
-        resultsHolder.postCandidateMetric(metric, candidate, (double) numerator, (double) denominator);
+//        resultsHolder.postCandidateMetric(metric, candidate, (double) numerator, (double) denominator);
     }
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new JavaRecursiveElementVisitor() {
 
             @Override

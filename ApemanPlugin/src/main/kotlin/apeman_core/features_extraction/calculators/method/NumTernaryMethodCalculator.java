@@ -1,11 +1,11 @@
 package apeman_core.features_extraction.calculators.method;
 
+import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiConditionalExpression;
-import com.intellij.psi.PsiElementVisitor;
 
 public class NumTernaryMethodCalculator extends NumSimpleElementCalculator {
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new NumTernaryMethodCalculator.Visitor();
     }
 

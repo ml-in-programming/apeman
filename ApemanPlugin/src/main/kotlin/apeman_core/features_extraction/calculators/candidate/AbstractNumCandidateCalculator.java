@@ -1,11 +1,11 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.features_extraction.calculators.BaseMetricsCalculator;
 import apeman_core.utils.CandidateUtils;
 import apeman_core.utils.MethodUtils;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiStatement;
-import com.sixrr.stockmetrics.execution.BaseMetricsCalculator;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;
@@ -16,10 +16,6 @@ abstract class AbstractNumCandidateCalculator extends BaseMetricsCalculator {
 
     public AbstractNumCandidateCalculator(ArrayList<ExtractionCandidate> candidates) {
         this.candidates = new ArrayList<>(candidates);
-    }
-
-    void postMetric(ExtractionCandidate candidate, int value) {
-        resultsHolder.postCandidateMetric(metric, candidate, (double) value);
     }
 
     public class CandidateVisitor extends JavaRecursiveElementVisitor {
@@ -42,7 +38,7 @@ abstract class AbstractNumCandidateCalculator extends BaseMetricsCalculator {
 
             if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
                 for (int i = 0; i < methodCandidates.size(); i++) {
-                    postMetric(methodCandidates.get(i), getCounterForCand(i));
+//                    postMetric(methodCandidates.get(i), getCounterForCand(i));
                 }
                 candidates.removeAll(methodCandidates);
                 isInsideMethod = false;
@@ -73,9 +69,7 @@ abstract class AbstractNumCandidateCalculator extends BaseMetricsCalculator {
         @Override
         public void visitStatement(PsiStatement statement) {
             CandidateUtils.checkStartOfCandidates(statement, methodCandidates);
-
             super.visitStatement(statement);
-
             CandidateUtils.checkEndOfCandidates(statement, methodCandidates);
         }
     }

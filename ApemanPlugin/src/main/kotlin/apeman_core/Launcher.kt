@@ -1,5 +1,6 @@
 package apeman_core
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.candidates_generation.CandidatesOfScope
 import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.features_extraction.FeaturesForEveryCandidate
@@ -9,7 +10,6 @@ import apeman_core.prediction.ModelProvider
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiMethod
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.util.logging.Logger
 
 private val log = Logger.getLogger("Launcher")

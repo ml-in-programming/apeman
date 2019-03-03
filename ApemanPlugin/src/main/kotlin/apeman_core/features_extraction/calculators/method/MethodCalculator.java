@@ -16,30 +16,30 @@
 
 package apeman_core.features_extraction.calculators.method;
 
+import apeman_core.features_extraction.calculators.BaseMetricsCalculator;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiMethod;
-import com.sixrr.stockmetrics.execution.BaseMetricsCalculator;
 
 public abstract class MethodCalculator extends BaseMetricsCalculator {
     void postMetric(PsiMethod method, int numerator, int denominator) {
-        resultsHolder.postMethodMetric(metric, method, (double) numerator, (double) denominator);
+//        resultsHolder.postMethodMetric(metric, method, (double) numerator, (double) denominator);
     }
 
-    void postMetric(PsiMethod method, int value) {
-        resultsHolder.postMethodMetric(metric, method, (double) value);
-    }
+//    void postMetric(PsiMethod method, int value) {
+//        resultsHolder.postMethodMetric(metric, method, (double) value);
+//    }
 
-    void postMetric(PsiMethod method, double value) {
-        resultsHolder.postMethodMetric(metric, method, value);
-    }
+//    void postMetric(PsiMethod method, double value) {
+//        resultsHolder.postMethodMetric(metric, method, value);
+//    }
 
     public void processMethod(final PsiMethod method) {
-        ProgressManager.getInstance().runProcess(new Runnable() {
-            @Override
-            public void run() {
-                method.accept(visitor);
-            }
-        }, new EmptyProgressIndicator());
+//        ProgressManager.getInstance().runProcess(new Runnable() {
+//            @Override
+//            public void run() {
+//                method.accept(visitor);
+//            }
+//        }, new EmptyProgressIndicator());
     }
 }

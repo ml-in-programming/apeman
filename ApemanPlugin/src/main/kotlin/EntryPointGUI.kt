@@ -17,7 +17,7 @@ class LauncherAction : BaseAnalysisAction("check1", "check2") {
         var info = ""
         for ((cand, features, proba) in sortedCandidates) {
             info += "\n\n$cand:\n proba = $proba\n\n"
-            for ((name, value) in features) {
+            for ((name, value) in features.features) {
                 info += "$name = $value\n"
             }
         }

@@ -16,14 +16,14 @@
 
 package apeman_core.features_extraction.calculators.method;
 
-import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
 
 public class NumMethodCallsCalculator extends NumSimpleElementCalculator {
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new Visitor();
     }
 

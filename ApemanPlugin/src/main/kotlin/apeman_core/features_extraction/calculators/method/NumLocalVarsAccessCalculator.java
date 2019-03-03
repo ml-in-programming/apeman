@@ -6,7 +6,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 public class NumLocalVarsAccessCalculator extends NumSimpleElementCalculator {
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new NumLocalVarsAccessCalculator.Visitor();
     }
 

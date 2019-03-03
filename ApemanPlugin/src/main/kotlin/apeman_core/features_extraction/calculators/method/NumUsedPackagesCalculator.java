@@ -14,7 +14,7 @@ public class NumUsedPackagesCalculator extends MethodCalculator {
     private Set<PsiPackage> usedPackages = null;
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new Visitor();
     }
 
@@ -36,7 +36,7 @@ public class NumUsedPackagesCalculator extends MethodCalculator {
             super.visitMethod(method);
             methodNestingDepth--;
             if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                postMetric(method, usedPackages.size());
+//                postMetric(method, usedPackages.size());
             }
         }
 

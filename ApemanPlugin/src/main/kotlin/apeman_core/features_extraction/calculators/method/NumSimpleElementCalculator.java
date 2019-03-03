@@ -1,13 +1,12 @@
 package apeman_core.features_extraction.calculators.method;
 
 import com.intellij.psi.JavaRecursiveElementVisitor;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 
 abstract class NumSimpleElementCalculator extends MethodCalculator {
 
     @Override
-    protected PsiElementVisitor createVisitor() {
+    public JavaRecursiveElementVisitor createVisitor() {
         return new Visitor();
     }
 
@@ -24,7 +23,7 @@ abstract class NumSimpleElementCalculator extends MethodCalculator {
             super.visitMethod(method);
             nestingDepth--;
             if (nestingDepth == 0) {
-                postMetric(method, elementsCounter);
+             //   postMetric(method, elementsCounter);
             }
         }
     }
