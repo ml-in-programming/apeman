@@ -3,12 +3,15 @@ package apeman_core.features_extraction.metrics
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.pipes.CandidateWithFeatures
 
-class CandidateMetric(
-        override val name: String,
-        override val metric: BaseMetricsCalculator
-): Metric(name, metric) {
+class CandidateMetric(metric: BaseMetricsCalculator
+): Metric(listOf(metric)) {
 
-    override fun calculateResult(candidate: CandidateWithFeatures) {
-        metric.features.forEach { candidate.features[it] = metric.results[it][0] }
+    override fun fetchResult(candidate: CandidateWithFeatures) {
+        assert(metrics.count() == 1)
+
+        metrics[0].results.resultForCandidate(candidate).forEach { (feat, value) ->
+            assert(candidate.features[feat] == -1.0)
+            candidate.features[feat] = value
+        }
     }
 }

@@ -1,28 +1,26 @@
 package apeman_core.features_extraction.metrics
 
-import com.sixrr.metrics.metricModel.MetricsResult
-import com.sixrr.metrics.utils.MethodUtils
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
+import apeman_core.features_extraction.calculators.BaseMetricsCalculator
+import apeman_core.pipes.CandidateWithFeatures
+import kotlin.math.abs
 
 class ComplementMetric(
-        override val name: String,
-        override val metric: com.sixrr.metrics.Metric,
-        private val candidateMetric: CandidateMetric
+        override val metrics: List<BaseMetricsCalculator>
 
-): Metric(name, metric) {
+): Metric(metrics) {
 
-    override fun calculateResult(
-            candidate: ExtractionCandidate,
-            resultsCandidate: MetricsResult,
-            resultsMethod: MetricsResult
-    ): Double {
+    override fun fetchResult(candidate: CandidateWithFeatures) {
+        assert(metrics.count() == 2)
 
-        val methodSign = MethodUtils.calculateSignature(candidate.sourceMethod)!!
-        val candId = candidate.id
+        val candResults = metrics[1].results.resultForCandidate(candidate)
+        val methodResults = metrics[0].results.resultForCandidate(candidate)
 
-        val methodValue = resultsMethod.getValueForMetric(metric, methodSign)!!
-        val candidateValue = resultsCandidate.getValueForMetric(candidateMetric.metric, candId)!!
+        methodResults.forEach { (feat, value) ->
+            assert(candidate.features[feat] == -1.0)
+            val complementFeature = feat.complementFeature()
+            val complementValue = candResults[complementFeature] ?: 0.0
 
-        return methodValue - candidateValue
+            candidate.features[feat] = abs(value - complementValue)
+        }
     }
 }

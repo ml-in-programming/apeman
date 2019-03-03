@@ -58,7 +58,28 @@ enum class FeatureType {
     PACKAGE_COUPLING,
     PACKAGE_COUPLING_2,
     PACKAGE_COHESION,
-    PACKAGE_COHESION_2
+    PACKAGE_COHESION_2;
+
+    fun complementFeature(): FeatureType? {
+        val replace = if (this.name.startsWith("NUM_"))
+            "NUM_" to "CON_"
+        else
+            "CON_" to "NUM_"
+
+        val complementName = this.name.replace(replace.first, replace.second)
+        return try {
+            FeatureType.valueOf(complementName)
+        } catch (e: IllegalArgumentException) {
+            null
+        }
+    }
+}
+
+fun couplingCohesionGroup(name: String): List<FeatureType> {
+    return FeatureType
+            .values()
+            .filter { it.name.startsWith(name) }
+            .sortedBy { it.name }
 }
 
 typealias Features = EnumMap<FeatureType, Double>

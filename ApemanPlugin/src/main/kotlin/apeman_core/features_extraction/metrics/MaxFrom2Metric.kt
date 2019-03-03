@@ -1,34 +1,25 @@
 package apeman_core.features_extraction.metrics
 
+import apeman_core.features_extraction.calculators.BaseMetricsCalculator
+import apeman_core.pipes.CandidateWithFeatures
 import com.sixrr.metrics.metricModel.MetricsResult
 import com.sixrr.metrics.profile.MetricInstance
 import com.sixrr.metrics.profile.MetricInstanceImpl
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 class MaxFrom2Metric(
-        override val name: String,
-        override val metric: com.sixrr.metrics.Metric,
-        private val metric2: com.sixrr.metrics.Metric
-): Metric(name, metric) {
+        override val metrics: List<BaseMetricsCalculator>
+): Metric(metrics) {
 
-    override fun createMetricInstance(): List<MetricInstance> {
-        return listOf(metric, metric2)
-                .map {
-                    MetricInstanceImpl(it).apply {
-                        isEnabled = true
-                    }
-                }.toList()
-    }
+    override fun fetchResult(candidate: CandidateWithFeatures) {
+        assert(metrics.count() == 2)
+        val results2 = metrics[1].results.resultForCandidate(candidate)
 
-    override fun calculateResult(
-            candidate: ExtractionCandidate,
-            resultsCandidate: MetricsResult,
-            resultsMethod: MetricsResult
-    ): Double {
-        val candId = candidate.id
-        val res1 = resultsCandidate.getValueForMetric(metric, candId)!!
-        val res2 = resultsCandidate.getValueForMetric(metric2, candId)!!
+        metrics[0].results.resultForCandidate(candidate).forEach { (feat, value) ->
+            assert(candidate.features[feat] == -1.0)
 
-        return Math.max(res1, res2)
+            val value2 = results2[feat]!!
+            candidate.features[feat] = maxOf(value, value2)
+        }
     }
 }
