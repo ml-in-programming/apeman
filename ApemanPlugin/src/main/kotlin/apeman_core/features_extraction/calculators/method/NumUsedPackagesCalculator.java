@@ -1,15 +1,19 @@
 package apeman_core.features_extraction.calculators.method;
 
+import apeman_core.base_entities.FeatureType;
+import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.*;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.MethodUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class NumUsedPackagesCalculator extends MethodCalculator {
+
+    public NumUsedPackagesCalculator(ArrayList<CandidateWithFeatures> candidates) {
+        super(candidates, FeatureType.CON_PACKAGE);
+    }
+
     private int methodNestingDepth = 0;
     private Set<PsiPackage> usedPackages = null;
 

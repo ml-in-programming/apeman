@@ -1,5 +1,7 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.base_entities.FeatureType;
+import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
@@ -8,8 +10,8 @@ import java.util.ArrayList;
 
 public class NumVarsAccessCandidateCalculator extends AbstractNumCandidateCalculator {
 
-    public NumVarsAccessCandidateCalculator(ArrayList<ExtractionCandidate> candidates) {
-        super(candidates);
+    public NumVarsAccessCandidateCalculator(ArrayList<CandidateWithFeatures> candidates) {
+        super(candidates, FeatureType.NUM_VAR_ACCESS);
     }
 
     @Override

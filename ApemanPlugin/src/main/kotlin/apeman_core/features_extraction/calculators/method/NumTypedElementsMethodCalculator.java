@@ -16,10 +16,18 @@
 
 package apeman_core.features_extraction.calculators.method;
 
+import apeman_core.base_entities.FeatureType;
+import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiTypeElement;
 
+import java.util.ArrayList;
+
 public class NumTypedElementsMethodCalculator extends NumSimpleElementCalculator {
+
+    public NumTypedElementsMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
+        super(candidates, FeatureType.CON_TYPED_ELEMENTS);
+    }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {

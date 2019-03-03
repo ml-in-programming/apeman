@@ -1,9 +1,17 @@
 package apeman_core.features_extraction.calculators.method;
 
+import apeman_core.base_entities.FeatureType;
+import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 
+import java.util.ArrayList;
+
 public class NumLocalVarsAccessCalculator extends NumSimpleElementCalculator {
+
+    public NumLocalVarsAccessCalculator(ArrayList<CandidateWithFeatures> candidates) {
+        super(candidates, FeatureType.CON_VAR_ACCESS);
+    }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {

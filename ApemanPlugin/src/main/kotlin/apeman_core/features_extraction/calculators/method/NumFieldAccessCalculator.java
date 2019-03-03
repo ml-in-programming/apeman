@@ -1,8 +1,16 @@
 package apeman_core.features_extraction.calculators.method;
 
+import apeman_core.base_entities.FeatureType;
+import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.*;
 
+import java.util.ArrayList;
+
 public class NumFieldAccessCalculator extends NumSimpleElementCalculator {
+
+    public NumFieldAccessCalculator(ArrayList<CandidateWithFeatures> candidates) {
+        super(candidates, FeatureType.CON_FIELD_ACCESS);
+    }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {

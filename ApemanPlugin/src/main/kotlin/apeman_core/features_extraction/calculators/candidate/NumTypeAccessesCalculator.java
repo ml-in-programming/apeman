@@ -1,5 +1,7 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.base_entities.FeatureType;
+import apeman_core.pipes.CandidateWithFeatures;
 import apeman_core.utils.TypeUtils;
 import com.intellij.psi.*;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
@@ -9,8 +11,8 @@ import java.util.HashSet;
 
 public class NumTypeAccessesCalculator extends AbstractNumCandidateCalculator {
 
-    public NumTypeAccessesCalculator(ArrayList<ExtractionCandidate> candidates) {
-        super(candidates);
+    public NumTypeAccessesCalculator(ArrayList<CandidateWithFeatures> candidates) {
+        super(candidates, FeatureType.NUM_TYPE_ACCESS);
     }
 
     @Override
@@ -43,7 +45,7 @@ public class NumTypeAccessesCalculator extends AbstractNumCandidateCalculator {
                 return;
 
             for (int i = 0; i < methodCandidates.size(); i++) {
-                if (methodCandidates.get(i).isInCandidate()) {
+                if (methodCandidates.get(i).getCandidate().isInCandidate()) {
                     TypeUtils.addTypesFromMethodTo(usedTypes.get(i), method);
                 }
             }
@@ -56,7 +58,7 @@ public class NumTypeAccessesCalculator extends AbstractNumCandidateCalculator {
                 return;
 
             for (int i = 0; i < methodCandidates.size(); i++) {
-                if (methodCandidates.get(i).isInCandidate()) {
+                if (methodCandidates.get(i).getCandidate().isInCandidate()) {
                     TypeUtils.tryAddTypeOfElementTo(usedTypes.get(i), element);
                 }
             }

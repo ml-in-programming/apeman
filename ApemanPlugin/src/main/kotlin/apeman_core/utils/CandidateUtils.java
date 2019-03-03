@@ -1,5 +1,6 @@
 package apeman_core.utils;
 
+import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiStatement;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
@@ -9,33 +10,32 @@ import java.util.stream.Collectors;
 
 public class CandidateUtils {
 
-    public static ArrayList<ExtractionCandidate> getCandidatesOfMethod(
+    public static ArrayList<CandidateWithFeatures> getCandidatesOfMethod(
             PsiMethod method,
-            ArrayList<ExtractionCandidate> allCandidates)
+            ArrayList<CandidateWithFeatures> allCandidates)
     {
         return allCandidates.stream()
-                .filter(elem -> elem.getSourceMethod().equals(method))
+                .filter(elem -> elem.getCandidate().getSourceMethod().equals(method))
                 .collect(Collectors.toCollection(ArrayList::new));
-
     }
 
     public static void checkStartOfCandidates(
             PsiStatement statement,
-            ArrayList<ExtractionCandidate> candidates
+            ArrayList<CandidateWithFeatures> candidates
     ) {
-        for (ExtractionCandidate candidate: candidates) {
-            if (candidate.getStart().equals(statement))
-                candidate.setInCandidate(true);
+        for (CandidateWithFeatures candidate: candidates) {
+            if (candidate.getCandidate().getStart().equals(statement))
+                candidate.getCandidate().setInCandidate(true);
         }
     }
 
     public static void checkEndOfCandidates(
             PsiStatement statement,
-            ArrayList<ExtractionCandidate> candidates
+            ArrayList<CandidateWithFeatures> candidates
     ) {
-        for (ExtractionCandidate candidate: candidates) {
-            if (candidate.getEnd().equals(statement))
-                candidate.setInCandidate(false);
+        for (CandidateWithFeatures candidate: candidates) {
+            if (candidate.getCandidate().getEnd().equals(statement))
+                candidate.getCandidate().setInCandidate(false);
         }
     }
 }

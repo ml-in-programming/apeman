@@ -1,24 +1,25 @@
 package apeman_core.features_extraction.calculators.candidate
 
+import apeman_core.base_entities.BlockOfMethod
+import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
+import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.utils.BlocksUtils
 import apeman_core.utils.CandidateUtils
 import com.intellij.psi.JavaRecursiveElementVisitor
-import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiMethod
-import org.jetbrains.annotations.Contract
-import org.jetbrains.research.groups.ml_methods.utils.BlockOfMethod
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 import java.util.ArrayList
 import java.util.HashMap
 
 open class AbstractCouplingCohesionCandidateCalculator<T>(
-        candidates: ArrayList<ExtractionCandidate>,
+        candidates: ArrayList<CandidateWithFeatures>,
+        neededFeature: FeatureType,
         private val aClass: Class<T>,
         private val isCouplingMethod: Boolean,
-        private val isFirstPlace: Boolean) : BaseMetricsCalculator() {
-
+        private val isFirstPlace: Boolean)
+    : BaseMetricsCalculator(candidates, arrayListOf(neededFeature))
+{
     private val candidates = ArrayList(candidates)
     private var coupling = 0.0
     private var cohesion = 0.0
@@ -26,7 +27,7 @@ open class AbstractCouplingCohesionCandidateCalculator<T>(
     override fun createVisitor() = CandidateVisitor()
 
     open inner class CandidateVisitor : JavaRecursiveElementVisitor() {
-        private var methodCandidates: ArrayList<ExtractionCandidate>? = null
+        private var methodCandidates: ArrayList<CandidateWithFeatures>? = null
 
         override fun visitMethod(method: PsiMethod) {
             super.visitMethod(method)
@@ -37,13 +38,13 @@ open class AbstractCouplingCohesionCandidateCalculator<T>(
         }
     }
 
-    private fun calculateCouplingCohesion(candidate: ExtractionCandidate) {
+    private fun calculateCouplingCohesion(candidate: CandidateWithFeatures) {
         coupling = 0.0
         cohesion = 0.0
 
-        val sourceMethod = candidate.sourceMethod
+        val sourceMethod = candidate.candidate.sourceMethod
         val sourceBlock = BlocksUtils.getBlockFromMethod(sourceMethod)
-        val candidateBlock = candidate.block
+        val candidateBlock = candidate.candidate.block
 
         val elements = getElementsFromBlock(candidateBlock)
         if (elements.isEmpty() || elements.size == 1 && !isFirstPlace) {

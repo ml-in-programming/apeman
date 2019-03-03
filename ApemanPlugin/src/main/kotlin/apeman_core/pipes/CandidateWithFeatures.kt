@@ -5,5 +5,5 @@ import apeman_core.base_entities.Features
 
 data class CandidateWithFeatures(
         val candidate: ExtractionCandidate,
-        val features: Features
+        val features: Features = Features()
 )

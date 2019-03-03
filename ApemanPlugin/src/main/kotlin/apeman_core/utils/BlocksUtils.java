@@ -1,7 +1,7 @@
 package apeman_core.utils;
 
+import apeman_core.base_entities.BlockOfMethod;
 import com.intellij.psi.*;
-import org.jetbrains.research.groups.ml_methods.utils.BlockOfMethod;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,10 +1,11 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.base_entities.BlockOfMethod;
+import apeman_core.base_entities.FeatureType;
+import apeman_core.pipes.CandidateWithFeatures;
 import apeman_core.utils.BlocksUtils;
 import apeman_core.utils.TypeUtils;
 import com.intellij.psi.*;
-import org.jetbrains.research.groups.ml_methods.utils.BlockOfMethod;
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,11 +17,12 @@ import java.util.Set;
 public class TypeAccessCouplingCohesionCandidateCalculator extends AbstractCouplingCohesionCandidateCalculator<PsiType> {
 
     public TypeAccessCouplingCohesionCandidateCalculator(
-            ArrayList<ExtractionCandidate> candidates,
+            ArrayList<CandidateWithFeatures> candidates,
+            FeatureType neededFeature,
             boolean isCouplingMethod,
             boolean isFirstPlace) {
 
-        super(candidates, PsiType.class, isCouplingMethod, isFirstPlace);
+        super(candidates, neededFeature, PsiType.class, isCouplingMethod, isFirstPlace);
     }
 
     @Override

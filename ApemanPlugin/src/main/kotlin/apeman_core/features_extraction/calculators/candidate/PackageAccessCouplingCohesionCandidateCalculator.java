@@ -1,10 +1,12 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.base_entities.BlockOfMethod;
+import apeman_core.base_entities.FeatureType;
+import apeman_core.pipes.CandidateWithFeatures;
 import apeman_core.utils.BlocksUtils;
 import apeman_core.utils.ClassUtils;
 import com.intellij.psi.*;
-import org.jetbrains.research.groups.ml_methods.utils.BlockOfMethod;
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,11 +16,12 @@ import java.util.Set;
 public class PackageAccessCouplingCohesionCandidateCalculator extends AbstractCouplingCohesionCandidateCalculator<PsiPackage> {
 
     public PackageAccessCouplingCohesionCandidateCalculator(
-            ArrayList<ExtractionCandidate> candidates,
+            ArrayList<CandidateWithFeatures> candidates,
+            FeatureType neededFeature,
             boolean isCouplingMethod,
             boolean isFirstPlace) {
 
-        super(candidates, PsiPackage.class, isCouplingMethod, isFirstPlace);
+        super(candidates, neededFeature, PsiPackage.class, isCouplingMethod, isFirstPlace);
     }
 
     @Override
@@ -62,7 +65,7 @@ public class PackageAccessCouplingCohesionCandidateCalculator extends AbstractCo
     private static int ourCount = 0;
 
     @Override
-    protected int getCountOfElementFromBlock(BlockOfMethod block, PsiPackage psiPackage) {
+    protected int getCountOfElementFromBlock(@NotNull BlockOfMethod block, PsiPackage psiPackage) {
         ourCount = 0;
 
         for (int i = 0; i < block.getStatementsCount(); i++) {
@@ -92,7 +95,6 @@ public class PackageAccessCouplingCohesionCandidateCalculator extends AbstractCo
         return ourCount;
     }
 
-    @Override
     protected double getFreqOfElementFromBlock(BlockOfMethod block, PsiPackage elem) {
         int count = getCountOfElementFromBlock(block, elem);
         return (double)count / BlocksUtils.getNumStatementsRecursively(block);

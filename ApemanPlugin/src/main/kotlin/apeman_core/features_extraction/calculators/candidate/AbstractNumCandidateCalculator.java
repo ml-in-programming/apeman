@@ -1,6 +1,8 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.base_entities.FeatureType;
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator;
+import apeman_core.pipes.CandidateWithFeatures;
 import apeman_core.utils.CandidateUtils;
 import apeman_core.utils.MethodUtils;
 import com.intellij.psi.JavaRecursiveElementVisitor;
@@ -12,22 +14,20 @@ import java.util.ArrayList;
 
 abstract class AbstractNumCandidateCalculator extends BaseMetricsCalculator {
 
-    private ArrayList<ExtractionCandidate> candidates;
-
-    public AbstractNumCandidateCalculator(ArrayList<ExtractionCandidate> candidates) {
-        this.candidates = new ArrayList<>(candidates);
+    public AbstractNumCandidateCalculator(ArrayList<CandidateWithFeatures> candidates, FeatureType feature) {
+        super(candidates, feature);
     }
 
     public class CandidateVisitor extends JavaRecursiveElementVisitor {
         protected int methodNestingDepth = 0;
-        ArrayList<ExtractionCandidate> methodCandidates;
+        ArrayList<CandidateWithFeatures> methodCandidates;
         ArrayList<Integer> counts = new ArrayList<>();
         boolean isInsideMethod = false;
 
         @Override
         public void visitMethod(PsiMethod method) {
             if (methodNestingDepth == 0) {
-                methodCandidates = CandidateUtils.getCandidatesOfMethod(method, candidates);
+                methodCandidates = CandidateUtils.getCandidatesOfMethod(method, getCandidates());
                 initCounters();
                 isInsideMethod = true;
             }
@@ -40,7 +40,7 @@ abstract class AbstractNumCandidateCalculator extends BaseMetricsCalculator {
                 for (int i = 0; i < methodCandidates.size(); i++) {
 //                    postMetric(methodCandidates.get(i), getCounterForCand(i));
                 }
-                candidates.removeAll(methodCandidates);
+                getCandidates().removeAll(methodCandidates);
                 isInsideMethod = false;
             }
         }
@@ -61,7 +61,7 @@ abstract class AbstractNumCandidateCalculator extends BaseMetricsCalculator {
         }
 
         protected void updateCounter(int i) {
-            if (methodCandidates.get(i).isInCandidate()) {
+            if (methodCandidates.get(i).getCandidate().isInCandidate()) {
                 counts.set(i, counts.get(i) + 1);
             }
         }

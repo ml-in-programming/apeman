@@ -1,5 +1,7 @@
 package apeman_core.features_extraction.calculators.candidate;
 
+import apeman_core.base_entities.FeatureType;
+import apeman_core.pipes.CandidateWithFeatures;
 import apeman_core.utils.ClassUtils;
 import com.intellij.psi.*;
 import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
@@ -11,8 +13,8 @@ import java.util.List;
 
 public class NumPackageAccessesCalculator extends AbstractNumCandidateCalculator {
 
-    public NumPackageAccessesCalculator(ArrayList<ExtractionCandidate> candidates) {
-        super(candidates);
+    public NumPackageAccessesCalculator(ArrayList<CandidateWithFeatures> candidates) {
+        super(candidates, FeatureType.NUM_PACKAGE);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class NumPackageAccessesCalculator extends AbstractNumCandidateCalculator
             List<PsiPackage> packages = Arrays.asList(ClassUtils.calculatePackagesRecursive(element));
 
             for (int i = 0; i < methodCandidates.size(); i++) {
-                if (methodCandidates.get(i).isInCandidate()) {
+                if (methodCandidates.get(i).getCandidate().isInCandidate()) {
                     usedPackages.get(i).addAll(packages);
                 }
             }

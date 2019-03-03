@@ -15,8 +15,9 @@ import com.sixrr.stockmetrics.methodMetrics.*
 class FeaturesForEveryCandidate(
         private val project: Project,
         private val analysisScope: AnalysisScope,
-        private val candidates: ArrayList<ExtractionCandidate>
+        candidates: ArrayList<ExtractionCandidate>
 ) {
+    private val candidates = candidates.map { CandidateWithFeatures(it) }
     private val metrics: MutableList<BaseMetricsCalculator> = arrayListOf()
     private var calcRunner: FeaturesCalculationRunner? = null
 
