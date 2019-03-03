@@ -3,6 +3,7 @@ package apeman_core.utils;
 import apeman_core.base_entities.BlockOfMethod;
 import com.intellij.psi.*;
 
+import java.lang.reflect.Array;
 import java.util.HashSet;
 import java.util.Set;
 

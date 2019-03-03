@@ -4,19 +4,18 @@ import apeman_core.base_entities.FeatureType;
 import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiConditionalExpression;
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;
 
-public class NumTernaryOperatorsCalculator extends AbstractNumCandidateCalculator {
+public class NumTernaryOperatorsCandidatesCalculator extends AbstractNumCandidateCalculator {
 
-    public NumTernaryOperatorsCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumTernaryOperatorsCandidatesCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.NUM_CONDITIONAL);
     }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {
-        return new NumTernaryOperatorsCalculator.Visitor();
+        return new NumTernaryOperatorsCandidatesCalculator.Visitor();
     }
 
     private class Visitor extends CandidateVisitor {

@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class NumUsedTypesCalculator extends MethodCalculator {
+public class NumUsedTypesMethodCalculator extends MethodCalculator {
 
-    public NumUsedTypesCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumUsedTypesMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_TYPE_ACCESS);
     }
 

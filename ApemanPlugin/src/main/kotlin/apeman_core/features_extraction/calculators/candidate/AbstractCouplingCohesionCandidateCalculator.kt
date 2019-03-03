@@ -12,17 +12,18 @@ import com.intellij.psi.PsiMethod
 import java.util.ArrayList
 import java.util.HashMap
 
-open class AbstractCouplingCohesionCandidateCalculator<T>(
+open class AbstractCouplingCohesionCandidateCalculator<T> (
         candidates: ArrayList<CandidateWithFeatures>,
         neededFeature: FeatureType,
-        private val aClass: Class<T>,
         private val isCouplingMethod: Boolean,
-        private val isFirstPlace: Boolean)
-    : BaseMetricsCalculator(candidates, arrayListOf(neededFeature))
+        private val isFirstPlace: Boolean,
+        private val aClass: Class<T>
+) : BaseMetricsCalculator(candidates, neededFeature)
 {
-    private val candidates = ArrayList(candidates)
+
     private var coupling = 0.0
     private var cohesion = 0.0
+    private fun result() = if (isCouplingMethod) coupling else cohesion
 
     override fun createVisitor() = CandidateVisitor()
 
@@ -34,6 +35,7 @@ open class AbstractCouplingCohesionCandidateCalculator<T>(
             methodCandidates = CandidateUtils.getCandidatesOfMethod(method, candidates)
             for (candidate in methodCandidates!!) {
                 calculateCouplingCohesion(candidate)
+                candidate.features.features[features[0]!!] = result()
             }
         }
     }

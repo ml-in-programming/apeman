@@ -1,41 +1,38 @@
-package apeman_core.features_extraction.calculators.candidate;
+package apeman_core.features_extraction.calculators.method;
 
 import apeman_core.base_entities.FeatureType;
 import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;
 
-public class NumInvocationsCalculator extends AbstractNumCandidateCalculator {
+public class NumInvocationMethodCalculator extends NumSimpleElementMethodCalculator {
 
-    public NumInvocationsCalculator(ArrayList<CandidateWithFeatures> candidates) {
-        super(candidates, FeatureType.NUM_INVOCATION);
+    public NumInvocationMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
+        super(candidates, FeatureType.CON_INVOCATION);
     }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {
-        return new NumInvocationsCalculator.Visitor();
+        return new Visitor();
     }
 
-    private class Visitor extends CandidateVisitor {
+    private class Visitor extends NumSimpleElementMethodCalculator.Visitor {
 
         @Override
         public void visitMethodCallExpression(PsiMethodCallExpression expression) {
             super.visitMethodCallExpression(expression);
-            if (!isInsideMethod)
-                return;
-            updateCounters();
+            elementsCounter++;
         }
 
         @Override
         public void visitNewExpression(PsiNewExpression exp) {
             super.visitNewExpression(exp);
             if (exp.getArrayDimensions().length == 0 &&
-                    exp.getArrayInitializer() == null && isInsideMethod) {
-                updateCounters();
+                    exp.getArrayInitializer() == null) {
+                elementsCounter++;
             }
         }
     }

@@ -58,9 +58,7 @@ enum class FeatureType {
     PACKAGE_COUPLING,
     PACKAGE_COUPLING_2,
     PACKAGE_COHESION,
-    PACKAGE_COHESION_2,
-
-    NONE
+    PACKAGE_COHESION_2
 }
 
 class Features {

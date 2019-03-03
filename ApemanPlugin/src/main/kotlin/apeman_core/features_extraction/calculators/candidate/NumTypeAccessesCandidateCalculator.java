@@ -4,20 +4,19 @@ import apeman_core.base_entities.FeatureType;
 import apeman_core.pipes.CandidateWithFeatures;
 import apeman_core.utils.TypeUtils;
 import com.intellij.psi.*;
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class NumTypeAccessesCalculator extends AbstractNumCandidateCalculator {
+public class NumTypeAccessesCandidateCalculator extends AbstractNumCandidateCalculator {
 
-    public NumTypeAccessesCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumTypeAccessesCandidateCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.NUM_TYPE_ACCESS);
     }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {
-        return new NumTypeAccessesCalculator.Visitor();
+        return new NumTypeAccessesCandidateCalculator.Visitor();
     }
 
     private class Visitor extends CandidateVisitor {

@@ -7,9 +7,9 @@ import com.intellij.psi.PsiLocalVariable;
 
 import java.util.ArrayList;
 
-public class NumLocalVarsCalculator extends NumSimpleElementCalculator {
+public class NumLocalVarsMethodCalculator extends NumSimpleElementMethodCalculator {
 
-    public NumLocalVarsCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumLocalVarsMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_VAR_ACCESS);
     }
 
@@ -18,7 +18,7 @@ public class NumLocalVarsCalculator extends NumSimpleElementCalculator {
         return new Visitor();
     }
 
-    private class Visitor extends NumSimpleElementCalculator.Visitor {
+    private class Visitor extends NumSimpleElementMethodCalculator.Visitor {
 
         @Override
         public void visitLocalVariable(PsiLocalVariable variable) {

@@ -22,7 +22,7 @@ public class TypeAccessCouplingCohesionCandidateCalculator extends AbstractCoupl
             boolean isCouplingMethod,
             boolean isFirstPlace) {
 
-        super(candidates, neededFeature, PsiType.class, isCouplingMethod, isFirstPlace);
+        super(candidates, neededFeature, isCouplingMethod, isFirstPlace, PsiType.class);
     }
 
     @Override

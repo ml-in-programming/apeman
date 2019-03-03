@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-abstract class NumSimpleElementCalculator extends MethodCalculator {
+abstract class NumSimpleElementMethodCalculator extends MethodCalculator {
 
-    public NumSimpleElementCalculator(ArrayList<CandidateWithFeatures> candidates, FeatureType neededFeature) {
+    public NumSimpleElementMethodCalculator(ArrayList<CandidateWithFeatures> candidates, FeatureType neededFeature) {
         super(candidates, neededFeature);
     }
 

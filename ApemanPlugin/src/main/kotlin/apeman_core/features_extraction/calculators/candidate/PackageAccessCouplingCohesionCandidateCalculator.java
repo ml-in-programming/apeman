@@ -21,7 +21,7 @@ public class PackageAccessCouplingCohesionCandidateCalculator extends AbstractCo
             boolean isCouplingMethod,
             boolean isFirstPlace) {
 
-        super(candidates, neededFeature, PsiPackage.class, isCouplingMethod, isFirstPlace);
+        super(candidates, neededFeature, isCouplingMethod, isFirstPlace, PsiPackage.class);
     }
 
     @Override

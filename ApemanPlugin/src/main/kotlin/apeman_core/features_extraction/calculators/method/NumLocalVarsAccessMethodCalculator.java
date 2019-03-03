@@ -7,18 +7,18 @@ import com.intellij.psi.util.PsiTreeUtil;
 
 import java.util.ArrayList;
 
-public class NumLocalVarsAccessCalculator extends NumSimpleElementCalculator {
+public class NumLocalVarsAccessMethodCalculator extends NumSimpleElementMethodCalculator {
 
-    public NumLocalVarsAccessCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumLocalVarsAccessMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_VAR_ACCESS);
     }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {
-        return new NumLocalVarsAccessCalculator.Visitor();
+        return new NumLocalVarsAccessMethodCalculator.Visitor();
     }
 
-    private class Visitor extends NumSimpleElementCalculator.Visitor {
+    private class Visitor extends NumSimpleElementMethodCalculator.Visitor {
         PsiMethod currentMethod = null;
 
         @Override

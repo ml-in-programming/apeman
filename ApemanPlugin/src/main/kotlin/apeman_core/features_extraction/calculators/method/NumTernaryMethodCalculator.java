@@ -7,7 +7,7 @@ import com.intellij.psi.PsiConditionalExpression;
 
 import java.util.ArrayList;
 
-public class NumTernaryMethodCalculator extends NumSimpleElementCalculator {
+public class NumTernaryMethodCalculator extends NumSimpleElementMethodCalculator {
 
     public NumTernaryMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_CONDITIONAL);
@@ -18,7 +18,7 @@ public class NumTernaryMethodCalculator extends NumSimpleElementCalculator {
         return new NumTernaryMethodCalculator.Visitor();
     }
 
-    private class Visitor extends NumSimpleElementCalculator.Visitor {
+    private class Visitor extends NumSimpleElementMethodCalculator.Visitor {
         @Override
         public void visitConditionalExpression(PsiConditionalExpression expression) {
             super.visitConditionalExpression(expression);

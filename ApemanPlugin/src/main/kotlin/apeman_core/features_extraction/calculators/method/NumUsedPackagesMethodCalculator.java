@@ -8,9 +8,9 @@ import com.sixrr.metrics.utils.MethodUtils;
 
 import java.util.*;
 
-public class NumUsedPackagesCalculator extends MethodCalculator {
+public class NumUsedPackagesMethodCalculator extends MethodCalculator {
 
-    public NumUsedPackagesCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumUsedPackagesMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_PACKAGE);
     }
 

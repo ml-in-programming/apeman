@@ -23,7 +23,7 @@ import com.intellij.psi.PsiTypeElement;
 
 import java.util.ArrayList;
 
-public class NumTypedElementsMethodCalculator extends NumSimpleElementCalculator {
+public class NumTypedElementsMethodCalculator extends NumSimpleElementMethodCalculator {
 
     public NumTypedElementsMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_TYPED_ELEMENTS);
@@ -34,7 +34,7 @@ public class NumTypedElementsMethodCalculator extends NumSimpleElementCalculator
         return new Visitor();
     }
 
-    private class Visitor extends NumSimpleElementCalculator.Visitor {
+    private class Visitor extends NumSimpleElementMethodCalculator.Visitor {
 
         @Override
         public void visitTypeElement(PsiTypeElement type) {

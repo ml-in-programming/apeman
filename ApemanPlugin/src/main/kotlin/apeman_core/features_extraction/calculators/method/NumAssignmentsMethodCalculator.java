@@ -7,9 +7,9 @@ import com.intellij.psi.PsiAssignmentExpression;
 
 import java.util.ArrayList;
 
-public class NumAssignmentsCalculator extends NumSimpleElementCalculator {
+public class NumAssignmentsMethodCalculator extends NumSimpleElementMethodCalculator {
 
-    public NumAssignmentsCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumAssignmentsMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_ASSIGN);
     }
 
@@ -18,7 +18,7 @@ public class NumAssignmentsCalculator extends NumSimpleElementCalculator {
         return new Visitor();
     }
 
-    private class Visitor extends NumSimpleElementCalculator.Visitor {
+    private class Visitor extends NumSimpleElementMethodCalculator.Visitor {
 
         @Override
         public void visitAssignmentExpression(PsiAssignmentExpression expression) {

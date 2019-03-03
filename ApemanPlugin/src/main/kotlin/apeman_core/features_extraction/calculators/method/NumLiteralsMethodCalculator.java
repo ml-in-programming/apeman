@@ -5,21 +5,20 @@ import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiLiteralExpression;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class NumLiteralsCalculator extends NumSimpleElementCalculator {
+public class NumLiteralsMethodCalculator extends NumSimpleElementMethodCalculator {
 
-    public NumLiteralsCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumLiteralsMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_LITERAL);
     }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {
-        return new NumLiteralsCalculator.Visitor();
+        return new NumLiteralsMethodCalculator.Visitor();
     }
 
-    private class Visitor extends NumSimpleElementCalculator.Visitor {
+    private class Visitor extends NumSimpleElementMethodCalculator.Visitor {
 
         @Override
         public void visitLiteralExpression(PsiLiteralExpression literal) {

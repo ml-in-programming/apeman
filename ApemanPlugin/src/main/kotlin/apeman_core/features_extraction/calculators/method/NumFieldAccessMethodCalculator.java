@@ -6,18 +6,18 @@ import com.intellij.psi.*;
 
 import java.util.ArrayList;
 
-public class NumFieldAccessCalculator extends NumSimpleElementCalculator {
+public class NumFieldAccessMethodCalculator extends NumSimpleElementMethodCalculator {
 
-    public NumFieldAccessCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumFieldAccessMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_FIELD_ACCESS);
     }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {
-        return new NumFieldAccessCalculator.Visitor();
+        return new NumFieldAccessMethodCalculator.Visitor();
     }
 
-    private class Visitor extends NumSimpleElementCalculator.Visitor {
+    private class Visitor extends NumSimpleElementMethodCalculator.Visitor {
         PsiClass currentClass = null;
 
         @Override

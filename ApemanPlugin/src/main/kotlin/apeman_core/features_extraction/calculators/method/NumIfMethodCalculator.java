@@ -6,13 +6,13 @@ import com.intellij.psi.PsiIfStatement;
 
 import java.util.ArrayList;
 
-public class NumIfCalculator extends NumSimpleElementCalculator {
+public class NumIfMethodCalculator extends NumSimpleElementMethodCalculator {
 
-    public NumIfCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumIfMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_IF);
     }
 
-    class Visitor extends NumSimpleElementCalculator.Visitor {
+    class Visitor extends NumSimpleElementMethodCalculator.Visitor {
 
         @Override
         public void visitIfStatement(PsiIfStatement statement) {

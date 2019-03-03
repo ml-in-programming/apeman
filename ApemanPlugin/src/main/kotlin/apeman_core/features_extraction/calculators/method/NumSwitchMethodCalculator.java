@@ -7,18 +7,18 @@ import com.intellij.psi.PsiSwitchStatement;
 
 import java.util.ArrayList;
 
-public class NumSwitchCalculator extends NumSimpleElementCalculator {
+public class NumSwitchMethodCalculator extends NumSimpleElementMethodCalculator {
 
-    public NumSwitchCalculator(ArrayList<CandidateWithFeatures> candidates) {
+    public NumSwitchMethodCalculator(ArrayList<CandidateWithFeatures> candidates) {
         super(candidates, FeatureType.CON_SWITCH);
     }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {
-        return new NumSwitchCalculator.Visitor();
+        return new NumSwitchMethodCalculator.Visitor();
     }
 
-    private class Visitor extends NumSimpleElementCalculator.Visitor {
+    private class Visitor extends NumSimpleElementMethodCalculator.Visitor {
 
         @Override
         public void visitSwitchStatement(PsiSwitchStatement statement) {

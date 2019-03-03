@@ -3,27 +3,26 @@ package apeman_core.features_extraction.calculators.candidate;
 import apeman_core.base_entities.FeatureType;
 import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.JavaRecursiveElementVisitor;
-import com.intellij.psi.PsiLocalVariable;
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
+import com.intellij.psi.PsiIfStatement;
 
 import java.util.ArrayList;
 
-public class NumLocalVarsCalculator extends AbstractNumCandidateCalculator {
+public class NumIfCandidateCalculator extends AbstractNumCandidateCalculator {
 
-    public NumLocalVarsCalculator(ArrayList<CandidateWithFeatures> candidates) {
-        super(candidates, FeatureType.NUM_LOCAL);
+    public NumIfCandidateCalculator(ArrayList<CandidateWithFeatures> candidates) {
+        super(candidates, FeatureType.NUM_IF);
     }
 
     @Override
     public JavaRecursiveElementVisitor createVisitor() {
-        return new NumLocalVarsCalculator.Visitor();
+        return new NumIfCandidateCalculator.Visitor();
     }
 
     private class Visitor extends CandidateVisitor {
 
         @Override
-        public void visitLocalVariable(PsiLocalVariable variable) {
-            super.visitLocalVariable(variable);
+        public void visitIfStatement(PsiIfStatement statement) {
+            super.visitIfStatement(statement);
             if (isInsideMethod) {
                 updateCounters();
             }
