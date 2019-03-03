@@ -1,6 +1,7 @@
 package apeman_core.features_extraction
 
 import apeman_core.features_extraction.metrics.Metric
+import apeman_core.pipes.CandidateWithFeatures
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.util.ProgressIndicatorBase
@@ -15,37 +16,20 @@ import com.sixrr.metrics.profile.MetricsProfile
 import com.sixrr.metrics.profile.MetricsProfileImpl
 
 class FeaturesCalculationRunner(
-        private val project: Project,
-        private val analysisScope: AnalysisScope,
-        metrics: List<Metric>
+        private val candidates: List<CandidateWithFeatures>,
+        private val metrics: List<Metric>
 ) {
-    private val PROFILE_NAME = "Gems metrics"
-    private val metricInstances = ArrayList<MetricInstance>()
-
-    var resultsForMethods: MetricsResult? = null
-    var resultsForCandidates: MetricsResult? = null
-
-    init {
-        metricInstances.addAll(
-                metrics.flatMap { it.createMetricInstance() }
-        )
-    }
 
     fun calculate() {
-
-        val metricsProfile: MetricsProfile = MetricsProfileImpl(PROFILE_NAME, metricInstances)
-        val metricsRun = MetricsRunImpl()
-        val metricsExecutionContext = MetricsExecutionContextImpl(project, analysisScope)
+        val calculators = metrics.flatMap { it.metrics }.distinct()
+        val visitors = calculators.map { it.createVisitor() }
+        val methods = candidates.map { it.candidate.sourceMethod }.distinct()
 
         ProgressManager.getInstance().runProcess({
 
-            metricsRun.profileName = metricsProfile.name
-            metricsRun.timestamp = TimeStamp()
-            metricsRun.context = analysisScope
-
-            metricsExecutionContext.calculateMetrics(metricsProfile, metricsRun)
-            resultsForMethods = metricsRun.getResultsForCategory(MetricCategory.Method)
-            resultsForCandidates = metricsRun.getResultsForCategory(MetricCategory.ExtractionCandidate)
+            for (method in methods)
+                for (visitor in visitors)
+                    method.accept(visitor)
 
         }, ProgressIndicatorBase ())
     }

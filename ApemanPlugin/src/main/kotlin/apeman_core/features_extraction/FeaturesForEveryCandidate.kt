@@ -18,11 +18,8 @@ import com.intellij.util.containers.mapSmart
 import com.sixrr.metrics.metricModel.MetricsResult
 
 
-class FeaturesForEveryCandidate(
-        private val project: Project,
-        private val analysisScope: AnalysisScope,
-        candidates: ArrayList<ExtractionCandidate>
-) {
+class FeaturesForEveryCandidate(candidates: ArrayList<ExtractionCandidate>) {
+
     private val candidates = ArrayList(candidates.map { CandidateWithFeatures(it) })
     private val metrics: MutableList<Metric> = arrayListOf()
     private var calcRunner: FeaturesCalculationRunner? = null
@@ -115,38 +112,14 @@ class FeaturesForEveryCandidate(
         assert(metrics.isNotEmpty())
         candidates.forEach { cand -> cand.features.forEach { cand.features[it.key] = -1.0 } }
 
-        calcRunner = FeaturesCalculationRunner(project, analysisScope, metrics)
+        calcRunner = FeaturesCalculationRunner(candidates, metrics)
         calcRunner!!.calculate()
 
-        assert(candidates.all { it.features.all { it.value != -1.0 } })
+        assert(candidates.all { it.features.all { it.value != -1.0 || it.key.name.startsWith("TYPE_ACCESS_") } })
     }
 
     fun getCandidatesWithFeatures(): List<CandidateWithFeatures> {
         calculate()
-        val candResults = calcRunner!!.resultsForCandidates!!
-        val methodResults = calcRunner!!.resultsForMethods!!
-        val candWithFeatures = arrayListOf<CandidateWithFeatures>()
-
-        for (cand in candidates) {
-            val featureVector = getFeatureVector(
-                    cand, candResults, methodResults
-            )
-            candWithFeatures.add(CandidateWithFeatures(cand, featureVector))
-        }
-        return candWithFeatures
-    }
-
-    private fun getFeatureVector(
-            cand: ExtractionCandidate,
-            candResults: MetricsResult,
-            methodResults: MetricsResult
-    ): List<Features> {
-
-        val featureVector = arrayListOf<Features>()
-        for (m in metrics) {
-            val value = m.calculateResult(cand, candResults, methodResults)
-            featureVector.add(Features(m.name, value))
-        }
-        return featureVector
+        return candidates
     }
 }
