@@ -3,7 +3,6 @@ package apeman_core.utils;
 import apeman_core.pipes.CandidateWithFeatures;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiStatement;
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate;
 
 import java.util.ArrayList;
 import java.util.List;

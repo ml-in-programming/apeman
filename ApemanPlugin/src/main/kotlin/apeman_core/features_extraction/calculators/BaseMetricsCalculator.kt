@@ -15,7 +15,7 @@ abstract class BaseMetricsCalculator @JvmOverloads constructor(
 
     protected val features = features ?: arrayListOf(feature!!)
     protected val firstFeature= this.features[0]
-    val results = Results(features!!, candidates)
+    val results = Results(this.features, candidates)
 
     abstract fun createVisitor(): JavaRecursiveElementVisitor
 }

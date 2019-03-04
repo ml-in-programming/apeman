@@ -46,7 +46,7 @@ class ModelProvider(
 
     private fun getColumnNames(): List<String> {
         assert(candidates.isNotEmpty())
-        return candidates[0].features.features.map { it.key.name }.toList()
+        return candidates[0].features.map { it.key.name }.toList()
     }
 
     fun predictCandidates(): List<CandidatesWithFeaturesAndProba> {

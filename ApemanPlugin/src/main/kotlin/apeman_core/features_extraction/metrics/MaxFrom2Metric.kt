@@ -2,10 +2,6 @@ package apeman_core.features_extraction.metrics
 
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.pipes.CandidateWithFeatures
-import com.sixrr.metrics.metricModel.MetricsResult
-import com.sixrr.metrics.profile.MetricInstance
-import com.sixrr.metrics.profile.MetricInstanceImpl
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 class MaxFrom2Metric(
         override val metrics: List<BaseMetricsCalculator>

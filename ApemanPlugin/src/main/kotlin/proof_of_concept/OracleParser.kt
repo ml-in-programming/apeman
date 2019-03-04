@@ -1,12 +1,11 @@
 package proof_of_concept
 
+import apeman_core.base_entities.ExtractionCandidate
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.util.io.isFile
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
-import java.io.BufferedWriter
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*

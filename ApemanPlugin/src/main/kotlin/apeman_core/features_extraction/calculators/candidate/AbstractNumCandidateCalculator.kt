@@ -1,0 +1,61 @@
+package apeman_core.features_extraction.calculators.candidate
+
+import apeman_core.base_entities.FeatureType
+import apeman_core.features_extraction.calculators.BaseMetricsCalculator
+import apeman_core.pipes.CandidateWithFeatures
+import apeman_core.utils.CandidateUtils
+import apeman_core.utils.MethodUtils
+import com.intellij.psi.JavaRecursiveElementVisitor
+import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiStatement
+
+import java.util.ArrayList
+
+abstract class AbstractNumCandidateCalculator(candidates: ArrayList<CandidateWithFeatures>, feature: FeatureType) : BaseMetricsCalculator(candidates, feature) {
+
+    open inner class CandidateVisitor : JavaRecursiveElementVisitor() {
+        var methodNestingDepth = 0
+        var methodCandidates: List<CandidateWithFeatures> = listOf()
+        var counts: MutableList<Int> = ArrayList()
+        var isInsideMethod = false
+
+        override fun visitMethod(method: PsiMethod) {
+            if (methodNestingDepth == 0) {
+                methodCandidates = CandidateUtils.getCandidatesOfMethod(method, candidates)
+                initCounters()
+                isInsideMethod = true
+            }
+
+            methodNestingDepth++
+            super.visitMethod(method)
+            methodNestingDepth--
+
+            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
+                for ((i, cand) in methodCandidates.withIndex()) {
+                    results.set(cand, firstFeature, getCounterForCand(i).toDouble())
+                }
+                isInsideMethod = false
+            }
+        }
+
+        protected open fun initCounters() {
+            counts.clear()
+            repeat(methodCandidates.size) { counts.add(0) }
+        }
+
+        protected open fun getCounterForCand(i: Int) = counts[i]
+
+        protected fun updateCounters() = methodCandidates.indices.forEach { updateCounter(it) }
+        protected fun updateCounter(i: Int) {
+            if (methodCandidates[i].candidate.isInCandidate) {
+                counts[i] = counts[i] + 1
+            }
+        }
+
+        override fun visitStatement(statement: PsiStatement) {
+            CandidateUtils.checkStartOfCandidates(statement, methodCandidates)
+            super.visitStatement(statement)
+            CandidateUtils.checkEndOfCandidates(statement, methodCandidates)
+        }
+    }
+}

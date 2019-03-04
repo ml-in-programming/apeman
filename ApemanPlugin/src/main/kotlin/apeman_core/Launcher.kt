@@ -58,13 +58,7 @@ class Launcher(
     }
 
     private fun calculateFeatures(candidates: List<ExtractionCandidate>): List<CandidateWithFeatures> {
-
-        featuresOfEveryCandidate = FeaturesForEveryCandidate(
-                project,
-                analysisScope,
-                ArrayList(candidates)
-        )
-
+        featuresOfEveryCandidate = FeaturesForEveryCandidate(ArrayList(candidates))
         return featuresOfEveryCandidate!!.getCandidatesWithFeatures()
     }
 
