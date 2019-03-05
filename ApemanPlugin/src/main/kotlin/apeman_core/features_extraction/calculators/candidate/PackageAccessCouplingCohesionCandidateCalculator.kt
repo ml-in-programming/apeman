@@ -1,6 +1,7 @@
 package apeman_core.features_extraction.calculators.candidate
 
 import apeman_core.base_entities.BlockOfMethod
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.utils.BlocksUtils
@@ -12,7 +13,7 @@ import java.util.Arrays
 import java.util.HashSet
 
 class PackageAccessCouplingCohesionCandidateCalculator(
-        candidates: ArrayList<CandidateWithFeatures>,
+        candidates: List<ExtractionCandidate>,
         neededFeature: FeatureType,
         isCouplingMethod: Boolean,
         isFirstPlace: Boolean) : AbstractCouplingCohesionCandidateCalculator<PsiPackage>(candidates, neededFeature, isCouplingMethod, isFirstPlace, PsiPackage::class.java) {

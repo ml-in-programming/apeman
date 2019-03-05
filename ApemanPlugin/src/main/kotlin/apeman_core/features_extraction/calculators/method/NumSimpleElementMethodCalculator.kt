@@ -1,5 +1,6 @@
 package apeman_core.features_extraction.calculators.method
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.pipes.CandidateWithFeatures
@@ -7,8 +8,10 @@ import apeman_core.utils.CandidateUtils
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiMethod
 
-abstract class NumSimpleElementMethodCalculator(candidates: List<CandidateWithFeatures>, neededFeature: FeatureType)
-    : BaseMetricsCalculator(candidates, neededFeature) {
+abstract class NumSimpleElementMethodCalculator(
+        candidates: List<ExtractionCandidate>,
+        neededFeature: FeatureType
+) : BaseMetricsCalculator(candidates, neededFeature) {
 
     override fun createVisitor() = Visitor()
 

@@ -1,5 +1,6 @@
 package apeman_core.features_extraction.calculators.candidate
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.pipes.CandidateWithFeatures
@@ -11,11 +12,11 @@ import com.intellij.psi.PsiStatement
 
 import java.util.ArrayList
 
-abstract class AbstractNumCandidateCalculator(candidates: ArrayList<CandidateWithFeatures>, feature: FeatureType) : BaseMetricsCalculator(candidates, feature) {
+abstract class AbstractNumCandidateCalculator(candidates: List<ExtractionCandidate>, feature: FeatureType) : BaseMetricsCalculator(candidates, feature) {
 
     open inner class CandidateVisitor : JavaRecursiveElementVisitor() {
         var methodNestingDepth = 0
-        var methodCandidates: List<CandidateWithFeatures> = listOf()
+        var methodCandidates: List<ExtractionCandidate> = listOf()
         var counts: MutableList<Int> = ArrayList()
         var isInsideMethod = false
 
@@ -47,7 +48,7 @@ abstract class AbstractNumCandidateCalculator(candidates: ArrayList<CandidateWit
 
         protected fun updateCounters() = methodCandidates.indices.forEach { updateCounter(it) }
         protected fun updateCounter(i: Int) {
-            if (methodCandidates[i].candidate.isInCandidate) {
+            if (methodCandidates[i].isInCandidate) {
                 counts[i] = counts[i] + 1
             }
         }

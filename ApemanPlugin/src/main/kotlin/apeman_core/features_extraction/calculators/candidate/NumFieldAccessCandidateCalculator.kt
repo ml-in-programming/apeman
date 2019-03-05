@@ -1,12 +1,14 @@
 package apeman_core.features_extraction.calculators.candidate
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.pipes.CandidateWithFeatures
 import com.intellij.psi.*
 
 import java.util.ArrayList
 
-class NumFieldAccessCandidateCalculator(candidates: ArrayList<CandidateWithFeatures>) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_FIELD_ACCESS) {
+class NumFieldAccessCandidateCalculator(candidates: List<ExtractionCandidate>
+) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_FIELD_ACCESS) {
 
     override fun createVisitor() = Visitor()
 

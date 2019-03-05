@@ -1,5 +1,6 @@
 package apeman_core.features_extraction.calculators.candidate
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.pipes.CandidateWithFeatures
@@ -10,7 +11,7 @@ import com.intellij.psi.PsiMethod
 
 import java.util.ArrayList
 
-class LocCandidateCalculator(candidates: ArrayList<CandidateWithFeatures>
+class LocCandidateCalculator(candidates: List<ExtractionCandidate>
 ) : BaseMetricsCalculator(candidates, FeatureType.LOC_CANDIDATE) {
 
     override fun createVisitor(): JavaRecursiveElementVisitor {
@@ -22,7 +23,7 @@ class LocCandidateCalculator(candidates: ArrayList<CandidateWithFeatures>
 
                 for (cand in candidatesOfMethod) {
                     results.set(cand, firstFeature,
-                            BlocksUtils.getNumStatementsRecursively(cand.candidate.block).toDouble())
+                            BlocksUtils.getNumStatementsRecursively(cand.block).toDouble())
                 }
             }
         }

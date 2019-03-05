@@ -1,5 +1,6 @@
 package apeman_core.features_extraction.calculators.candidate
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.pipes.CandidateWithFeatures
 import com.intellij.psi.*
@@ -7,7 +8,8 @@ import com.intellij.psi.util.PsiTreeUtil
 
 import java.util.ArrayList
 
-class NumVarsAccessCandidateCalculator(candidates: ArrayList<CandidateWithFeatures>) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_VAR_ACCESS) {
+class NumVarsAccessCandidateCalculator(candidates: List<ExtractionCandidate>
+) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_VAR_ACCESS) {
 
     override fun createVisitor() = Visitor()
 

@@ -9,9 +9,9 @@ class MaxFrom2Metric(
 
     override fun fetchResult(candidate: CandidateWithFeatures) {
         assert(metrics.count() == 2)
-        val results2 = metrics[1].results.resultForCandidate(candidate)
+        val results2 = metrics[1].results.resultForCandidate(candidate.candidate)
 
-        metrics[0].results.resultForCandidate(candidate).forEach { (feat, value) ->
+        metrics[0].results.resultForCandidate(candidate.candidate).forEach { (feat, value) ->
             assert(candidate.features[feat] == -1.0)
 
             val value2 = results2[feat]!!

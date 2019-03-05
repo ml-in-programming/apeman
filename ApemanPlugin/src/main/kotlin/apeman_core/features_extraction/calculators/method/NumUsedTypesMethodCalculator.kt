@@ -1,5 +1,6 @@
 package apeman_core.features_extraction.calculators.method
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.pipes.CandidateWithFeatures
@@ -11,7 +12,7 @@ import com.intellij.psi.*
 import java.util.ArrayList
 import java.util.HashSet
 
-class NumUsedTypesMethodCalculator(candidates: ArrayList<CandidateWithFeatures>
+class NumUsedTypesMethodCalculator(candidates: List<ExtractionCandidate>
 ) : BaseMetricsCalculator(candidates, FeatureType.CON_TYPE_ACCESS) {
 
     private var methodNestingDepth = 0

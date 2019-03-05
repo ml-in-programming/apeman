@@ -1,33 +1,34 @@
 package apeman_core.utils
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.pipes.CandidateWithFeatures
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiStatement
 
 object CandidateUtils {
 
-    fun getCandidatesOfMethod(method: PsiMethod, allCandidates: List<CandidateWithFeatures>)
+    fun getCandidatesOfMethod(method: PsiMethod, allCandidates: List<ExtractionCandidate>)
             = allCandidates
-            .filter { it.candidate.sourceMethod == method }
+            .filter { it.sourceMethod == method }
             .toList()
 
     fun checkStartOfCandidates(
             statement: PsiStatement,
-            candidates: List<CandidateWithFeatures>
+            candidates: List<ExtractionCandidate>
     ) {
         for (candidate in candidates) {
-            if (candidate.candidate.start == statement)
-                candidate.candidate.isInCandidate = true
+            if (candidate.start == statement)
+                candidate.isInCandidate = true
         }
     }
 
     fun checkEndOfCandidates(
             statement: PsiStatement,
-            candidates: List<CandidateWithFeatures>
+            candidates: List<ExtractionCandidate>
     ) {
         for (candidate in candidates) {
-            if (candidate.candidate.end == statement)
-                candidate.candidate.isInCandidate = false
+            if (candidate.end == statement)
+                candidate.isInCandidate = false
         }
     }
 }

@@ -12,17 +12,12 @@ import java.util.logging.*
 import kotlin.streams.toList
 
 class OneProjectAnalyzer(private val dirOfProject: String) {
-    private val log = Logger.getLogger("OneProjectAnalyzer")
+    private val log = Logger.getGlobal()
     private var project: Project? = null
     private val apemanCandidates = arrayListOf<CandidatesWithFeaturesAndProba>()
     private val oracleEntries = arrayListOf<OracleEntry>()
 
     fun analyze(): List<Results> {
-        val fileHandler = FileHandler("/home/snyss/Prog/mm/diploma/main/logs_" + LocalDateTime.now() + ".txt")
-        fileHandler.formatter = SimpleFormatter()
-        log.addHandler(fileHandler)
-        log.level = Level.ALL
-
         log.fine("analyze project")
         loadProject()
         val parser = OracleParser(dirOfProject, project!!)
@@ -35,7 +30,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
     private fun loadProject() {
 
         val dirpath = Paths.get(dirOfProject)
-        log.fine("path: ${dirpath.toUri()}")
+        log.info("path: ${dirpath.toUri()}")
 
         assert(Files.isDirectory(dirpath))
         val listOfFiles = Files.list(dirpath).toList()
@@ -72,9 +67,10 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
 
             log.info("tolerance = $tolerance,\noracle = ${oracleSet.size},\n" +
                     "apeman = ${apemanSet.size},\n" +
+                    "true positives = ${truePositives.count()},\n" +
                     "precision = $precision,\n" +
                     "recall = $recall,\n" +
-                    "f-measure = ${results.fMeasure}"
+                    "f-score = ${results.fMeasure}"
             )
             listOfResults.add(results)
         }

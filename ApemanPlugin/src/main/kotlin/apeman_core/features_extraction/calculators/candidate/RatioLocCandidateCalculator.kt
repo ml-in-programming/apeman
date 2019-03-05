@@ -12,7 +12,8 @@ import com.intellij.psi.PsiMethod
 
 import java.util.ArrayList
 
-class RatioLocCandidateCalculator(candidates: ArrayList<CandidateWithFeatures>) : BaseMetricsCalculator(candidates, FeatureType.LOC_RATIO) {
+class RatioLocCandidateCalculator(candidates: List<ExtractionCandidate>
+) : BaseMetricsCalculator(candidates, FeatureType.LOC_RATIO) {
 
     override fun createVisitor(): JavaRecursiveElementVisitor {
         return object : JavaRecursiveElementVisitor() {
@@ -27,7 +28,7 @@ class RatioLocCandidateCalculator(candidates: ArrayList<CandidateWithFeatures>) 
                 val numStatementsMethod = BlocksUtils.getNumStatementsRecursively(blockOfMethod)
 
                 for (cand in candidatesOfMethod) {
-                    val candStatements = BlocksUtils.getNumStatementsRecursively(cand.candidate.block)
+                    val candStatements = BlocksUtils.getNumStatementsRecursively(cand.block)
                     results.set(cand, firstFeature, candStatements / numStatementsMethod.toDouble())
                 }
             }

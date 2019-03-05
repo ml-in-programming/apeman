@@ -12,7 +12,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiMethod
 import java.util.logging.Logger
 
-private val log = Logger.getLogger("Launcher")
+private val log = Logger.getGlobal()
 
 class Launcher(
         private val project: Project,

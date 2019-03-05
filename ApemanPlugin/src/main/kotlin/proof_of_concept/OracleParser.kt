@@ -15,7 +15,7 @@ class OracleParser(
         dirWithOracle: String,
         private val project: Project
 ) {
-    private val log = Logger.getLogger("OracleParser")
+    private val log = Logger.getGlobal()
 
     private val scope = AnalysisScope(project)
     private val oraclePathStr = "$dirWithOracle/oracle.txt"
@@ -92,6 +92,7 @@ class OracleParser(
 
                     val candStatements = currentCodeBlock!!.statements
                             .filter { candRange.contains(it.textRange) }
+                    assert(candStatements.count() > 0)
                     val cand = ExtractionCandidate(candStatements.toTypedArray(), currentMethod!!)
 
                     val className = currentMethod!!.containingClass?.qualifiedName ?: ""

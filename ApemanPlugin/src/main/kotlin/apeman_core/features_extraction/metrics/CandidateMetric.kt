@@ -9,7 +9,7 @@ class CandidateMetric(metric: BaseMetricsCalculator
     override fun fetchResult(candidate: CandidateWithFeatures) {
         assert(metrics.count() == 1)
 
-        metrics[0].results.resultForCandidate(candidate).forEach { (feat, value) ->
+        metrics[0].results.resultForCandidate(candidate.candidate).forEach { (feat, value) ->
             assert(candidate.features[feat] == -1.0)
             candidate.features[feat] = value
         }

@@ -12,9 +12,10 @@ import apeman_core.features_extraction.metrics.MaxFrom2Metric
 import apeman_core.features_extraction.metrics.Metric
 import com.intellij.psi.*
 
-class FeaturesForEveryCandidate(candidates: ArrayList<ExtractionCandidate>) {
-
-    private val candidates = ArrayList(candidates.map { CandidateWithFeatures(it) })
+class FeaturesForEveryCandidate(
+        private val candidates: List<ExtractionCandidate>
+) {
+    private val candidatesWithFeatures = ArrayList<CandidateWithFeatures>()
     private val metrics: MutableList<Metric> = arrayListOf()
     private var calcRunner: FeaturesCalculationRunner? = null
 
@@ -103,19 +104,23 @@ class FeaturesForEveryCandidate(candidates: ArrayList<ExtractionCandidate>) {
 
     private fun calculate() {
         assert(metrics.isNotEmpty())
-        candidates.forEach { cand -> FeatureType.values().forEach { cand.features[it] = -1.0 } }
-
-        assert(candidates.all { it.features.count() == FeatureType.values().count() })
-        assert(candidates.all { it.features.all { it.value == -1.0 } })
-
         calcRunner = FeaturesCalculationRunner(candidates, metrics)
         calcRunner!!.calculate()
 
-        assert(candidates.all { it.features.all { it.value != -1.0 || it.key.name.startsWith("TYPE_ACCESS_") } })
+        candidates.forEach { cand ->
+            val candWithFeat = CandidateWithFeatures(cand)
+            FeatureType.values().forEach { candWithFeat.features[it] = -1.0 }
+            candidatesWithFeatures.add(candWithFeat)
+        }
+        assert(candidatesWithFeatures.all { it.features.count() == FeatureType.values().count() })
+        assert(candidatesWithFeatures.all { it.features.all { it.value == -1.0 } })
+
+        candidatesWithFeatures.forEach { cand -> metrics.forEach { m -> m.fetchResult(cand) } }
+        assert(candidatesWithFeatures.all { it.features.all { it.value != -1.0 || it.key.name.startsWith("TYPE_ACCESS_") } })
     }
 
     fun getCandidatesWithFeatures(): List<CandidateWithFeatures> {
         calculate()
-        return candidates
+        return candidatesWithFeatures
     }
 }

@@ -1,5 +1,6 @@
 package apeman_core.features_extraction.calculators.method
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.pipes.CandidateWithFeatures
 import com.intellij.psi.*
@@ -7,7 +8,8 @@ import com.intellij.psi.util.PsiTreeUtil
 
 import java.util.ArrayList
 
-class NumLocalVarsAccessMethodCalculator(candidates: ArrayList<CandidateWithFeatures>) : NumSimpleElementMethodCalculator(candidates, FeatureType.CON_VAR_ACCESS) {
+class NumLocalVarsAccessMethodCalculator(candidates: List<ExtractionCandidate>
+) : NumSimpleElementMethodCalculator(candidates, FeatureType.CON_VAR_ACCESS) {
 
     override fun createVisitor() = Visitor()
 

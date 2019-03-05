@@ -12,8 +12,8 @@ class ComplementMetric(
     override fun fetchResult(candidate: CandidateWithFeatures) {
         assert(metrics.count() == 2)
 
-        val candResults = metrics[1].results.resultForCandidate(candidate)
-        val methodResults = metrics[0].results.resultForCandidate(candidate)
+        val candResults = metrics[1].results.resultForCandidate(candidate.candidate)
+        val methodResults = metrics[0].results.resultForCandidate(candidate.candidate)
 
         methodResults.forEach { (feat, value) ->
             assert(candidate.features[feat] == -1.0)

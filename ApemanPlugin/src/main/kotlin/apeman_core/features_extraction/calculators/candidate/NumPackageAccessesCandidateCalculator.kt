@@ -1,5 +1,6 @@
 package apeman_core.features_extraction.calculators.candidate
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.utils.ClassUtils
@@ -9,7 +10,8 @@ import java.util.ArrayList
 import java.util.Arrays
 import java.util.HashSet
 
-class NumPackageAccessesCandidateCalculator(candidates: ArrayList<CandidateWithFeatures>) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_PACKAGE) {
+class NumPackageAccessesCandidateCalculator(candidates: List<ExtractionCandidate>
+) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_PACKAGE) {
 
     override fun createVisitor() = Visitor()
 
@@ -42,14 +44,13 @@ class NumPackageAccessesCandidateCalculator(candidates: ArrayList<CandidateWithF
                 return
 
             val element = reference.resolve()
-            if (element == null || element.containingFile == null)
-            // for packages, dirs etc
+            if (element == null || element.containingFile == null) // for packages, dirs etc
                 return
 
-            val packages = Arrays.asList(*ClassUtils.calculatePackagesRecursive(element))
+            val packages = ClassUtils.calculatePackagesRecursive(element).toList()
 
             for (i in methodCandidates.indices) {
-                if (methodCandidates[i].candidate.isInCandidate) {
+                if (methodCandidates[i].isInCandidate) {
                     usedPackages!![i].addAll(packages)
                 }
             }

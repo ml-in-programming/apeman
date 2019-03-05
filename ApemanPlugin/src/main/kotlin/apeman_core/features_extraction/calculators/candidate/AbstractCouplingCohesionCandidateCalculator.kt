@@ -1,6 +1,7 @@
 package apeman_core.features_extraction.calculators.candidate
 
 import apeman_core.base_entities.BlockOfMethod
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.pipes.CandidateWithFeatures
@@ -14,7 +15,7 @@ import java.util.ArrayList
 import java.util.HashMap
 
 open class AbstractCouplingCohesionCandidateCalculator<T> (
-        candidates: ArrayList<CandidateWithFeatures>,
+        candidates: List<ExtractionCandidate>,
         neededFeature: FeatureType,
         private val isCouplingMethod: Boolean,
         private val isFirstPlace: Boolean,
@@ -29,7 +30,7 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
     override fun createVisitor() = CandidateVisitor()
 
     open inner class CandidateVisitor : JavaRecursiveElementVisitor() {
-        private var methodCandidates: List<CandidateWithFeatures>? = null
+        private var methodCandidates: List<ExtractionCandidate>? = null
 
         override fun visitMethod(method: PsiMethod) {
             super.visitMethod(method)
@@ -41,13 +42,13 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
         }
     }
 
-    private fun calculateCouplingCohesion(candidate: CandidateWithFeatures) {
+    private fun calculateCouplingCohesion(candidate: ExtractionCandidate) {
         coupling = 0.0
         cohesion = 0.0
 
-        val sourceMethod = candidate.candidate.sourceMethod
+        val sourceMethod = candidate.sourceMethod
         val sourceBlock = BlocksUtils.getBlockFromMethod(sourceMethod)
-        val candidateBlock = candidate.candidate.block
+        val candidateBlock = candidate.block
 
         val elements = getElementsFromBlock(candidateBlock)
         if (elements.isEmpty() || elements.size == 1 && !isFirstPlace) {
