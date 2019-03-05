@@ -1,7 +1,7 @@
 package proof_of_concept
 
+import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.pipes.CandidatesWithFeaturesAndProba
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 data class Results(
         val tolerance: Int,

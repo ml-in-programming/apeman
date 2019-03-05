@@ -40,13 +40,14 @@ class ModelProvider(
 
     private fun saveTrainingCsv(from: String, to: String) {
         val csv = importCsvFrom(from)
-        csv.remainColumns(ArrayList(getColumnNames()))
+        val remainNames = getColumnNames()
+        csv.remainColumns(remainNames)
         csv.export(to)
     }
 
     private fun getColumnNames(): List<String> {
         assert(candidates.isNotEmpty())
-        return candidates[0].features.map { it.name }.toList()
+        return candidates[0].features.map { it.key.name }.toList()
     }
 
     fun predictCandidates(): List<CandidatesWithFeaturesAndProba> {

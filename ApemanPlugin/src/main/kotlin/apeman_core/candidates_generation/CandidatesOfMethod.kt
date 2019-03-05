@@ -1,11 +1,11 @@
 package apeman_core.candidates_generation
 
+import apeman_core.base_entities.ExtractionCandidate
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.psi.*
 import com.intellij.refactoring.extractMethod.ExtractMethodHandler
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.util.*
 import kotlin.collections.ArrayList
 

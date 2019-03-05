@@ -1,11 +1,11 @@
 package apeman_core.candidates_generation
 
-import apeman_core.scopeToTopMethods
+import apeman_core.base_entities.ExtractionCandidate
+import apeman_core.utils.scopeToTopMethods
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiMethod
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 import java.util.logging.Logger
 
 
@@ -48,7 +48,7 @@ public class CandidatesOfScope(
     }
 }
 
-// factory for candidates (easier than define several constructors)
+// factory for candidates (easier for me than define several constructors)
 public fun CandidatesOfScope(project: Project, analysisScope: AnalysisScope): CandidatesOfScope {
     log.info(analysisScope.fileCount.toString())
 

@@ -1,20 +1,21 @@
 package apeman_core.features_extraction
 
+import apeman_core.base_entities.ExtractionCandidate
+import apeman_core.base_entities.FeatureType
 import apeman_core.pipes.CandidateWithFeatures
-import apeman_core.pipes.Feature
-import com.intellij.analysis.AnalysisScope
-import com.intellij.openapi.project.Project
-import com.sixrr.metrics.metricModel.MetricsResult
-import com.sixrr.stockmetrics.candidateMetrics.*
-import com.sixrr.stockmetrics.methodMetrics.*
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
-
+import apeman_core.features_extraction.calculators.BaseMetricsCalculator
+import apeman_core.features_extraction.calculators.candidate.*
+import apeman_core.features_extraction.calculators.method.*
+import apeman_core.features_extraction.metrics.CandidateMetric
+import apeman_core.features_extraction.metrics.ComplementMetric
+import apeman_core.features_extraction.metrics.MaxFrom2Metric
+import apeman_core.features_extraction.metrics.Metric
+import com.intellij.psi.*
 
 class FeaturesForEveryCandidate(
-        private val project: Project,
-        private val analysisScope: AnalysisScope,
-        private val candidates: ArrayList<ExtractionCandidate>
+        private val candidates: List<ExtractionCandidate>
 ) {
+    private val candidatesWithFeatures = ArrayList<CandidateWithFeatures>()
     private val metrics: MutableList<Metric> = arrayListOf()
     private var calcRunner: FeaturesCalculationRunner? = null
 
@@ -24,96 +25,102 @@ class FeaturesForEveryCandidate(
 
     private fun declareMetrics() {
 
-        metrics.addAll(listOf(
-                CandidateMetric("Num_Literal", NumLiteralsCandidateMetric(candidates)),
-                CandidateMetric("Num_Conditional", NumTernaryOperatorsCandidateMetric(candidates)),
-                CandidateMetric("Num_Switch", NumSwitchOperatorsCandidateMetric(candidates)),
-                CandidateMetric("Num_Type_Ac", NumTypeAccessesCandidateMetric(candidates)),
-                CandidateMetric("Num_Invocation", NumInvocationsCandidateMetric(candidates)),
-                CandidateMetric("Num_If", NumIfCandidateMetric(candidates)),
-                CandidateMetric("Num_Assign", NumAssignmentsCandidateMetric(candidates)),
-                CandidateMetric("Num_Typed_Ele", NumTypedElementsCandidateMetric(candidates)),
-                CandidateMetric("Num_Var_Ac", NumVarsAccessCandidateMetric(candidates)),
-                CandidateMetric("Num_Field_Ac", NumFieldAccessesCandidateMetric(candidates)),
-                CandidateMetric("Num_local", NumLocalVarsCandidateMetric(candidates)),
-                CandidateMetric("Num_Package", NumPackagesCandidateMetric(candidates))
+        val candidateCalculators = listOf(
+                NumLiteralsCandidateCalculator(candidates),
+                NumTernaryOperatorsCandidatesCalculator(candidates),
+                NumTypeAccessesCandidateCalculator(candidates),
+                NumInvocationsCandidateCalculator(candidates),
+                NumIfCandidateCalculator(candidates),
+                NumAssignmentsCandidateCalculator(candidates),
+                NumSwitchOperatorsCandidatesCalculator(candidates),
+                NumLocalVarsCandidateCalculator(candidates),
+                NumFieldAccessCandidateCalculator(candidates),
+                NumVarsAccessCandidateCalculator(candidates),
+                NumTypedElementsCandidateCalculator(candidates),
+                NumPackageAccessesCandidateCalculator(candidates),
+                LocCandidateCalculator(candidates),
+                RatioLocCandidateCalculator(candidates),
+
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.VAR_ACCESS_COUPLING, true, true, PsiVariable::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.VAR_ACCESS_COUPLING_2, true, false, PsiVariable::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.VAR_ACCESS_COHESION, false, true, PsiVariable::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.VAR_ACCESS_COHESION_2, false, false, PsiVariable::class.java),
+
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COUPLING, true, true, PsiField::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COUPLING_2, true, false, PsiField::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COHESION, false, true, PsiField::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COHESION_2, false, false, PsiField::class.java),
+
+//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING, true, true),
+//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING_2, true, false),
+//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION, false, true),
+//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION_2, false, false),
+
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COUPLING, true, true, PsiTypeElement::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COHESION, false, true, PsiTypeElement::class.java),
+
+                PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COUPLING, true, true),
+                PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COUPLING_2, true, false),
+                PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COHESION, false, true),
+                PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COHESION_2, false, false)
+        )
+
+        val complementCalculators = listOf(
+            NumLiteralsMethodCalculator(candidates),
+            NumTernaryMethodCalculator(candidates),
+            NumUsedTypesMethodCalculator(candidates),
+            NumInvocationMethodCalculator(candidates),
+            NumIfMethodCalculator(candidates),
+            NumAssignmentsMethodCalculator(candidates),
+            NumSwitchMethodCalculator(candidates),
+            NumLocalVarsAccessMethodCalculator(candidates),
+            NumFieldAccessMethodCalculator(candidates),
+            NumLocalVarsMethodCalculator(candidates),
+            NumTypedElementsMethodCalculator(candidates),
+            NumUsedPackagesMethodCalculator(candidates)
+        )
+
+        val invocationMetricCoupling = MaxFrom2Metric(listOf(
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COUPLING, true, true, PsiCallExpression::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COUPLING, true, true, PsiNewExpression::class.java)
         ))
 
-        val namesToMetrics = metrics.map {
-            it.name to it as CandidateMetric
-        }.toMap()
+        val invocationMetricCohesion = MaxFrom2Metric(listOf(
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COHESION, false, true, PsiCallExpression::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COHESION, false, true, PsiNewExpression::class.java)
+        ))
+
+        val candidateMetrics = candidateCalculators.map { CandidateMetric(it) }
+
+        val complementMetrics = complementCalculators
+                .mapIndexed { i, calc -> ComplementMetric(listOf(calc, candidateCalculators[i])) }
 
         metrics.addAll(listOf(
-                CandidateMetric("LOC_Extracted_Method", LocCandidateMetric(candidates)),
-                ComplementMetric("CON_LITERAL", NumLiteralsMetric(), namesToMetrics["Num_Literal"]!!),
-                ComplementMetric("CON_CONDITIONAL", NumTernaryOperatorsMetric(), namesToMetrics["Num_Conditional"]!!),
-                ComplementMetric("CON_TYPE_ACC", NumUsedTypesMetric(), namesToMetrics["Num_Type_Ac"]!!),
-                ComplementMetric("CON_INVOCATION", NumMethodCallsMetric(), namesToMetrics["Num_Invocation"]!!),
-                ComplementMetric("CON_IF", NumIfMetric(), namesToMetrics["Num_If"]!!),
-                ComplementMetric("CON_ASSIGN", NumAssignmentsMetric(), namesToMetrics["Num_Assign"]!!),
-                ComplementMetric("CON_SWITCH", NumSwitchMetric(), namesToMetrics["Num_Switch"]!!),
-                ComplementMetric("CON_VAR_ACC", NumLocalVarsAccessMetric(), namesToMetrics["Num_Var_Ac"]!!),
-                ComplementMetric("CON_FIELD_ACC", NumFieldAccessMetric(), namesToMetrics["Num_Field_Ac"]!!),
-                ComplementMetric("CON_LOCAL", NumLocalVarsMetric(), namesToMetrics["Num_local"]!!),
-                ComplementMetric("CON_TYPED_ELE", NumTypedElementsMethodMetric(), namesToMetrics["Num_Typed_Ele"]!!),
-                ComplementMetric("CON_PACKAGE", NumUsedPackagesMetric(), namesToMetrics["Num_Package"]!!),
-                CandidateMetric("ratio_LOC", RatioLocCandidateMetric(candidates)),
-                CandidateMetric("Ratio_Variable_Access", VariableCouplingCandidateMetric(candidates)),
-                CandidateMetric("Ratio_Variable_Access2", VariableCoupling2CandidateMetric(candidates)),
-                CandidateMetric("VarAc_Cohesion", VariableCohesionCandidateMetric(candidates)),
-                CandidateMetric("VarAc_Cohesion2", VariableCohesion2CandidateMetric(candidates)),
-                CandidateMetric("Ratio_Field_Access", FieldCouplingCandidateMetric(candidates)),
-                CandidateMetric("Ratio_Field_Access2", FieldCoupling2CandidateMetric(candidates)),
-                CandidateMetric("Field_Cohesion", FieldCohesionCandidateMetric(candidates)),
-                CandidateMetric("Field_Cohesion2", FieldCohesion2CandidateMetric(candidates)),
-                MaxFrom2Metric("Ratio_Invocation", InvocationCouplingCandidateMetric(candidates), InvocationNewCouplingCandidateMetric(candidates)),
-                MaxFrom2Metric("Invocation_Cohesion", InvocationCohesionCandidateMetric(candidates), InvocationNewCohesionCandidateMetric(candidates)),
-//                CandidateMetric("Ratio_Type_Access", TypeAccessCouplingCandidateMetric(candidates)),
-//                CandidateMetric("Ratio_Type_Access2", TypeAccessCoupling2CandidateMetric(candidates)),
-//                CandidateMetric("TypeAc_Cohesion", TypeAccessCohesionCandidateMetric(candidates)),
-//                CandidateMetric("TypeAc_Cohesion2", TypeAccessCohesion2CandidateMetric(candidates)),
-                CandidateMetric("Ratio_Typed_Ele", TypeElementCouplingCandidateMetric(candidates)),
-                CandidateMetric("TypedEle_Cohesion", TypeElementCohesionCandidateMetric(candidates)),
-                CandidateMetric("Ratio_Package", PackageAccessCouplingCandidateMetric(candidates)),
-                CandidateMetric("Ratio_Package2", PackageAccessCoupling2CandidateMetric(candidates)),
-                CandidateMetric("Package_Cohesion", PackageAccessCohesionCandidateMetric(candidates)),
-                CandidateMetric("Package_Cohesion2", PackageAccessCohesion2CandidateMetric(candidates))
-        ))
+                candidateMetrics,
+                complementMetrics,
+                listOf(invocationMetricCoupling, invocationMetricCohesion)
+        ).flatten())
     }
 
     private fun calculate() {
         assert(metrics.isNotEmpty())
-
-        calcRunner = FeaturesCalculationRunner(project, analysisScope, metrics)
+        calcRunner = FeaturesCalculationRunner(candidates, metrics)
         calcRunner!!.calculate()
+
+        candidates.forEach { cand ->
+            val candWithFeat = CandidateWithFeatures(cand)
+            FeatureType.values().forEach { candWithFeat.features[it] = -1.0 }
+            candidatesWithFeatures.add(candWithFeat)
+        }
+        assert(candidatesWithFeatures.all { it.features.count() == FeatureType.values().count() })
+        assert(candidatesWithFeatures.all { it.features.all { it.value == -1.0 } })
+
+        candidatesWithFeatures.forEach { cand -> metrics.forEach { m -> m.fetchResult(cand) } }
+        assert(candidatesWithFeatures.all { it.features.all { it.value != -1.0 || it.key.name.startsWith("TYPE_ACCESS_") } })
     }
 
     fun getCandidatesWithFeatures(): List<CandidateWithFeatures> {
         calculate()
-        val candResults = calcRunner!!.resultsForCandidates!!
-        val methodResults = calcRunner!!.resultsForMethods!!
-        val candWithFeatures = arrayListOf<CandidateWithFeatures>()
-
-        for (cand in candidates) {
-            val featureVector =  getFeatureVector(
-                    cand, candResults, methodResults
-            )
-            candWithFeatures.add(CandidateWithFeatures(cand, featureVector))
-        }
-        return candWithFeatures
-    }
-
-    private fun getFeatureVector(
-            cand: ExtractionCandidate,
-            candResults: MetricsResult,
-            methodResults: MetricsResult
-    ): List<Feature> {
-
-        val featureVector = arrayListOf<Feature>()
-        for (m in metrics) {
-            val value = m.calculateResult(cand, candResults, methodResults)
-            featureVector.add(Feature(m.name, value))
-        }
-        return featureVector
+        return candidatesWithFeatures
     }
 }

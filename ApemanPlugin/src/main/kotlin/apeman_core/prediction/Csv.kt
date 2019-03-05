@@ -33,7 +33,7 @@ class Csv(header: Collection<String>, data: Collection<Collection<String>>) {
         }
     }
 
-    fun remainColumns(columnNames: ArrayList<String>) {
+    fun remainColumns(columnNames: List<String>) {
 
         assert(header.containsAll(columnNames))
 
@@ -85,6 +85,6 @@ fun importCsvFrom(candidates: ArrayList<CandidateWithFeatures>, featureNames: Ar
     val csv = Csv(featureNames, data)
     val candidateNames = ArrayList(candidates.map {it.candidate.toString()})
 
-    csv.addIndicesColumn("Names", candidateNames)
+    csv.addIndicesColumn("NAME_CANDIDATE", candidateNames)
     return csv
 }

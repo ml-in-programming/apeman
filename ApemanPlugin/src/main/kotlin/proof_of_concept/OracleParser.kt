@@ -1,12 +1,11 @@
 package proof_of_concept
 
+import apeman_core.base_entities.ExtractionCandidate
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.util.io.isFile
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
-import java.io.BufferedWriter
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
@@ -16,7 +15,7 @@ class OracleParser(
         dirWithOracle: String,
         private val project: Project
 ) {
-    private val log = Logger.getLogger("OracleParser")
+    private val log = Logger.getGlobal()
 
     private val scope = AnalysisScope(project)
     private val oraclePathStr = "$dirWithOracle/oracle.txt"
@@ -93,6 +92,7 @@ class OracleParser(
 
                     val candStatements = currentCodeBlock!!.statements
                             .filter { candRange.contains(it.textRange) }
+                    assert(candStatements.count() > 0)
                     val cand = ExtractionCandidate(candStatements.toTypedArray(), currentMethod!!)
 
                     val className = currentMethod!!.containingClass?.qualifiedName ?: ""

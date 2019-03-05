@@ -1,7 +1,7 @@
 package proof_of_concept
 
+import apeman_core.base_entities.ExtractionCandidate
 import com.intellij.psi.PsiMethod
-import org.jetbrains.research.groups.ml_methods.utils.ExtractionCandidate
 
 data class OracleEntry(
         val methodName: String,

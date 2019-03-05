@@ -72,10 +72,8 @@ class Dataset:
 
     def _read(self, filename: str) -> np.ndarray:
         dataset = pd.read_csv(filename)
-        if 'Name_Ext_Method' in dataset.columns:
-            dataset = dataset.drop(columns=['Name_Ext_Mtd'])
-        if 'Names' in dataset.columns:
-            dataset = dataset.drop(columns=['Names'])        
+        if 'NAME_CANDIDATE' in dataset.columns:
+            dataset = dataset.drop(columns=['NAME_CANDIDATE'])
         return np.nan_to_num(dataset.values, copy=False)
 
     def store_proba(self, filename: str, proba: 'array-like'):
