@@ -28,7 +28,7 @@ class TypeAccessCouplingCohesionCandidateCalculator(
             block[i].accept(object : JavaRecursiveElementVisitor() {
                 override fun visitElement(element: PsiElement?) {
                     super.visitElement(element)
-                    TypeUtils.tryAddTypeOfElementTo(result, element)
+                    TypeUtils.tryAddTypeOfElementTo(result, element!!)
                 }
             })
         }

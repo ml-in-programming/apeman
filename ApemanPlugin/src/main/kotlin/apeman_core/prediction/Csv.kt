@@ -33,7 +33,7 @@ class Csv(header: Collection<String>, data: Collection<Collection<String>>) {
         }
     }
 
-    fun remainColumns(columnNames: ArrayList<String>) {
+    fun remainColumns(columnNames: List<String>) {
 
         assert(header.containsAll(columnNames))
 

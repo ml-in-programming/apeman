@@ -75,7 +75,7 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
     }
 
     protected open fun getCountOfElementFromBlock(block: BlockOfMethod, elem: T?): Int {
-        return BlocksUtils.getCountOfElementFromBlock<T>(block, elem)
+        return BlocksUtils.getCountOfElementFromBlock(block, elem!!)
     }
 
     protected open fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: T): Double {

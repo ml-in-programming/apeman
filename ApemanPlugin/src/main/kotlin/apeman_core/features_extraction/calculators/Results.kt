@@ -7,17 +7,21 @@ class Results(
         val features: List<FeatureType>,
         val candidates: List<CandidateWithFeatures>
 ) {
-    private val results = HashMap<CandidateWithFeatures, ArrayList<Double>>()
+    private val results = HashMap<CandidateWithFeatures, HashMap<FeatureType, Double>>()
     init {
-        candidates.forEach { results[it] = ArrayList(features.count()) }
+        candidates.forEach { cand ->
+            results[cand] = HashMap()
+            features.forEach { feat -> results[cand]!![feat] = -1.0 }
+        }
     }
 
     fun set(cand: CandidateWithFeatures, feature: FeatureType, value: Double) {
-        val featureIndex = features.indexOf(feature)
-        assert(featureIndex >= 0)
-
-        results[cand]!![featureIndex] = value
+        assert(results[cand]!![feature] == -1.0)
+        results[cand]!![feature] = value
     }
 
-    fun resultForCandidate(cand: CandidateWithFeatures) = features.zip(results[cand]!!).toMap()
+    fun resultForCandidate(cand: CandidateWithFeatures): Map<FeatureType, Double> {
+        assert(results[cand]!!.all { it.value != -1.0 })
+        return results[cand]!!.toMap()
+    }
 }

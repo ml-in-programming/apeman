@@ -12,7 +12,7 @@ class NumLocalVarsAccessMethodCalculator(candidates: ArrayList<CandidateWithFeat
     override fun createVisitor() = Visitor()
 
     inner class Visitor : NumSimpleElementMethodCalculator.Visitor() {
-        internal var currentMethod: PsiMethod? = null
+        private var currentMethod: PsiMethod? = null
 
         override fun visitMethod(method: PsiMethod) {
             if (nestingDepth == 0)

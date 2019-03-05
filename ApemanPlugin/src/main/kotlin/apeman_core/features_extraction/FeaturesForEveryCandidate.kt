@@ -64,7 +64,7 @@ class FeaturesForEveryCandidate(candidates: ArrayList<ExtractionCandidate>) {
                 PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COHESION_2, false, false)
         )
 
-        val complementCalculators = listOf<BaseMetricsCalculator>(
+        val complementCalculators = listOf(
             NumLiteralsMethodCalculator(candidates),
             NumTernaryMethodCalculator(candidates),
             NumUsedTypesMethodCalculator(candidates),
@@ -97,14 +97,16 @@ class FeaturesForEveryCandidate(candidates: ArrayList<ExtractionCandidate>) {
         metrics.addAll(listOf(
                 candidateMetrics,
                 complementMetrics,
-                listOf(invocationMetricCoupling,
-                        invocationMetricCohesion)
+                listOf(invocationMetricCoupling, invocationMetricCohesion)
         ).flatten())
     }
 
     private fun calculate() {
         assert(metrics.isNotEmpty())
-        candidates.forEach { cand -> cand.features.forEach { cand.features[it.key] = -1.0 } }
+        candidates.forEach { cand -> FeatureType.values().forEach { cand.features[it] = -1.0 } }
+
+        assert(candidates.all { it.features.count() == FeatureType.values().count() })
+        assert(candidates.all { it.features.all { it.value == -1.0 } })
 
         calcRunner = FeaturesCalculationRunner(candidates, metrics)
         calcRunner!!.calculate()

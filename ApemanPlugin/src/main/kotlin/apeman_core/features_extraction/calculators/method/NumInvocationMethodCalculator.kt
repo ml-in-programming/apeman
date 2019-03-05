@@ -21,7 +21,7 @@ class NumInvocationMethodCalculator(candidates: ArrayList<CandidateWithFeatures>
 
         override fun visitNewExpression(exp: PsiNewExpression) {
             super.visitNewExpression(exp)
-            if (exp.arrayDimensions.size == 0 && exp.arrayInitializer == null) {
+            if (exp.arrayDimensions.isEmpty() && exp.arrayInitializer == null) {
                 elementsCounter++
             }
         }

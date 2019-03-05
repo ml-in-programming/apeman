@@ -21,7 +21,7 @@ class NumTypeAccessesCandidateCalculator(candidates: ArrayList<CandidateWithFeat
                 usedTypes = ArrayList()
             }
             usedTypes!!.clear()
-            methodCandidates.forEach { (candidate, features) -> usedTypes!!.add(HashSet()) }
+            methodCandidates.forEach { usedTypes!!.add(HashSet()) }
         }
 
         override fun getCounterForCand(i: Int): Int {
@@ -47,7 +47,7 @@ class NumTypeAccessesCandidateCalculator(candidates: ArrayList<CandidateWithFeat
 
             for (i in methodCandidates.indices) {
                 if (methodCandidates[i].candidate.isInCandidate) {
-                    TypeUtils.tryAddTypeOfElementTo(usedTypes!![i], element)
+                    TypeUtils.tryAddTypeOfElementTo(usedTypes!![i], element!!)
                 }
             }
         }

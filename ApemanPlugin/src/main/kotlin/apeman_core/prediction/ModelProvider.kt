@@ -40,7 +40,8 @@ class ModelProvider(
 
     private fun saveTrainingCsv(from: String, to: String) {
         val csv = importCsvFrom(from)
-        csv.remainColumns(ArrayList(getColumnNames()))
+        val remainNames = getColumnNames()
+        csv.remainColumns(remainNames)
         csv.export(to)
     }
 

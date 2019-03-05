@@ -57,7 +57,8 @@ class PackageAccessCouplingCohesionCandidateCalculator(
                     if (resolved == null || resolved.containingFile == null)
                         return
 
-                    val packages = ClassUtils.calculatePackagesRecursive(reference.resolve())
+                    val packages = ClassUtils
+                            .calculatePackagesRecursive(reference.resolve() ?: return)
                     for (pack in packages) {
                         if (pack === psiPackage)
                             ourCount++

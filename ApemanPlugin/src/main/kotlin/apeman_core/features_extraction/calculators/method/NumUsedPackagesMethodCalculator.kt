@@ -3,6 +3,7 @@ package apeman_core.features_extraction.calculators.method
 import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.pipes.CandidateWithFeatures
+import apeman_core.utils.CandidateUtils
 import apeman_core.utils.ClassUtils
 import apeman_core.utils.MethodUtils
 import com.intellij.psi.*
@@ -28,15 +29,17 @@ class NumUsedPackagesMethodCalculator(candidates: ArrayList<CandidateWithFeature
 
             methodNestingDepth++
 
-            val containingPackages = Arrays.asList(
-                    *ClassUtils.calculatePackagesRecursive(method)
-            )
+            val containingPackages = ClassUtils
+                    .calculatePackagesRecursive(method).toList()
             usedPackages!!.addAll(containingPackages)
 
             super.visitMethod(method)
             methodNestingDepth--
             if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                //                postMetric(method, usedPackages.size());
+                val res = usedPackages!!.count().toDouble()
+                CandidateUtils
+                        .getCandidatesOfMethod(method, candidates)
+                        .forEach { results.set(it, firstFeature, res) }
             }
         }
 
@@ -46,10 +49,9 @@ class NumUsedPackagesMethodCalculator(candidates: ArrayList<CandidateWithFeature
                 return
 
             val element = reference.resolve()
-            if (element == null || element.containingFile == null)
-            // for packages, dirs etc
+            if (element == null || element.containingFile == null) // for packages, dirs etc
                 return
-            val packages = Arrays.asList(*ClassUtils.calculatePackagesRecursive(element))
+            val packages = ClassUtils.calculatePackagesRecursive(element).toList()
             usedPackages!!.addAll(packages)
         }
     }
