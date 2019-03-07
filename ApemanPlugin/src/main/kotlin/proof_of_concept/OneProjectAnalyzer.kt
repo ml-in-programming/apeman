@@ -7,7 +7,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.time.LocalDateTime
 import java.util.logging.*
 import kotlin.streams.toList
 
@@ -55,50 +54,16 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         assert(oracleEntries.isNotEmpty())
 
         val listOfResults = mutableListOf<Results>()
-        val apemanSet = apemanCandidates.toSet()
-        val oracleSet = oracleEntries.toSet()
 
         for (tolerance in 1..3) {
-            val truePositives = calculateTruePositivesForTolerance(tolerance)
-
-            val precision = truePositives.count().toDouble() / apemanSet.size
-            val recall = truePositives.count().toDouble() / oracleSet.size
-            val results = Results(tolerance, apemanSet.size, oracleSet.size, precision, recall, oracleEntries.map { it.candidate }, truePositives)
-
-            log.info("tolerance = $tolerance,\noracle = ${oracleSet.size},\n" +
-                    "apeman = ${apemanSet.size},\n" +
-                    "true positives = ${truePositives.count()},\n" +
-                    "precision = $precision,\n" +
-                    "recall = $recall,\n" +
-                    "f-score = ${results.fMeasure}"
+            val results = Results(
+                    tolerance,
+                    oracleEntries.map { it.candidate },
+                    apemanCandidates
             )
+            log.info(results.toString())
             listOfResults.add(results)
         }
         return listOfResults
-    }
-
-    private fun calculateTruePositivesForTolerance(tolerance: Int): List<CandidatesWithFeaturesAndProba> {
-        val truePositives = arrayListOf<CandidatesWithFeaturesAndProba>()
-
-        for (oracleCand in oracleEntries) {
-            val candSameMethod = apemanCandidates.filter { (cand, _, _) ->
-                cand.sourceMethod == oracleCand.method
-            }
-            val oracleLines = oracleCand.candidate.toString().split("\n")
-
-            val sameCand = candSameMethod.firstOrNull { (cand, _, _) ->
-                val (same, notSame) = cand.toString()
-                        .split("\n")
-                        .partition { line -> oracleLines.contains(line) }
-                val maxDiff = 2 * tolerance
-                return@firstOrNull notSame.count() <= maxDiff && same.count() > oracleLines.count() - maxDiff
-
-            }
-            if (sameCand != null) {
-                truePositives.add(sameCand)
-
-            }
-        }
-        return truePositives
     }
 }

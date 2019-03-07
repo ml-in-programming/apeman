@@ -23,23 +23,33 @@ class ProofOfConceptLauncher : ApplicationStarter {
 
 //        val subjectDir = "/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/subjects/"
         val subjectDir = "/home/snyss/Prog/mm/diploma/gems_datasets/subjects/"
+        val results = arrayListOf<Results>()
 
         try {
-            val junit = OneProjectAnalyzer(subjectDir + "junit3.8")
-            junit.analyze()
-
-            val jHotDraw = OneProjectAnalyzer(subjectDir + "JHotDraw5.2")
-            jHotDraw.analyze()
-
-            val myWebMarker = OneProjectAnalyzer(subjectDir + "MyWebMarket")
-            myWebMarker.analyze()
-
-            val wikidevFilters = OneProjectAnalyzer(subjectDir + "wikidev-filters")
-            wikidevFilters.analyze()
+//            val junit = OneProjectAnalyzer(subjectDir + "junit3.8")
+//            results.addAll(junit.analyze())
+//
+//            val jHotDraw = OneProjectAnalyzer(subjectDir + "JHotDraw5.2")
+//            results.addAll(jHotDraw.analyze())
+//
+//            val myWebMarker = OneProjectAnalyzer(subjectDir + "MyWebMarket")
+//            results.addAll(myWebMarker.analyze())
+//
+//            val wikidevFilters = OneProjectAnalyzer(subjectDir + "wikidev-filters")
+//            results.addAll(wikidevFilters.analyze())
 
             val myPlanner = OneProjectAnalyzer(subjectDir + "myplanner-data-src")
-            myPlanner.analyze()
+            results.addAll(myPlanner.analyze())
 
+            for (tolerance in 1..3) {
+                val tolResults = results.filter { it.tolerance == tolerance }
+
+                val overallResult = Results(tolerance,
+                        tolResults.flatMap { it.oracleCandidates }.toList(),
+                        tolResults.flatMap { it.candidates }.toList()
+                )
+                log.info("overallResults:\n$overallResult")
+            }
         } catch (e: Error) {
             val log = Logger.getLogger("error")
             log.severe("Error: $e")
