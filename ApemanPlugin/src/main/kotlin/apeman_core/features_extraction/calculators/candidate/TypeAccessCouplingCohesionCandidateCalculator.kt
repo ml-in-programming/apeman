@@ -13,10 +13,8 @@ import java.util.ArrayList
 import java.util.HashSet
 
 class TypeAccessCouplingCohesionCandidateCalculator(
-        candidates: List<ExtractionCandidate>,
-        neededFeature: FeatureType,
-        isCouplingMethod: Boolean,
-        isFirstPlace: Boolean) : AbstractCouplingCohesionCandidateCalculator<PsiType>(candidates, neededFeature, isCouplingMethod, isFirstPlace, PsiType::class.java) {
+        candidates: List<ExtractionCandidate>)
+    : AbstractCouplingCohesionCandidateCalculator<PsiType>(candidates, "TYPE_", PsiType::class.java) {
 
     override fun createVisitor() = Visitor()
 
@@ -36,7 +34,7 @@ class TypeAccessCouplingCohesionCandidateCalculator(
         return result
     }
 
-    override fun getCountOfElementFromBlock(block: BlockOfMethod, elem: PsiType?): Int {
+    override fun getCountOfElementFromBlock(block: BlockOfMethod, elem: PsiType): Int {
         ourCount = 0
 
         for (i in 0 until block.statementsCount) {

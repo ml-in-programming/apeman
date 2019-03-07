@@ -41,28 +41,13 @@ class FeaturesForEveryCandidate(
                 LocCandidateCalculator(candidates),
                 RatioLocCandidateCalculator(candidates),
 
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.VAR_ACCESS_COUPLING, true, true, PsiVariable::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.VAR_ACCESS_COUPLING_2, true, false, PsiVariable::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.VAR_ACCESS_COHESION, false, true, PsiVariable::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.VAR_ACCESS_COHESION_2, false, false, PsiVariable::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, "VAR_ACCESS", PsiVariable::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, "FIELD_ACCESS", PsiField::class.java),
 
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COUPLING, true, true, PsiField::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COUPLING_2, true, false, PsiField::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COHESION, false, true, PsiField::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COHESION_2, false, false, PsiField::class.java),
+                TypeAccessCouplingCohesionCandidateCalculator(candidates),
+                PackageAccessCouplingCohesionCandidateCalculator(candidates),
 
-//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING, true, true),
-//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING_2, true, false),
-//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION, false, true),
-//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION_2, false, false),
-
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COUPLING, true, true, PsiTypeElement::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COHESION, false, true, PsiTypeElement::class.java),
-
-                PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COUPLING, true, true),
-                PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COUPLING_2, true, false),
-                PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COHESION, false, true),
-                PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COHESION_2, false, false)
+                AbstractCouplingCohesionCandidateCalculator(candidates, "TYPED_ELEMENTS", PsiTypeElement::class.java)
         )
 
         val complementCalculators = listOf(
@@ -81,24 +66,18 @@ class FeaturesForEveryCandidate(
         )
 
         val invocationMetricCoupling = MaxFrom2Metric(listOf(
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COUPLING, true, true, PsiCallExpression::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COUPLING, true, true, PsiNewExpression::class.java)
-        ))
-
-        val invocationMetricCohesion = MaxFrom2Metric(listOf(
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COHESION, false, true, PsiCallExpression::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COHESION, false, true, PsiNewExpression::class.java)
+                AbstractCouplingCohesionCandidateCalculator(candidates, "INVOCATION_", PsiCallExpression::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, "INVOCATION_", PsiNewExpression::class.java)
         ))
 
         val candidateMetrics = candidateCalculators.map { CandidateMetric(it) }
-
         val complementMetrics = complementCalculators
                 .mapIndexed { i, calc -> ComplementMetric(listOf(calc, candidateCalculators[i])) }
 
         metrics.addAll(listOf(
                 candidateMetrics,
                 complementMetrics,
-                listOf(invocationMetricCoupling, invocationMetricCohesion)
+                listOf(invocationMetricCoupling)
         ).flatten())
     }
 

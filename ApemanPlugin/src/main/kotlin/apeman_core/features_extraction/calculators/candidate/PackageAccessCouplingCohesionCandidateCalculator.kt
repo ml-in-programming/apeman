@@ -3,20 +3,16 @@ package apeman_core.features_extraction.calculators.candidate
 import apeman_core.base_entities.BlockOfMethod
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.utils.BlocksUtils
 import apeman_core.utils.ClassUtils
 import com.intellij.psi.*
 
-import java.util.ArrayList
 import java.util.Arrays
 import java.util.HashSet
 
 class PackageAccessCouplingCohesionCandidateCalculator(
-        candidates: List<ExtractionCandidate>,
-        neededFeature: FeatureType,
-        isCouplingMethod: Boolean,
-        isFirstPlace: Boolean) : AbstractCouplingCohesionCandidateCalculator<PsiPackage>(candidates, neededFeature, isCouplingMethod, isFirstPlace, PsiPackage::class.java) {
+        candidates: List<ExtractionCandidate>
+) : AbstractCouplingCohesionCandidateCalculator<PsiPackage>(candidates, "PACKAGE_", PsiPackage::class.java) {
 
     override fun createVisitor(): CandidateVisitor = Visitor()
 
@@ -47,7 +43,7 @@ class PackageAccessCouplingCohesionCandidateCalculator(
         return result
     }
 
-    override fun getCountOfElementFromBlock(block: BlockOfMethod, psiPackage: PsiPackage?): Int {
+    override fun getCountOfElementFromBlock(block: BlockOfMethod, elem: PsiPackage): Int {
         ourCount = 0
 
         for (i in 0 until block.statementsCount) {
@@ -61,14 +57,14 @@ class PackageAccessCouplingCohesionCandidateCalculator(
                     val packages = ClassUtils
                             .calculatePackagesRecursive(reference.resolve() ?: return)
                     for (pack in packages) {
-                        if (pack === psiPackage)
+                        if (pack === elem)
                             ourCount++
                     }
                 }
 
                 override fun visitPackage(aPackage: PsiPackage) {
                     super.visitPackage(aPackage)
-                    if (aPackage === psiPackage)
+                    if (aPackage === elem)
                         ourCount++
                 }
             })

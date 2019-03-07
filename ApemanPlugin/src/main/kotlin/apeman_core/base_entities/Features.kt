@@ -73,13 +73,17 @@ enum class FeatureType {
             null
         }
     }
-}
 
-fun couplingCohesionGroup(name: String): List<FeatureType> {
-    return FeatureType
-            .values()
-            .filter { it.name.startsWith(name) }
-            .sortedBy { it.name }
+    companion object {
+        fun couplingCohesionGroup(name: String): List<FeatureType> {
+            val features = FeatureType
+                    .values()
+                    .filter { it.name.startsWith(name) }
+                    .sortedBy { it.name }
+            assert(features.count() == 2 || features.count() == 4)
+            return features
+        }
+    }
 }
 
 typealias Features = EnumMap<FeatureType, Double>
