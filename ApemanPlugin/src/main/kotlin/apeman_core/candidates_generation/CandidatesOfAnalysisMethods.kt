@@ -9,11 +9,9 @@ import com.intellij.psi.PsiMethod
 import java.util.logging.Logger
 
 
-val log = Logger.getLogger("CandidatesOfScope")!!
+val log = Logger.getLogger("CandidatesOfAnalysisMethods")!!
 
-
-public class CandidatesOfScope(
-        private val project: Project,
+class CandidatesOfAnalysisMethods(
         private val analysisMethods: List<PsiMethod>
 ) {
 
@@ -46,12 +44,4 @@ public class CandidatesOfScope(
             })
         }
     }
-}
-
-// factory for candidates (easier for me than define several constructors)
-public fun CandidatesOfScope(project: Project, analysisScope: AnalysisScope): CandidatesOfScope {
-    log.info(analysisScope.fileCount.toString())
-
-    val methods = scopeToTopMethods(analysisScope)
-    return CandidatesOfScope(project, methods)
 }

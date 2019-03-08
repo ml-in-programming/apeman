@@ -19,9 +19,11 @@
     </extensions>
 
     <actions>
-        <group id="MyPlugin.SampleMenu" text="Check methods for refactoring" description="">
+        <group id="MyPlugin.SampleMenu" text="Check methods with apeman" description="">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="plugin.LauncherAction" class="LauncherAction" text="Hello" description="Says hello"/>
+            <action id="plugin.gui.AnalysisScopeLauncher" class="gui.AnalysisScopeLauncher" text="analyse scope" description="Says hello"/>
+            <action id="plugin.gui.AnalysisMethodLauncher" class="gui.AnalysisMethodLauncher" text="analyse 1 method" description="Says hello"/>
+            <action id="plugin.gui.AnalysisSelectionLauncher" class="gui.AnalysisSelectionLauncher" text="analyse 1 candidate" description="Says hello"/>
         </group>
     </actions>
 </idea-plugin>

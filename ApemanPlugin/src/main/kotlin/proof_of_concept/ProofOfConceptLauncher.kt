@@ -32,11 +32,11 @@ class ProofOfConceptLauncher : ApplicationStarter {
 //            val jHotDraw = OneProjectAnalyzer(subjectDir + "JHotDraw5.2")
 //            results.addAll(jHotDraw.analyze())
 //
-//            val myWebMarker = OneProjectAnalyzer(subjectDir + "MyWebMarket")
-//            results.addAll(myWebMarker.analyze())
-//
-//            val wikidevFilters = OneProjectAnalyzer(subjectDir + "wikidev-filters")
-//            results.addAll(wikidevFilters.analyze())
+            val myWebMarker = OneProjectAnalyzer(subjectDir + "MyWebMarket")
+            results.addAll(myWebMarker.analyze())
+
+            val wikidevFilters = OneProjectAnalyzer(subjectDir + "wikidev-filters")
+            results.addAll(wikidevFilters.analyze())
 
             val myPlanner = OneProjectAnalyzer(subjectDir + "myplanner-data-src")
             results.addAll(myPlanner.analyze())

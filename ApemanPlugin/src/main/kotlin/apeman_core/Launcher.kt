@@ -1,36 +1,43 @@
 package apeman_core
 
 import apeman_core.base_entities.ExtractionCandidate
-import apeman_core.candidates_generation.CandidatesOfScope
+import apeman_core.candidates_generation.CandidatesOfAnalysisMethods
+import apeman_core.candidates_generation.CustomCandidates
 import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.features_extraction.FeaturesForEveryCandidate
 import apeman_core.grouping.GettingBestCandidates
 import apeman_core.pipes.CandidatesWithFeaturesAndProba
 import apeman_core.prediction.ModelProvider
+import apeman_core.utils.scopeToTopMethods
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.TextRange
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiMethod
 import java.util.logging.Logger
 
 private val log = Logger.getGlobal()
 
 class Launcher(
-        private val project: Project,
-        private val analysisScope: AnalysisScope,
-        private val analysisMethods: List<PsiMethod> = arrayListOf()
+        analysisScope: AnalysisScope? = null,
+        private var analysisMethods: List<PsiMethod>? = null,
+        private val analysisCandidates: List<Pair<TextRange, PsiFile>>? = null
 ) {
-    private var candidatesOfScope: CandidatesOfScope? = null
     private var featuresOfEveryCandidate: FeaturesForEveryCandidate? = null
     private var model: ModelProvider? = null
 
+    init {
+        assert((analysisScope != null) xor (analysisMethods != null) xor (analysisCandidates != null))
+
+        if (analysisScope != null) {
+            analysisMethods = scopeToTopMethods(analysisScope)
+        }
+
+        assert((analysisMethods != null) xor (analysisCandidates != null))
+    }
+
     fun getCandidatesWithProba(): ArrayList<CandidatesWithFeaturesAndProba> {
 
-        log.fine("scope has ${analysisScope.fileCount} files")
-
-        if (analysisScope.fileCount == 0 && analysisMethods.isEmpty()) {
-            log.info("return from scope")
-            return arrayListOf()
-        }
 
         log.info("generate candidates")
         val candidates = generateCandidates()
@@ -49,16 +56,17 @@ class Launcher(
     }
 
     private fun generateCandidates(): List<ExtractionCandidate> {
-        candidatesOfScope = if (analysisMethods.isNotEmpty())
-            CandidatesOfScope(project, analysisMethods)
-        else
-            CandidatesOfScope(project, analysisScope)
-
-        return candidatesOfScope!!.getCandidates()
+        return if (analysisMethods != null) {
+            val candidatesOfScope = CandidatesOfAnalysisMethods(analysisMethods!!)
+            candidatesOfScope.getCandidates()
+        } else {
+            assert(analysisCandidates != null)
+            CustomCandidates(analysisCandidates!!).getCandidates()
+        }
     }
 
     private fun calculateFeatures(candidates: List<ExtractionCandidate>): List<CandidateWithFeatures> {
-        featuresOfEveryCandidate = FeaturesForEveryCandidate(ArrayList(candidates))
+        featuresOfEveryCandidate = FeaturesForEveryCandidate(candidates)
         return featuresOfEveryCandidate!!.getCandidatesWithFeatures()
     }
 
