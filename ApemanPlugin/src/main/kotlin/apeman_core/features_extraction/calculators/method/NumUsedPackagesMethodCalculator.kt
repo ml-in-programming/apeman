@@ -12,48 +12,56 @@ import com.intellij.psi.*
 import java.util.*
 
 class NumUsedPackagesMethodCalculator(candidates: List<ExtractionCandidate>
-) : BaseMetricsCalculator(candidates, FeatureType.CON_PACKAGE) {
+) : NumSimpleElementMethodCalculator(candidates, FeatureType.CON_PACKAGE) {
 
-    private var methodNestingDepth = 0
-    private var usedPackages: MutableSet<PsiPackage>? = null
+//    private var methodNestingDepth = 0
+//    private var usedPackages: MutableSet<PsiPackage>? = null
 
-    override fun createVisitor(): JavaRecursiveElementVisitor {
+    override fun createVisitor(): NumSimpleElementMethodCalculator.Visitor {
         return Visitor()
     }
 
-    private inner class Visitor : JavaRecursiveElementVisitor() {
+    private inner class Visitor : NumSimpleElementMethodCalculator.Visitor() {
 
-        override fun visitMethod(method: PsiMethod) {
-            if (methodNestingDepth == 0) {
-                usedPackages = HashSet()
-            }
-
-            methodNestingDepth++
-
+        override fun initElementsCounter(method: PsiMethod) {
             val containingPackages = ClassUtils
                     .calculatePackagesRecursive(method).toList()
-            usedPackages!!.addAll(containingPackages)
-
-            super.visitMethod(method)
-            methodNestingDepth--
-            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                val res = usedPackages!!.count().toDouble()
-                CandidateUtils
-                        .getCandidatesOfMethod(method, candidates)
-                        .forEach { results.set(it, firstFeature, res) }
-            }
+            elementsCounter = containingPackages.count()
         }
+
+//        override fun visitMethod(method: PsiMethod) {
+//            if (methodNestingDepth == 0) {
+//                usedPackages = HashSet()
+//            }
+//
+//            methodNestingDepth++
+//
+//
+//            usedPackages!!.addAll(containingPackages)
+//
+//            super.visitMethod(method)
+//            methodNestingDepth--
+//            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
+//                val res = usedPackages!!.count().toDouble()
+//                CandidateUtils
+//                        .getCandidatesOfMethod(method, candidates)
+//                        .forEach { results.set(it, firstFeature, res) }
+//            }
+//        }
 
         override fun visitReferenceElement(reference: PsiJavaCodeReferenceElement) {
             super.visitReferenceElement(reference)
-            if (methodNestingDepth == 0)
+//            if (methodNestingDepth == 0)
+//                return
+            if (nestingDepth == 0)
                 return
 
             val element = reference.resolve()
             if (element == null || element.containingFile == null) // for packages, dirs etc
                 return
             val packages = ClassUtils.calculatePackagesRecursive(element).toList()
-            usedPackages!!.addAll(packages)
+//            usedPackages!!.addAll(packages)
+            elementsCounter += packages.count()
         }
     }
 }

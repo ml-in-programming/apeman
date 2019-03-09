@@ -3,7 +3,6 @@ package apeman_core.features_extraction
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.pipes.CandidateWithFeatures
-import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.features_extraction.calculators.candidate.*
 import apeman_core.features_extraction.calculators.method.*
 import apeman_core.features_extraction.metrics.CandidateMetric
@@ -23,12 +22,35 @@ class FeaturesForEveryCandidate(
         declareMetrics()
     }
 
+    // как будто бы type access и type elements поменялись местами. Еще там должно быть не set, а просто
+    // и package и type access это количество, а не сеты
+
+    // wrong con package (6 vs our 44)
+
+    // !wrong num literal (1 vs our 24)
+    // wrong num invocation (114 vs our 131)
+    // wrong num type access (33 vs our 21)
+    // !wrong num field access (9 vs our 0)
+    // wrong num typed elements (273 vs our 21)
+    // wrong num packages (379 vs our 14)
+
+    // wrong var access coupling (1 vs our 1.018)
+    // wrong var access coupling 2 (1 vs our 1.018)
+    // wrong var access cohesion (0.407 vs our 0.426)
+    // wrong var access cohesion 2 (0.389 vs our 0.037)
+    // wrong field access all (1, 0, 0.055, 0 vs our 0)
+    // wrong invocation coupling (1 vs our 1.018)
+    // wrong invocation cohesion (0.07 vs our 0.018)
+    // check type access
+    // wrong typed elements cp ch (1, 0.4 vs out 1.018, 0.018)
+    // wrong package all (1, 1, 0.87, 0.24 vs our 1.018, 1.018, 0.018, 0.055)
+
     private fun declareMetrics() {
 
         val candidateCalculators = listOf(
                 NumLiteralsCandidateCalculator(candidates),
                 NumTernaryOperatorsCandidatesCalculator(candidates),
-                NumTypeAccessesCandidateCalculator(candidates),
+                NumTypedElementsCandidateCalculator(candidates),
                 NumInvocationsCandidateCalculator(candidates),
                 NumIfCandidateCalculator(candidates),
                 NumAssignmentsCandidateCalculator(candidates),
@@ -36,7 +58,7 @@ class FeaturesForEveryCandidate(
                 NumLocalVarsCandidateCalculator(candidates),
                 NumFieldAccessCandidateCalculator(candidates),
                 NumVarsAccessCandidateCalculator(candidates),
-                NumTypedElementsCandidateCalculator(candidates),
+                NumTypeAccessCandidateCalculator(candidates),
                 NumPackageAccessesCandidateCalculator(candidates),
                 LocCandidateCalculator(candidates),
                 RatioLocCandidateCalculator(candidates),
@@ -51,10 +73,10 @@ class FeaturesForEveryCandidate(
                 AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COHESION, false, true, PsiField::class.java),
                 AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COHESION_2, false, false, PsiField::class.java),
 
-//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING, true, true),
-//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING_2, true, false),
-//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION, false, true),
-//                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION_2, false, false),
+                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING, true, true),
+                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING_2, true, false),
+                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION, false, true),
+                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION_2, false, false),
 
                 AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COUPLING, true, true, PsiTypeElement::class.java),
                 AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COHESION, false, true, PsiTypeElement::class.java),
@@ -66,18 +88,18 @@ class FeaturesForEveryCandidate(
         )
 
         val complementCalculators = listOf(
-            NumLiteralsMethodCalculator(candidates),
-            NumTernaryMethodCalculator(candidates),
-            NumUsedTypesMethodCalculator(candidates),
-            NumInvocationMethodCalculator(candidates),
-            NumIfMethodCalculator(candidates),
-            NumAssignmentsMethodCalculator(candidates),
-            NumSwitchMethodCalculator(candidates),
-            NumLocalVarsAccessMethodCalculator(candidates),
-            NumFieldAccessMethodCalculator(candidates),
-            NumLocalVarsMethodCalculator(candidates),
-            NumTypedElementsMethodCalculator(candidates),
-            NumUsedPackagesMethodCalculator(candidates)
+                NumLiteralsMethodCalculator(candidates),
+                NumTernaryMethodCalculator(candidates),
+                NumTypedElementsMethodCalculator(candidates),
+                NumInvocationMethodCalculator(candidates),
+                NumIfMethodCalculator(candidates),
+                NumAssignmentsMethodCalculator(candidates),
+                NumSwitchMethodCalculator(candidates),
+                NumLocalVarsMethodCalculator(candidates),
+                NumFieldAccessMethodCalculator(candidates),
+                NumLocalVarsAccessMethodCalculator(candidates),
+                NumTypeAccessesMethodCalculator(candidates),
+                NumUsedPackagesMethodCalculator(candidates)
         )
 
         val invocationMetricCoupling = MaxFrom2Metric(listOf(

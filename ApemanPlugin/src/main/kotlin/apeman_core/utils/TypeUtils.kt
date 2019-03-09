@@ -21,7 +21,7 @@ object TypeUtils {
         return gettingTypeMethod
     }
 
-    fun tryAddTypeOfElementTo(typeSet: MutableSet<PsiType>, element: PsiElement): Boolean {
+    fun tryAddTypeOfElementTo(typeCollection: MutableCollection<PsiType>, element: PsiElement): Boolean {
 
         val isInMethod = PsiTreeUtil.getParentOfType(element, PsiMethod::class.java) != null
         if (!isInMethod)
@@ -35,7 +35,7 @@ object TypeUtils {
             try {
                 val type = gettingTypeMethod.invoke(element) as? PsiType
                 if (type != null) {
-                    typeSet.add(type)
+                    typeCollection.add(type)
                     return true
                 }
                 return false
@@ -47,11 +47,11 @@ object TypeUtils {
         return false
     }
 
-    fun addTypesFromMethodTo(typeSet: MutableSet<PsiType>, method: PsiMethod): Boolean {
-        typeSet.add(method.returnType!!)
+    fun addTypesFromMethodTo(typeCollection: MutableCollection<PsiType>, method: PsiMethod): Boolean {
+        typeCollection.add(method.returnType!!)
         val parameters = method.parameterList.parameters
         for (parameter in parameters) {
-            typeSet.add(parameter.type)
+            typeCollection.add(parameter.type)
         }
         return true
     }

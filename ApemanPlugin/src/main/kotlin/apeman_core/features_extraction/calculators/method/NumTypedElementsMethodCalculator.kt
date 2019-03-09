@@ -1,39 +1,52 @@
-/*
- * Copyright 2005, Sixth and Red River Software
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
 package apeman_core.features_extraction.calculators.method
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.pipes.CandidateWithFeatures
-import com.intellij.psi.JavaRecursiveElementVisitor
-import com.intellij.psi.PsiTypeElement
+import apeman_core.utils.CandidateUtils
+import apeman_core.utils.MethodUtils
+import apeman_core.utils.TypeUtils
+import com.intellij.psi.*
 
 import java.util.ArrayList
 
 class NumTypedElementsMethodCalculator(candidates: List<ExtractionCandidate>
 ) : NumSimpleElementMethodCalculator(candidates, FeatureType.CON_TYPED_ELEMENTS) {
 
-    override fun createVisitor() = Visitor()
+    private var methodNestingDepth = 0
+    //    private var typeSet: MutableSet<PsiType>? = null
 
-    inner class Visitor : NumSimpleElementMethodCalculator.Visitor() {
+    override fun createVisitor(): NumSimpleElementMethodCalculator.Visitor {
+        return Visitor()
+    }
 
-        override fun visitTypeElement(type: PsiTypeElement) {
-            super.visitTypeElement(type)
-            elementsCounter++
+    private inner class Visitor : NumSimpleElementMethodCalculator.Visitor() {
+
+        private var typeCollection = arrayListOf<PsiType>()
+
+        override fun visitMethod(method: PsiMethod) {
+//            if (methodNestingDepth == 0) {
+//                typeSet = HashSet()
+//            }
+            TypeUtils.addTypesFromMethodTo(typeCollection, method)
+            elementsCounter += typeCollection.count()
+            typeCollection.clear()
+
+//            methodNestingDepth++
+            super.visitMethod(method)
+//            methodNestingDepth--
+//            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
+//                val res = typeCollection!!.count().toDouble()
+//                CandidateUtils
+//                        .getCandidatesOfMethod(method, candidates)
+//                        .forEach { results.set(it, firstFeature, res) }
+//            }
+        }
+
+        override fun visitElement(element: PsiElement) {
+            super.visitElement(element)
+            TypeUtils.tryAddTypeOfElementTo(typeCollection, element)
+            elementsCounter += typeCollection.count()
+            typeCollection.clear()
         }
     }
 }
