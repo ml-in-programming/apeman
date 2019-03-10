@@ -15,6 +15,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiMethod
 import java.util.logging.Logger
+import kotlin.system.exitProcess
 
 private val log = Logger.getGlobal()
 
@@ -38,21 +39,31 @@ class Launcher(
 
     fun getCandidatesWithProba(): ArrayList<CandidatesWithFeaturesAndProba> {
 
+        try {
+            log.info("generate candidates")
+            val candidates = generateCandidates()
 
-        log.info("generate candidates")
-        val candidates = generateCandidates()
+            log.info("calculate features")
+            val candidatesWithFeatures = calculateFeatures(candidates)
 
-        log.info("calculate features")
-        val candidatesWithFeatures = calculateFeatures(candidates)
+            log.info("predict candidates")
+            val candidatesWithProba = predictCandidates(candidatesWithFeatures)
 
-        log.info("predict candidates")
-        val candidatesWithProba = predictCandidates(candidatesWithFeatures)
+            log.info("getting top candidates")
+            val bestCandidates = gettingBestCandidates(candidatesWithProba)
 
-        log.info("getting top candidates")
-        val bestCandidates = gettingBestCandidates(candidatesWithProba)
+            log.info("predicting success!")
+            return ArrayList(bestCandidates)
+        } catch (e: Error) {
+            val log = Logger.getLogger("error")
+            log.severe("Error: $e")
+            return arrayListOf()
+        } catch (e: Exception) {
+            val log = Logger.getLogger("exception")
+            log.severe("Exception: $e")
+            return arrayListOf()
 
-        log.info("predicting success!")
-        return ArrayList(bestCandidates)
+        }
     }
 
     private fun generateCandidates(): List<ExtractionCandidate> {

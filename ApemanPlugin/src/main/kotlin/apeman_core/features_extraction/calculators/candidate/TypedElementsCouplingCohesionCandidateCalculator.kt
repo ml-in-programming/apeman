@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException
 import java.util.ArrayList
 import java.util.HashSet
 
-class TypeAccessCouplingCohesionCandidateCalculator(
+class TypedElementsCouplingCohesionCandidateCalculator(
         candidates: List<ExtractionCandidate>,
         neededFeature: FeatureType,
         isCouplingMethod: Boolean,

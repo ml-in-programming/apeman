@@ -26,24 +26,22 @@ class FeaturesForEveryCandidate(
     // и package и type access это количество, а не сеты
 
     // wrong con package (6 vs our 44)
+    // wrong con typed elements (10 vs our 25)
 
     // !wrong num literal (1 vs our 24)
-    // wrong num invocation (114 vs our 131)
-    // wrong num type access (33 vs our 21)
-    // !wrong num field access (9 vs our 0)
-    // wrong num typed elements (273 vs our 21)
-    // wrong num packages (379 vs our 14)
 
-    // wrong var access coupling (1 vs our 1.018)
-    // wrong var access coupling 2 (1 vs our 1.018)
-    // wrong var access cohesion (0.407 vs our 0.426)
+    // !wrong num invocation (114 vs our 131)
+    // wrong num type access (33 vs our 21)
+    // wrong num typed elements (273 vs our 578)
+    // wrong num packages (379 vs our 900)
+
+    // wrong var access cohesion (0.407 vs our 0.555)
     // wrong var access cohesion 2 (0.389 vs our 0.037)
     // wrong field access all (1, 0, 0.055, 0 vs our 0)
-    // wrong invocation coupling (1 vs our 1.018)
     // wrong invocation cohesion (0.07 vs our 0.018)
-    // check type access
-    // wrong typed elements cp ch (1, 0.4 vs out 1.018, 0.018)
-    // wrong package all (1, 1, 0.87, 0.24 vs our 1.018, 1.018, 0.018, 0.055)
+    // wrong type access cp, ch (1, 0, 0.555, 0 vs our 1, 1, 0.1, 0.1)
+    // wrong typed elements ch (0.4 vs our 0.037)
+    // wrong package all (0.87, 0.24 vs our 0.018, 0.055)
 
     private fun declareMetrics() {
 
@@ -73,13 +71,13 @@ class FeaturesForEveryCandidate(
                 AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COHESION, false, true, PsiField::class.java),
                 AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COHESION_2, false, false, PsiField::class.java),
 
-                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING, true, true),
-                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING_2, true, false),
-                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION, false, true),
-                TypeAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION_2, false, false),
+                TypedElementsCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COUPLING, true, true),
+                TypedElementsCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COHESION, false, true),
 
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COUPLING, true, true, PsiTypeElement::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COHESION, false, true, PsiTypeElement::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING, true, true, PsiTypeElement::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING_2, true, false, PsiTypeElement::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION, false, true, PsiTypeElement::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COHESION_2, false, false, PsiTypeElement::class.java),
 
                 PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COUPLING, true, true),
                 PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COUPLING_2, true, false),

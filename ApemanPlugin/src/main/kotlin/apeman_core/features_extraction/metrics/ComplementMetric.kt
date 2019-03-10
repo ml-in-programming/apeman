@@ -23,6 +23,7 @@ class ComplementMetric(
             val complementFeature = feat.complementFeature()
             val complementValue = candResults[complementFeature] ?: 0.0
 
+            assert(value >= complementValue)
             candidate.features[feat] = abs(value - complementValue)
         }
     }

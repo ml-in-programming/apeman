@@ -26,8 +26,7 @@ class NumFieldAccessCandidateCalculator(candidates: List<ExtractionCandidate>
             super.visitReferenceElement(reference)
             val elem = reference.resolve()
 
-            if (elem is PsiField && isInsideMethod &&
-                    elem.containingClass === currentClass) {
+            if (elem is PsiField && isInsideMethod) {
                 updateCounters()
             }
         }
