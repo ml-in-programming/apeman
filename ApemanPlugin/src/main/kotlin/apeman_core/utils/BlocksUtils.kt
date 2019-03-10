@@ -12,8 +12,7 @@ object BlocksUtils {
 
     private var ourStatementsCount = 0
 
-    fun <T> getElementsOfBlock(
-            block: BlockOfMethod, aClassElement: Class<T>): Set<T> {
+    fun <T> getElementsOfBlock(block: BlockOfMethod, aClassElement: Class<T>): Set<T> {
         val result = HashSet<T>()
 
         for (i in 0 until block.statementsCount) {
@@ -23,6 +22,12 @@ object BlocksUtils {
                             super.visitElement(element)
                             if (aClassElement.isAssignableFrom(element!!.javaClass)) {
                                 result.add(aClassElement.cast(element))
+
+                            } else if (element is PsiReference) {
+                                val resolved = element.resolve()
+                                if (aClassElement.isAssignableFrom(resolved!!.javaClass)) {
+                                    result.add(aClassElement.cast(resolved))
+                                }
                             }
                         }
                     }
@@ -57,7 +62,7 @@ object BlocksUtils {
 
     fun <T> getFreqOfElementFromBlock(block: BlockOfMethod, element: T): Double {
         val count = getCountOfElementFromBlock(block, element)
-        return count.toDouble() / getNumStatementsRecursively(block)
+        return count.toDouble()// / getNumStatementsRecursively(block)
     }
 
     fun getNumStatementsRecursively(block: BlockOfMethod): Int {

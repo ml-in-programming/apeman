@@ -22,16 +22,16 @@ class NumInvocationMethodCalculator(candidates: List<ExtractionCandidate>
             elementsCounter++
         }
 
-        override fun visitNewExpression(exp: PsiNewExpression) {
-            super.visitNewExpression(exp)
-            if (exp.arrayDimensions.isEmpty() && exp.arrayInitializer == null) {
-                elementsCounter++
-            }
-        }
+//        override fun visitNewExpression(exp: PsiNewExpression) {
+//            super.visitNewExpression(exp)
+//            if (exp.arrayDimensions.isEmpty() && exp.arrayInitializer == null) {
+//                elementsCounter++
+//            }
+//        }
 
-        override fun visitTypeCastExpression(expression: PsiTypeCastExpression?) {
-            super.visitTypeCastExpression(expression)
-            elementsCounter++
-        }
+//        override fun visitTypeCastExpression(expression: PsiTypeCastExpression?) {
+//            super.visitTypeCastExpression(expression)
+//            elementsCounter++
+//        }
     }
 }

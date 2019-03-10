@@ -23,18 +23,18 @@ class NumInvocationsCandidateCalculator(candidates: List<ExtractionCandidate>
                 updateCounters()
         }
 
-        override fun visitNewExpression(exp: PsiNewExpression) {
-            super.visitNewExpression(exp)
-            if (exp.arrayDimensions.size == 0 &&
-                    exp.arrayInitializer == null && isInsideMethod) {
-                updateCounters()
-            }
-        }
-
-        override fun visitTypeCastExpression(expression: PsiTypeCastExpression?) {
-            super.visitTypeCastExpression(expression)
-            if (isInsideMethod)
-                updateCounters()
-        }
+//        override fun visitNewExpression(exp: PsiNewExpression) {
+//            super.visitNewExpression(exp)
+//            if (exp.arrayDimensions.size == 0 &&
+//                    exp.arrayInitializer == null && isInsideMethod) {
+//                updateCounters()
+//            }
+//        }
+//
+//        override fun visitTypeCastExpression(expression: PsiTypeCastExpression?) {
+//            super.visitTypeCastExpression(expression)
+//            if (isInsideMethod)
+//                updateCounters()
+//        }
     }
 }
