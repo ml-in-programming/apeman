@@ -21,12 +21,9 @@ class FeaturesForEveryCandidate(
         declareMetrics()
     }
 
-    // invocation cohesion, coupling. Надо отдельные методы, которые проверяют, что на один элемент ссылаются
-
     // wrong con package (6 vs our 44)
     // wrong con typed elements (10 vs our 25)
 
-    // wrong num invocation (114 vs our 131)
     // wrong num type access (33 vs our 21)
     // wrong num typed elements (273 vs our 578)
     // wrong num packages (379 vs our 960)
@@ -35,7 +32,6 @@ class FeaturesForEveryCandidate(
     // wrong var access cohesion 2 (0.389 vs our 0.037)
 
     // wrong field access all (1, 0, 0.055, 0 vs our 1, 1, 0.07, 0.018)
-    // wrong invocation cohesion (0.07 vs our 0.018)
 
     // wrong type access cp2, ch, ch2 (0, 0.555, 0 vs our 1, 0.1, 0.1)
     // wrong typed elements ch (0.4 vs our 0.037)
@@ -81,8 +77,8 @@ class FeaturesForEveryCandidate(
                 PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COHESION, false, true),
                 PackageAccessCouplingCohesionCandidateCalculator(candidates, FeatureType.PACKAGE_COHESION_2, false, false),
 
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COUPLING, true, true, PsiMethodCallExpression::class.java),
-                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COHESION, false, true, PsiMethodCallExpression::class.java)
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COUPLING, true, true, PsiMethod::class.java),
+                AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.INVOCATION_COHESION, false, true, PsiMethod::class.java)
         )
 
         val complementCalculators = listOf(

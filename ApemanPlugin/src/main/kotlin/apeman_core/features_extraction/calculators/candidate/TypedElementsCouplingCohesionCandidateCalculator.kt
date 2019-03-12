@@ -71,10 +71,10 @@ class TypedElementsCouplingCohesionCandidateCalculator(
         return ourCount
     }
 
-    override fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: PsiType): Double {
-        val count = getCountOfElementFromBlock(block, elem)
-        return count.toDouble() / BlocksUtils.getNumStatementsRecursively(block)
-    }
+//    override fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: PsiType): Double {
+//        val count = getCountOfElementFromBlock(block, elem)
+//        return count.toDouble() / BlocksUtils.getNumStatementsRecursively(block)
+//    }
 
     companion object {
         private var ourCount = 0

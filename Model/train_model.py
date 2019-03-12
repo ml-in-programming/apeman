@@ -24,5 +24,6 @@ if __name__ == "__main__":
         headers = f.readline().split(',')
         print(len(headers))
         print(len(classifier.model.feature_importances_))
-        print(list(zip(headers, classifier.model.feature_importances_)))
+        import pprint
+        pprint.pprint(sorted(zip(headers, classifier.model.feature_importances_), key=lambda n: -n[1]))
     classifier.serialize_model()

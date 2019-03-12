@@ -59,7 +59,7 @@ class NumUsedPackagesMethodCalculator(candidates: List<ExtractionCandidate>
             val element = reference.resolve()
             if (element == null || element.containingFile == null) // for packages, dirs etc
                 return
-            val packages = ClassUtils.calculatePackagesRecursive(element).toList()
+            val packages = ClassUtils.calculatePackagesRecursive(element)
 //            usedPackages!!.addAll(packages)
             elementsCounter += packages.count()
         }
