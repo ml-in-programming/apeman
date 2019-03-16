@@ -45,7 +45,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         val methods = oracleEntries.map { it.method }.distinct()
 
         log.fine("launch apeman")
-        val launcher = Launcher(project!!, analysisScope = methodsToScope(methods), analysisMethods = methods)
+        val launcher = Launcher(analysisMethods = methods)
         apemanCandidates.addAll(launcher.getCandidatesWithProba())
     }
 

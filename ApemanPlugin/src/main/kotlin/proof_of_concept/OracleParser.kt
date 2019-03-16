@@ -1,6 +1,7 @@
 package proof_of_concept
 
 import apeman_core.base_entities.ExtractionCandidate
+import apeman_core.utils.CandidateUtils
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
@@ -42,7 +43,7 @@ class OracleParser(
 
         scope.accept(object : JavaRecursiveElementVisitor() {
             private var currentMethod: PsiMethod? = null
-            private var currentCodeBlock: PsiCodeBlock? = null
+//            private var currentCodeBlock: PsiCodeBlock? = null
             private var startOffset = Stack<Int>()
             private var endOffset = Stack<Int>()
             private var nestingDepth = 0
@@ -61,21 +62,20 @@ class OracleParser(
                 nestingDepth--
             }
 
-            override fun visitCodeBlock(block: PsiCodeBlock?) {
-                val oldBlock = currentCodeBlock
-                currentCodeBlock = block
-
-                super.visitCodeBlock(block)
-                currentCodeBlock = oldBlock
-            }
-
+//            override fun visitCodeBlock(block: PsiCodeBlock?) {
+//                val oldBlock = currentCodeBlock
+//                currentCodeBlock = block
+//
+//                super.visitCodeBlock(block)
+//                currentCodeBlock = oldBlock
+//            }
+//
             override fun visitComment(comment: PsiComment?) {
                 super.visitComment(comment)
                 if (comment == null)
                     return
 
                 if (comment.text!! == "/*{*/") {
-                    assert(currentCodeBlock != null)
                     assert(currentMethod != null)
 
                     startOffset.push(comment.textRange.startOffset)
@@ -83,17 +83,14 @@ class OracleParser(
 
                 if (comment.text!! == "/*}*/") {
 
-                    assert(currentCodeBlock != null)
+//                    assert(currentCodeBlock != null)
                     assert(currentMethod != null)
                     assert(startOffset.isNotEmpty())
 
                     endOffset.push(comment.textRange.endOffset)
                     val candRange = TextRange(startOffset.pop(), endOffset.pop())
 
-                    val candStatements = currentCodeBlock!!.statements
-                            .filter { candRange.contains(it.textRange) }
-                    assert(candStatements.count() > 0)
-                    val cand = ExtractionCandidate(candStatements.toTypedArray(), currentMethod!!)
+                    val cand = CandidateUtils.fromTextRange(candRange, currentMethod!!)
 
                     val className = currentMethod!!.containingClass?.qualifiedName ?: ""
                     val methodName = getMethodSignature(currentMethod!!)

@@ -46,8 +46,8 @@ abstract class AbstractNumCandidateCalculator(candidates: List<ExtractionCandida
 
         protected open fun getCounterForCand(i: Int) = counts[i]
 
-        protected fun updateCounters() = methodCandidates.indices.forEach { updateCounter(it) }
-        protected fun updateCounter(i: Int) {
+        protected open fun updateCounters() = methodCandidates.indices.forEach { updateCounter(it) }
+        protected open fun updateCounter(i: Int) {
             if (methodCandidates[i].isInCandidate) {
                 counts[i] = counts[i] + 1
             }

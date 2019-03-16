@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException
 import java.util.ArrayList
 import java.util.HashSet
 
-class TypeAccessCouplingCohesionCandidateCalculator(
+class TypedElementsCouplingCohesionCandidateCalculator(
         candidates: List<ExtractionCandidate>,
         neededFeature: FeatureType,
         isCouplingMethod: Boolean,
@@ -71,10 +71,10 @@ class TypeAccessCouplingCohesionCandidateCalculator(
         return ourCount
     }
 
-    override fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: PsiType): Double {
-        val count = getCountOfElementFromBlock(block, elem)
-        return count.toDouble() / BlocksUtils.getNumStatementsRecursively(block)
-    }
+//    override fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: PsiType): Double {
+//        val count = getCountOfElementFromBlock(block, elem)
+//        return count.toDouble() / BlocksUtils.getNumStatementsRecursively(block)
+//    }
 
     companion object {
         private var ourCount = 0

@@ -4,8 +4,7 @@ import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiStatement
 
 class ExtractionCandidate(statements: Array<PsiStatement>,
-                          val sourceMethod: PsiMethod,
-                          uniqueId: Int = 0
+                          val sourceMethod: PsiMethod
 ) {
     init {
         assert(statements.count() > 0)
@@ -13,7 +12,6 @@ class ExtractionCandidate(statements: Array<PsiStatement>,
 
     val block = BlockOfMethod(statements)
     var isInCandidate: Boolean = false
-    val id = "cand_$uniqueId"
 
     val start: PsiStatement
         get() = block.firstStatement

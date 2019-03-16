@@ -24,8 +24,7 @@ class NumFieldAccessMethodCalculator(candidates: List<ExtractionCandidate>
         override fun visitReferenceElement(reference: PsiJavaCodeReferenceElement) {
             super.visitReferenceElement(reference)
             val elem = reference.resolve()
-            if (elem is PsiField && nestingDepth > 0 &&
-                    elem.containingClass === currentClass) {
+            if (elem is PsiField && nestingDepth > 0) {
                 elementsCounter++
             }
         }

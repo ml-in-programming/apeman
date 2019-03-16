@@ -1,6 +1,7 @@
 package apeman_core.candidates_generation
 
 import apeman_core.base_entities.ExtractionCandidate
+import apeman_core.utils.CandidateUtils
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
@@ -36,38 +37,13 @@ class CandidatesOfMethod(private val sourceMethod: PsiMethod) {
 
                 val candidateBlock = ExtractionCandidate(
                         Arrays.copyOfRange(statements, i, j + 1),
-                        sourceMethod,
-                        uniqueId
+                        sourceMethod
                 )
-                if (isValid(candidateBlock)) {
+                if (CandidateUtils.isValid(candidateBlock)) {
                     candidates.add(candidateBlock)
                     uniqueId++
                 }
             }
         }
-    }
-
-    // get editor, select candidateBlock and check if we can extract it
-    private fun isValid(candidateBlock: ExtractionCandidate): Boolean {
-
-        val editor = getEditor()
-
-        editor.selectionModel.setSelection(
-                candidateBlock.start.textOffset,
-                candidateBlock.end.textRange.endOffset
-        )
-
-        return ExtractMethodHandler().isAvailableForQuickList(
-                editor,
-                sourceMethod.containingFile,
-                DataContext.EMPTY_CONTEXT
-        )
-    }
-
-    private fun getEditor(): Editor {
-        val document = PsiDocumentManager.getInstance(sourceMethod.project)
-                .getDocument(sourceMethod.containingFile)!!
-
-        return EditorFactory.getInstance().createEditor(document)!!
     }
 }

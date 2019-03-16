@@ -21,9 +21,10 @@ abstract class NumSimpleElementMethodCalculator(
 
         override fun visitMethod(method: PsiMethod) {
             if (nestingDepth == 0) {
-                elementsCounter = 0
+                initElementsCounter(method)
             }
             nestingDepth++
+
             super.visitMethod(method)
             nestingDepth--
             if (nestingDepth == 0) {
@@ -31,6 +32,10 @@ abstract class NumSimpleElementMethodCalculator(
                     results.set(cand, firstFeature, elementsCounter.toDouble())
                 }
             }
+        }
+
+        protected open fun initElementsCounter(method: PsiMethod) {
+            elementsCounter = 0
         }
     }
 }

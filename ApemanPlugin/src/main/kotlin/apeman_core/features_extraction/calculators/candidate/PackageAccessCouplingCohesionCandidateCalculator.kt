@@ -76,10 +76,10 @@ class PackageAccessCouplingCohesionCandidateCalculator(
         return ourCount
     }
 
-    override fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: PsiPackage): Double {
-        val count = getCountOfElementFromBlock(block, elem)
-        return count.toDouble() / BlocksUtils.getNumStatementsRecursively(block)
-    }
+//    override fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: PsiPackage): Double {
+//        val count = getCountOfElementFromBlock(block, elem)
+//        return count.toDouble() / BlocksUtils.getNumStatementsRecursively(block)
+//    }
 
     companion object {
 

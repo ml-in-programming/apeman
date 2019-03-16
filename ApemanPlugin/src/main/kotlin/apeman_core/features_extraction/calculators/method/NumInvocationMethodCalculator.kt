@@ -6,6 +6,7 @@ import apeman_core.pipes.CandidateWithFeatures
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.PsiNewExpression
+import com.intellij.psi.PsiTypeCastExpression
 
 import java.util.ArrayList
 
@@ -21,11 +22,16 @@ class NumInvocationMethodCalculator(candidates: List<ExtractionCandidate>
             elementsCounter++
         }
 
-        override fun visitNewExpression(exp: PsiNewExpression) {
-            super.visitNewExpression(exp)
-            if (exp.arrayDimensions.isEmpty() && exp.arrayInitializer == null) {
-                elementsCounter++
-            }
-        }
+//        override fun visitNewExpression(exp: PsiNewExpression) {
+//            super.visitNewExpression(exp)
+//            if (exp.arrayDimensions.isEmpty() && exp.arrayInitializer == null) {
+//                elementsCounter++
+//            }
+//        }
+
+//        override fun visitTypeCastExpression(expression: PsiTypeCastExpression?) {
+//            super.visitTypeCastExpression(expression)
+//            elementsCounter++
+//        }
     }
 }

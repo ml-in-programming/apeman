@@ -23,9 +23,9 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
 ) : BaseMetricsCalculator(candidates, neededFeature)
 {
 
-    private var coupling = 0.0
-    private var cohesion = 0.0
-    private fun result() = if (isCouplingMethod) coupling else cohesion
+    protected var coupling = 0.0
+    protected var cohesion = 0.0
+    protected fun result() = if (isCouplingMethod) coupling else cohesion
 
     override fun createVisitor() = CandidateVisitor()
 
@@ -42,7 +42,7 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
         }
     }
 
-    private fun calculateCouplingCohesion(candidate: ExtractionCandidate) {
+    protected open fun calculateCouplingCohesion(candidate: ExtractionCandidate) {
         coupling = 0.0
         cohesion = 0.0
 
@@ -58,13 +58,13 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
         val ratio = HashMap<T, Double>()
 
         for (e in elements) {
-            val freqCandidate = getFreqOfElementFromBlock(candidateBlock, e)
-            val freqMethod = getFreqOfElementFromBlock(sourceBlock, e)
-            ratio[e] = freqCandidate / freqMethod
+            val freqCandidate = getCountOfElementFromBlock(candidateBlock, e)
+            val freqMethod = getCountOfElementFromBlock(sourceBlock, e)
+            ratio[e] = freqCandidate.toDouble() / freqMethod
         }
 
         val bestElem = getElementFromRatio(ratio)
-        coupling = ratio[bestElem]!!
+        coupling = ratio[bestElem] ?: 0.0
 
         val loc = BlocksUtils.getNumStatementsRecursively(candidateBlock)
         val count = getCountOfElementFromBlock(candidateBlock, bestElem)
@@ -79,11 +79,11 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
         return BlocksUtils.getCountOfElementFromBlock(block, elem!!)
     }
 
-    protected open fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: T): Double {
-        return BlocksUtils.getFreqOfElementFromBlock(block, elem)
-    }
+//    protected open fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: T): Double {
+//        return BlocksUtils.getFreqOfElementFromBlock(block, elem)
+//    }
 
-    private fun getElementFromRatio(ratio: HashMap<T, Double>): T? {
+    protected fun getElementFromRatio(ratio: HashMap<T, Double>): T? {
         val elem = getMaxRatio(ratio)
         if (isFirstPlace)
             return elem

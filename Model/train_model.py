@@ -20,5 +20,10 @@ if __name__ == "__main__":
 
     classifier.fit(fit_dataset.features,
                    fit_dataset.classes_of_classifier)
-
+    with open(DATASET_REAL_POSITIVE) as f:
+        headers = f.readline().split(',')
+        print(len(headers))
+        print(len(classifier.model.feature_importances_))
+        import pprint
+        pprint.pprint(sorted(zip(headers, classifier.model.feature_importances_), key=lambda n: -n[1]))
     classifier.serialize_model()

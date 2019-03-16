@@ -1,5 +1,6 @@
 package apeman_core.features_extraction.metrics
 
+import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
 import apeman_core.pipes.CandidateWithFeatures
 import kotlin.math.abs
@@ -15,11 +16,14 @@ class ComplementMetric(
         val candResults = metrics[1].results.resultForCandidate(candidate.candidate)
         val methodResults = metrics[0].results.resultForCandidate(candidate.candidate)
 
+        assert(candResults.mapKeys { it.key.complementFeature() }.keys == methodResults.keys)
+
         methodResults.forEach { (feat, value) ->
             assert(candidate.features[feat] == -1.0)
             val complementFeature = feat.complementFeature()
             val complementValue = candResults[complementFeature] ?: 0.0
 
+            assert(value >= complementValue)
             candidate.features[feat] = abs(value - complementValue)
         }
     }
