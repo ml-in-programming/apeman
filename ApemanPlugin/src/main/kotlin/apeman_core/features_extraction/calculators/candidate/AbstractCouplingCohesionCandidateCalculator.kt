@@ -64,7 +64,7 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
         }
 
         val bestElem = getElementFromRatio(ratio)
-        coupling = ratio[bestElem]!!
+        coupling = ratio[bestElem] ?: 0.0
 
         val loc = BlocksUtils.getNumStatementsRecursively(candidateBlock)
         val count = getCountOfElementFromBlock(candidateBlock, bestElem)

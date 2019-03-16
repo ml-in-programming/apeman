@@ -39,7 +39,7 @@ class NumPackageAccessesCandidateCalculator(candidates: List<ExtractionCandidate
 //            }
 //        }
         override fun updateCounter(i: Int) {
-            assert(packages.isNotEmpty())
+//            assert(packages.isNotEmpty())
             if (methodCandidates[i].isInCandidate) {
                 counts[i] += packages.count()
             }

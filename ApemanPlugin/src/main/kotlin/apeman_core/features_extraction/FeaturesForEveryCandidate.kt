@@ -64,8 +64,8 @@ class FeaturesForEveryCandidate(
                 AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COHESION, false, true, PsiField::class.java),
                 AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.FIELD_ACCESS_COHESION_2, false, false, PsiField::class.java),
 
-                TypedElementsCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COUPLING, true, true),
-                TypedElementsCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COHESION, false, true),
+//                TypedElementsCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COUPLING, true, true),
+//                TypedElementsCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPED_ELEMENTS_COHESION, false, true),
 
                 AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING, true, true, PsiTypeElement::class.java),
                 AbstractCouplingCohesionCandidateCalculator(candidates, FeatureType.TYPE_ACCESS_COUPLING_2, true, false, PsiTypeElement::class.java),
@@ -120,7 +120,7 @@ class FeaturesForEveryCandidate(
         assert(candidatesWithFeatures.all { it.features.all { it.value == -1.0 } })
 
         candidatesWithFeatures.forEach { cand -> metrics.forEach { m -> m.fetchResult(cand) } }
-        assert(candidatesWithFeatures.all { it.features.all { it.value != -1.0 || it.key.name.startsWith("TYPE_ACCESS_") || it.key.name.endsWith("_LITERAL")} })
+        assert(candidatesWithFeatures.all { it.features.all { it.value != -1.0 || it.key.name.startsWith("TYPED_ELEMEN") || it.key.name.endsWith("_LITERAL")} })
     }
 
     fun getCandidatesWithFeatures(): List<CandidateWithFeatures> {

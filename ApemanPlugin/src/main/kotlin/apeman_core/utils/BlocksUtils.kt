@@ -24,8 +24,8 @@ object BlocksUtils {
                                 result.add(aClassElement.cast(element))
 
                             } else if (element is PsiReference) {
-                                val resolved = element.resolve()
-                                if (aClassElement.isAssignableFrom(resolved!!.javaClass)) {
+                                val resolved = element.resolve() ?: return
+                                if (aClassElement.isAssignableFrom(resolved.javaClass)) {
                                     result.add(aClassElement.cast(resolved))
                                 }
                             }
