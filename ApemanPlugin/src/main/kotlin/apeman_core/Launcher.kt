@@ -25,8 +25,6 @@ class Launcher(
         private var analysisMethods: List<PsiMethod>? = null,
         private val analysisCandidates: List<Pair<TextRange, PsiFile>>? = null
 ) {
-    private var featuresOfEveryCandidate: FeaturesForEveryCandidate? = null
-    private var model: TensorFlowModelProvider? = null
 
     init {
         assert((analysisScope != null) xor (analysisMethods != null) xor (analysisCandidates != null))
@@ -79,14 +77,14 @@ class Launcher(
     }
 
     private fun calculateFeatures(candidates: List<ExtractionCandidate>): List<CandidateWithFeatures> {
-        featuresOfEveryCandidate = FeaturesForEveryCandidate(candidates)
-        return featuresOfEveryCandidate!!.getCandidatesWithFeatures()
+        val featuresOfEveryCandidate = FeaturesForEveryCandidate(candidates)
+        return featuresOfEveryCandidate.getCandidatesWithFeatures()
     }
 
     private fun predictCandidates(candidatesWithFeature: List<CandidateWithFeatures>)
             : List<CandidatesWithFeaturesAndProba> {
-        model = TensorFlowModelProvider(candidatesWithFeature)
-        return model!!.predictCandidates()
+        val model = TensorFlowModelProvider(candidatesWithFeature)
+        return model.predictCandidates()
     }
 
     private fun gettingBestCandidates(candToProba: List<CandidatesWithFeaturesAndProba>)

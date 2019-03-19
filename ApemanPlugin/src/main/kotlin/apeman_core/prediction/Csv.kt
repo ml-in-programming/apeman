@@ -78,8 +78,10 @@ fun importCsvFrom(candidates: ArrayList<CandidateWithFeatures>, featureNames: Ar
 
     val data = ArrayList<ArrayList<String>>()
 
-    for (cand in candidates) {
-        val featuresStr = ArrayList(cand.features.map { it.value.toString() })
+    for ((cand, feat) in candidates) {
+        val featuresStr = ArrayList(feat
+                .filter { it.value != -1.0 }
+                .map { it.value.toString() })
         data.add(featuresStr)
     }
     val csv = Csv(featureNames, data)

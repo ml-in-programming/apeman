@@ -24,7 +24,7 @@ class TensorFlowModelProvider(
 
         SavedModelBundle.load(last_model_path, "serve").use { model ->
             printSignature(model)
-            val proba = getProba(model, input).toList()
+            val proba = getProba(model, input)
             return candidatesAndProbaZipped(proba)
         }
     }
@@ -79,7 +79,7 @@ class TensorFlowModelProvider(
     private fun getProba(
             model: SavedModelBundle,
             input: List<Pair<String, Tensor<Double>>>
-    ): FloatArray {
+    ): List<Float> {
 
         var runner = model.session().runner()
 
@@ -91,8 +91,9 @@ class TensorFlowModelProvider(
         assert(output.count() == 1)
         val probaTensor = output[0].expect(Float::class.javaObjectType)!!
 
-        val array2dOfFloat = Array(1) { FloatArray(candidates.count()) }
-        return probaTensor.copyTo(array2dOfFloat)[0]
+        val array2dOfFloat = Array(candidates.count()) { FloatArray(1) }
+        val proba = probaTensor.copyTo(array2dOfFloat)
+        return proba.map { it[0] }
     }
 
     private fun candidatesAndProbaZipped(proba: List<Float>) =
