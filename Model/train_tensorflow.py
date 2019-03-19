@@ -16,8 +16,19 @@ DATASET_AUGMENTED_NEGATIVE = pathlib.Path('neg_aug.csv')
 
 def _read_file(filename, _class: int = 0):
     dataset = pd.read_csv(filename)
-    if 'NAME_CANDIDATE' in dataset.columns:
-        dataset = dataset.drop(columns=['NAME_CANDIDATE'])
+    drop_columns = [
+        'NAME_CANDIDATE',
+        'NUM_LITERAL',
+        'CON_LITERAL',
+        'TYPED_ELEMENTS_COUPLING',
+        'TYPED_ELEMENTS_COHESION',
+        'CON_LOC',
+        'CON_ASSERT'
+    ]
+
+    for col in drop_columns:
+        if col in dataset.columns:
+            dataset = dataset.drop(columns=col)
 
     classes = np.repeat(a=_class, repeats=dataset.shape[0])
     classes = pd.DataFrame(data=classes, columns=['CLASSES'])
@@ -38,14 +49,14 @@ features = train_dataset.columns
 
 feature_columns = []
 for feature_name in column_names:
-    if "CON_" in feature_name or "NUM_" in feature_name:
-        feature_columns.append(
-            tf.feature_column.numeric_column(feature_name, dtype=tf.int64)
-        )
-    else:
-        feature_columns.append(
-            tf.feature_column.numeric_column(feature_name, dtype=tf.float64)
-        )
+    # if "CON_" in feature_name or "NUM_" in feature_name:
+    #     feature_columns.append(
+    #         tf.feature_column.numeric_column(feature_name, dtype=tf.int64)
+    #     )
+    # else:
+    feature_columns.append(
+        tf.feature_column.numeric_column(feature_name, dtype=tf.float64)
+    )
 
 NUM_EXAMPLES = len(train_classes)
 
@@ -56,22 +67,26 @@ train_input_fn = tf.estimator.inputs.pandas_input_fn(
 est = tf.estimator.BoostedTreesRegressor(feature_columns, n_batches_per_layer=1)
 est.train(train_input_fn, max_steps=100)
 
-
 # saving stage
 
+# feature_spec = {
+#     col: tf.FixedLenFeature([1], tf.int64, 0)
+#     for col in column_names
+#     if col.startswith('CON_') or col.startswith('NUM_')
+# }
+# feature_spec = {}
+# feature_spec.update({
+#     col: tf.FixedLenFeature([1], tf.float32, 0.0)
+#     for col in column_names
+#     if col not in feature_spec
+# })
+
 feature_spec = {
-    col: tf.FixedLenFeature([1], tf.int64, 0)
+    col: tf.convert_to_tensor(train_dataset[col].values, dtype=tf.float64, name=col)
     for col in column_names
-    if col.startswith('CON_') or col.startswith('NUM_')
 }
 
-feature_spec.update({
-    col: tf.FixedLenFeature([1], tf.float32, 0.0)
-    for col in column_names
-    if col not in feature_spec
-})
-
-serving_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(
+serving_fn = tf.estimator.export.build_raw_serving_input_receiver_fn(
     feature_spec
 )
 

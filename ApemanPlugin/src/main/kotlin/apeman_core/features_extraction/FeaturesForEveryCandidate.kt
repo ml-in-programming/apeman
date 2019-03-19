@@ -121,6 +121,7 @@ class FeaturesForEveryCandidate(
 
         candidatesWithFeatures.forEach { cand -> metrics.forEach { m -> m.fetchResult(cand) } }
         assert(candidatesWithFeatures.all { it.features.all { it.value != -1.0 || it.key.name.startsWith("TYPED_ELEMEN") || it.key.name.endsWith("_LITERAL")} })
+
     }
 
     fun getCandidatesWithFeatures(): List<CandidateWithFeatures> {

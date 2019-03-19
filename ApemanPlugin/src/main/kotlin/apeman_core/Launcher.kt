@@ -8,6 +8,7 @@ import apeman_core.features_extraction.FeaturesForEveryCandidate
 import apeman_core.grouping.GettingBestCandidates
 import apeman_core.pipes.CandidatesWithFeaturesAndProba
 import apeman_core.prediction.ModelProvider
+import apeman_core.prediction.TensorFlowModelProvider
 import apeman_core.utils.scopeToTopMethods
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
@@ -25,7 +26,7 @@ class Launcher(
         private val analysisCandidates: List<Pair<TextRange, PsiFile>>? = null
 ) {
     private var featuresOfEveryCandidate: FeaturesForEveryCandidate? = null
-    private var model: ModelProvider? = null
+    private var model: TensorFlowModelProvider? = null
 
     init {
         assert((analysisScope != null) xor (analysisMethods != null) xor (analysisCandidates != null))
@@ -54,6 +55,7 @@ class Launcher(
 
             log.info("predicting success!")
             return ArrayList(bestCandidates)
+
         } catch (e: Error) {
             val log = Logger.getLogger("error")
             log.severe("Error: $e")
@@ -83,8 +85,7 @@ class Launcher(
 
     private fun predictCandidates(candidatesWithFeature: List<CandidateWithFeatures>)
             : List<CandidatesWithFeaturesAndProba> {
-        model = ModelProvider(candidatesWithFeature)
-        model!!.trainModel()
+        model = TensorFlowModelProvider(candidatesWithFeature)
         return model!!.predictCandidates()
     }
 
