@@ -67,6 +67,8 @@ train_input_fn = tf.estimator.inputs.pandas_input_fn(
 est = tf.estimator.BoostedTreesRegressor(feature_columns, n_batches_per_layer=1)
 est.train(train_input_fn, max_steps=100)
 
+# evaluate on test data
+
 # saving stage
 
 # feature_spec = {
