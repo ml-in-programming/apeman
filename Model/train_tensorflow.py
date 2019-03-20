@@ -23,7 +23,7 @@ def _drop_columns(columns, dataset):
             dataset = dataset.drop(columns=col)
 
 
-def _read_file(filename, _class: int = 0):
+def _read_train_file(filename, _class: int = 0, coef = 1.0):
     dataset = pd.read_csv(filename)
     _drop_columns([
         'NAME_CANDIDATE',
@@ -34,15 +34,16 @@ def _read_file(filename, _class: int = 0):
         'CON_LOC',
         'CON_ASSERT'
     ], dataset)
+    dataset = dataset.head(n=int(dataset.shape[0] * coef))
     classes = np.repeat(a=_class, repeats=dataset.shape[0])
     classes = pd.DataFrame(data=classes, columns=['CLASSES'])
     return dataset, classes, dataset.columns
 
-
-real_pos, y_real_pos, column_names = _read_file(DATASET_REAL_POSITIVE, _class=1)
-real_neg, y_real_neg, _ = _read_file(DATASET_REAL_NEGATIVE, _class=0)
-aug_pos, y_aug_pos, _ = _read_file(DATASET_AUGMENTED_POSITIVE, _class=1)
-aug_neg, y_aug_neg, _ = _read_file(DATASET_AUGMENTED_NEGATIVE, _class=0)
+coef = 0.5
+real_pos, y_real_pos, column_names = _read_train_file(DATASET_REAL_POSITIVE, _class=1, coef=coef)
+real_neg, y_real_neg, _ = _read_train_file(DATASET_REAL_NEGATIVE, _class=0, coef=coef)
+aug_pos, y_aug_pos, _ = _read_train_file(DATASET_AUGMENTED_POSITIVE, _class=1, coef=coef)
+aug_neg, y_aug_neg, _ = _read_train_file(DATASET_AUGMENTED_NEGATIVE, _class=0, coef=coef)
 
 train_dataset = pd.concat((real_pos, real_neg, aug_pos, aug_neg))
 train_classes = pd.concat((y_real_pos, y_real_neg, y_aug_pos, y_aug_neg))
