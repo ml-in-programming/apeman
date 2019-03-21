@@ -7,16 +7,14 @@ import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.features_extraction.FeaturesForEveryCandidate
 import apeman_core.grouping.GettingBestCandidates
 import apeman_core.pipes.CandidatesWithFeaturesAndProba
-import apeman_core.prediction.ModelProvider
+import apeman_core.prediction.SciKitModelProvider
 import apeman_core.prediction.TensorFlowModelProvider
 import apeman_core.utils.scopeToTopMethods
 import com.intellij.analysis.AnalysisScope
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiMethod
 import java.util.logging.Logger
-import kotlin.system.exitProcess
 
 private val log = Logger.getGlobal()
 

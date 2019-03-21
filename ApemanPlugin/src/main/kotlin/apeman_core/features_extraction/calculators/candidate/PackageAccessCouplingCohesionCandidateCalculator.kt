@@ -3,13 +3,9 @@ package apeman_core.features_extraction.calculators.candidate
 import apeman_core.base_entities.BlockOfMethod
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.pipes.CandidateWithFeatures
-import apeman_core.utils.BlocksUtils
 import apeman_core.utils.ClassUtils
 import com.intellij.psi.*
 
-import java.util.ArrayList
-import java.util.Arrays
 import java.util.HashSet
 
 class PackageAccessCouplingCohesionCandidateCalculator(
@@ -24,18 +20,20 @@ class PackageAccessCouplingCohesionCandidateCalculator(
 
     override fun getElementsFromBlock(block: BlockOfMethod): Set<PsiPackage> {
         assert(block.statementsCount > 0)
-        val result = HashSet(ClassUtils.calculatePackagesRecursive(block.firstStatement).toList())
+        val firstPackage = ClassUtils.findPackage(block.firstStatement)
+        val result = hashSetOf<PsiPackage>()
+        if (firstPackage != null)
+            result.add(firstPackage)
 
         for (i in 0 until block.statementsCount) {
             block[i].accept(object : JavaRecursiveElementVisitor() {
                 override fun visitReferenceElement(reference: PsiJavaCodeReferenceElement) {
                     super.visitReferenceElement(reference)
-                    val elem = reference.resolve()
-                    if (elem == null || elem.containingFile == null)
-                        return
 
-                    val packages = ClassUtils.calculatePackagesRecursive(elem)
-                    result.addAll(Arrays.asList(*packages))
+                    val elem = reference.resolve() ?: return
+                    val psiPackage = ClassUtils.findPackage(elem) ?: return
+
+                    result.add(psiPackage)
                 }
 
                 override fun visitPackage(aPackage: PsiPackage) {
@@ -47,29 +45,20 @@ class PackageAccessCouplingCohesionCandidateCalculator(
         return result
     }
 
-    override fun getCountOfElementFromBlock(block: BlockOfMethod, psiPackage: PsiPackage?): Int {
+    override fun getCountOfElementFromBlock(block: BlockOfMethod, elem: PsiPackage?): Int {
         ourCount = 0
 
         for (i in 0 until block.statementsCount) {
             block[i].accept(object : JavaRecursiveElementVisitor() {
                 override fun visitReferenceElement(reference: PsiJavaCodeReferenceElement) {
                     super.visitReferenceElement(reference)
-                    val resolved = reference.resolve()
-                    if (resolved == null || resolved.containingFile == null)
-                        return
 
-                    val packages = ClassUtils
-                            .calculatePackagesRecursive(reference.resolve() ?: return)
-                    for (pack in packages) {
-                        if (pack === psiPackage)
-                            ourCount++
-                    }
-                }
+                    val resolved = reference.resolve() ?: return
+                    val resolvedPackage = ClassUtils.findPackage(resolved) ?: return
 
-                override fun visitPackage(aPackage: PsiPackage) {
-                    super.visitPackage(aPackage)
-                    if (aPackage === psiPackage)
+                    if (elem === resolvedPackage) {
                         ourCount++
+                    }
                 }
             })
         }

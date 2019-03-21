@@ -60,16 +60,10 @@ object BlocksUtils {
         return ourCount
     }
 
-    fun <T> getFreqOfElementFromBlock(block: BlockOfMethod, element: T): Double {
-        val count = getCountOfElementFromBlock(block, element)
-        return count.toDouble()// / getNumStatementsRecursively(block)
-    }
-
     fun getNumStatementsRecursively(block: BlockOfMethod): Int {
         ourStatementsCount = 0
         for (i in 0 until block.statementsCount) {
             block[i].accept(object : JavaRecursiveElementVisitor() {
-
 
                 override fun visitStatement(statement: PsiStatement) {
                     super.visitStatement(statement)
@@ -80,6 +74,32 @@ object BlocksUtils {
             })
         }
         return ourStatementsCount
+    }
+
+    fun <T> getStatementsWithElement(block: BlockOfMethod, element: T): Int {
+        val statementsMap = hashSetOf<PsiStatement>()
+        var currentStatement: PsiStatement? = null
+
+        for (i in 0 until block.statementsCount) {
+            block[i].accept(object : JavaRecursiveElementVisitor() {
+
+                override fun visitStatement(statement: PsiStatement?) {
+                    val oldStatement = currentStatement
+                    currentStatement = statement
+                    super.visitStatement(statement)
+                    currentStatement = oldStatement
+                }
+
+                override fun visitReferenceElement(reference: PsiJavaCodeReferenceElement) {
+                    super.visitReferenceElement(reference)
+
+                    if (reference.isReferenceTo(element as PsiElement)) {
+                        statementsMap.add(currentStatement!!)
+                    }
+                }
+            })
+        }
+        return statementsMap.count()
     }
 
     fun getBlockFromMethod(method: PsiMethod): BlockOfMethod {

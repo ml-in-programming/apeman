@@ -67,7 +67,7 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
         coupling = ratio[bestElem] ?: 0.0
 
         val loc = BlocksUtils.getNumStatementsRecursively(candidateBlock)
-        val count = getCountOfElementFromBlock(candidateBlock, bestElem)
+        val count = getStatementsWithElement(candidateBlock, bestElem)
         cohesion = count.toDouble() / loc
     }
 
@@ -77,6 +77,10 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
 
     protected open fun getCountOfElementFromBlock(block: BlockOfMethod, elem: T?): Int {
         return BlocksUtils.getCountOfElementFromBlock(block, elem!!)
+    }
+
+    protected open fun getStatementsWithElement(block: BlockOfMethod, elem: T?): Int {
+        return BlocksUtils.getStatementsWithElement(block, elem!!)
     }
 
 //    protected open fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: T): Double {
