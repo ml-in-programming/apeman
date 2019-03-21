@@ -12,7 +12,7 @@ import com.intellij.psi.PsiMethod
 import java.util.ArrayList
 
 class LocCandidateCalculator(candidates: List<ExtractionCandidate>
-) : BaseMetricsCalculator(candidates, FeatureType.LOC_CANDIDATE) {
+) : BaseMetricsCalculator(candidates, FeatureType.NUM_LOC) {
 
     override fun createVisitor(): JavaRecursiveElementVisitor {
         return object : JavaRecursiveElementVisitor() {

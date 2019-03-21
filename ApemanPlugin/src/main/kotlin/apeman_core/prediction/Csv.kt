@@ -1,5 +1,6 @@
 package apeman_core.prediction
 
+import apeman_core.base_entities.FeatureType
 import apeman_core.pipes.CandidateWithFeatures
 import org.apache.commons.csv.CSVFormat
 import java.io.File
@@ -80,7 +81,7 @@ fun importCsvFrom(candidates: ArrayList<CandidateWithFeatures>, featureNames: Ar
 
     for ((cand, feat) in candidates) {
         val featuresStr = ArrayList(feat
-                .filter { it.value != -1.0 }
+                .filter { it.value != -1.0 && it.key != FeatureType.NUM_ASSERT }
                 .map { it.value.toString() })
         data.add(featuresStr)
     }

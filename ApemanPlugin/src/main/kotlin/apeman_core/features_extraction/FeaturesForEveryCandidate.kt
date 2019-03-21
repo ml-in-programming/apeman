@@ -21,12 +21,12 @@ class FeaturesForEveryCandidate(
         declareMetrics()
     }
 
-    // wrong con package (6 vs our 44)
+    // wrong con package (6 vs our 10)
     // wrong con typed elements (10 vs our 25)
 
     // wrong num type access (33 vs our 21)
     // wrong num typed elements (273 vs our 578)
-    // wrong num packages (379 vs our 960)
+    // wrong num packages (379 vs our 223)
 
     // wrong var access cohesion (0.407 vs our 0.555)
     // wrong var access cohesion 2 (0.389 vs our 0.037)
@@ -51,6 +51,7 @@ class FeaturesForEveryCandidate(
                 NumVarsAccessCandidateCalculator(candidates),
                 NumTypeAccessCandidateCalculator(candidates),
                 NumPackageAccessesCandidateCalculator(candidates),
+                NumAssertCandidateCalculator(candidates),
                 LocCandidateCalculator(candidates),
                 RatioLocCandidateCalculator(candidates),
 
@@ -92,7 +93,9 @@ class FeaturesForEveryCandidate(
                 NumFieldAccessMethodCalculator(candidates),
                 NumLocalVarsAccessMethodCalculator(candidates),
                 NumTypeAccessesMethodCalculator(candidates),
-                NumUsedPackagesMethodCalculator(candidates)
+                NumUsedPackagesMethodCalculator(candidates),
+                NumAssertMethodCalculator(candidates),
+                NumLOCMethodCalculator(candidates)
         )
 
         val candidateMetrics = candidateCalculators.map { CandidateMetric(it) }

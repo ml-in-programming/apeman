@@ -23,7 +23,7 @@ class TensorFlowModelProvider(
         val input = getInputList()
 
         SavedModelBundle.load(last_model_path, "serve").use { model ->
-            printSignature(model)
+//            printSignature(model)
             val proba = getProba(model, input)
             return candidatesAndProbaZipped(proba)
         }
@@ -68,7 +68,7 @@ class TensorFlowModelProvider(
 
     private fun getInputList() = FeatureType
             .values()
-            .filter { candidates[0].features[it]!! >= 0 }
+            .filter { candidates[0].features[it]!! >= 0 && it.name != "NUM_ASSERT" }
             .map { featureToTensor(it) }
 
     private fun featureToTensor(featureName: FeatureType) = featureName.name to Tensors.create(

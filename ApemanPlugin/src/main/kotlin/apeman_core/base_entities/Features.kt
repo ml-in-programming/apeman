@@ -15,14 +15,13 @@ enum class FeatureType {
     NUM_FIELD_ACCESS,
     NUM_LOCAL,
     NUM_PACKAGE,
+    NUM_ASSERT,
 
-    // there aren't CON_LOC!
-    // also CON_ASSERT
-    LOC_CANDIDATE,
-//    NUM_LOC,
+    NUM_LOC,
     LOC_RATIO,
-//    СON_LOC,
-//    CON_ASSERT,
+    CON_LOC,
+
+    CON_ASSERT,
     CON_LITERAL,
     CON_CONDITIONAL,
     CON_SWITCH,
