@@ -13,6 +13,7 @@ import kotlin.collections.ArrayList
 class CandidatesOfMethod(private val sourceMethod: PsiMethod) {
 
     val candidates = ArrayList<ExtractionCandidate>()
+    var sourceCodeBlock = false
 
     init {
         generateCandidates()
@@ -22,7 +23,10 @@ class CandidatesOfMethod(private val sourceMethod: PsiMethod) {
         sourceMethod.accept(object : JavaRecursiveElementVisitor() {
             override fun visitCodeBlock(block: PsiCodeBlock) {
                 super.visitCodeBlock(block)
+                if (block == sourceMethod.body)
+                    sourceCodeBlock = true
                 generateCandidatesOfOneBlock(block)
+                sourceCodeBlock = false
             }
         })
     }
@@ -30,18 +34,19 @@ class CandidatesOfMethod(private val sourceMethod: PsiMethod) {
     private fun generateCandidatesOfOneBlock(block: PsiCodeBlock) {
         val n = block.statementCount
         val statements = block.statements
-        var uniqueId = 0
 
         for (i in 0 until n) {
             for (j in i until n) {
 
+                val isSourceCand =  sourceCodeBlock && i == 0 && j == n - 1
+
                 val candidateBlock = ExtractionCandidate(
                         Arrays.copyOfRange(statements, i, j + 1),
-                        sourceMethod
+                        sourceMethod,
+                        isSourceCand
                 )
                 if (CandidateUtils.isValid(candidateBlock)) {
                     candidates.add(candidateBlock)
-                    uniqueId++
                 }
             }
         }

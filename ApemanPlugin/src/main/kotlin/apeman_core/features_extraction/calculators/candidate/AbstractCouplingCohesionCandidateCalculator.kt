@@ -8,8 +8,7 @@ import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.utils.BlocksUtils
 import apeman_core.utils.CandidateUtils
 import com.intellij.openapi.application.invokeAndWaitIfNeed
-import com.intellij.psi.JavaRecursiveElementVisitor
-import com.intellij.psi.PsiMethod
+import com.intellij.psi.*
 
 import java.util.ArrayList
 import java.util.HashMap
@@ -82,10 +81,6 @@ open class AbstractCouplingCohesionCandidateCalculator<T> (
     protected open fun getStatementsWithElement(block: BlockOfMethod, elem: T?): Int {
         return BlocksUtils.getStatementsWithElement(block, elem!!)
     }
-
-//    protected open fun getFreqOfElementFromBlock(block: BlockOfMethod, elem: T): Double {
-//        return BlocksUtils.getFreqOfElementFromBlock(block, elem)
-//    }
 
     protected fun getElementFromRatio(ratio: HashMap<T, Double>): T? {
         val elem = getMaxRatio(ratio)
