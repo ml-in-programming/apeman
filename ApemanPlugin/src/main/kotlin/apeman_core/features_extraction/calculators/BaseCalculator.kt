@@ -5,7 +5,9 @@ import apeman_core.base_entities.FeatureType
 import apeman_core.utils.CandidateUtils
 import com.intellij.psi.PsiMethod
 
-abstract class BaseCalculator(val candidates: List<ExtractionCandidate>, val features: List<FeatureType>) {
+abstract class BaseCalculator(val candidates: List<ExtractionCandidate>, val features: List<FeatureType>
+) : SuperBaseCalculator()
+{
 
     val numFeature = features[0]
     val conFeature = features[1]
@@ -34,10 +36,10 @@ abstract class BaseCalculator(val candidates: List<ExtractionCandidate>, val fea
         }
     }
 
-    val results = Results(features, candidates)
+    override val results = Results(features, candidates)
     abstract fun getStatementsMap(): StatementsMap
 
-    fun calculateMethod(method: PsiMethod) {
+    override fun calculateMethod(method: PsiMethod) {
 
         val statementsMap = getStatementsMap()
         statementsMap.addElementsAbstract(method)

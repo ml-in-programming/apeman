@@ -28,7 +28,7 @@ open class StatementsMap {
     protected open fun addElem(elem: Any) {
         allElements.add(elem)
 
-        // refresh elementsToCount for NUM, CON and COUPLING metrics
+        // refresh elementsToCount for NUM, CON and COUPLING calculators
         for (statement in statementsTrace) {
             val elemToCount = elementsToCount.getOrPut(statement) { LinkedHashMap() }
             val count = elemToCount.getOrPut(elem) { 0 }
