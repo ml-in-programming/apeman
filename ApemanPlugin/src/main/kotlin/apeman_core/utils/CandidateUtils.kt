@@ -11,8 +11,7 @@ import com.intellij.refactoring.extractMethod.ExtractMethodHandler
 
 object CandidateUtils {
 
-    fun getCandidatesOfMethod(method: PsiMethod, allCandidates: List<ExtractionCandidate>)
-            = allCandidates
+    fun getCandidatesOfMethod(method: PsiMethod, allCandidates: List<ExtractionCandidate>) = allCandidates
             .filter { it.sourceMethod == method }
             .toList()
 
@@ -74,4 +73,7 @@ object CandidateUtils {
 
         return EditorFactory.getInstance().createEditor(document)!!
     }
+
+    public fun getSourceCandidate(method: PsiMethod, candidates: List<ExtractionCandidate>) = candidates
+            .first { it.isSourceCandidate && it.sourceMethod === method }
 }

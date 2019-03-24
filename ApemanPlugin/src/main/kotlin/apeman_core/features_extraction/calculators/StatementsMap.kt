@@ -12,22 +12,20 @@ import kotlin.collections.LinkedHashSet
 typealias Cohesion = Pair<Double, Double>
 typealias Coupling = Pair<Double, Double>
 
-open class StatementsMap(
-        val method: PsiMethod
-) {
+open class StatementsMap {
 
-    protected val elementsToCount = linkedMapOf<PsiStatement, LinkedHashMap<PsiElement, Int>>()
-    protected val elementsToNumStmts = linkedMapOf<PsiStatement, LinkedHashMap<PsiElement, Int>>()
-    protected val elementToStatements = linkedMapOf<PsiElement, LinkedHashSet<PsiStatement>>()
+    protected val elementsToCount = linkedMapOf<PsiStatement, LinkedHashMap<Any, Int>>()
+    protected val elementsToNumStmts = linkedMapOf<PsiStatement, LinkedHashMap<Any, Int>>()
+    protected val elementToStatements = linkedMapOf<Any, LinkedHashSet<PsiStatement>>()
 
     protected val statementsCount = linkedMapOf<PsiStatement, Int>()
     protected val uniqueStatements = linkedSetOf<PsiStatement>()
 
-    protected val allElements = linkedSetOf<PsiElement>()
-    protected val allElementsList = arrayListOf<PsiElement>()
+    protected val allElements = linkedSetOf<Any>()
+    protected val allElementsList = arrayListOf<Any>()
     protected val statementsTrace = ArrayList<PsiStatement>()
 
-    protected open fun addElem(elem: PsiElement) {
+    protected open fun addElem(elem: Any) {
         allElements.add(elem)
 
         // refresh elementsToCount for NUM, CON and COUPLING metrics
@@ -70,7 +68,7 @@ open class StatementsMap(
         }
     }
 
-    protected open inner class Visitor : JavaRecursiveElementVisitor() {
+    open inner class Visitor : JavaRecursiveElementVisitor() {
         override fun visitStatement(statement: PsiStatement?) {
             statementsTrace.add(statement!!)
             super.visitStatement(statement)
@@ -79,7 +77,11 @@ open class StatementsMap(
         }
     }
 
-    protected open fun calculateNumAndCon(sourceCand: ExtractionCandidate, candidates: List<ExtractionCandidate>
+    fun addElementsAbstract(method: PsiElement) {
+        method.accept(Visitor())
+    }
+
+    fun calculateNumAndCon(sourceCand: ExtractionCandidate, candidates: List<ExtractionCandidate>
     ): List<Pair<Int, Int>> {
         assert(elementsToCount.isNotEmpty())
 
@@ -102,7 +104,7 @@ open class StatementsMap(
         return numsAndCons
     }
 
-    protected open fun calculateCouplingAndCohesions(
+    fun calculateCouplingAndCohesions(
             sourceCand: ExtractionCandidate,
             candidates: List<ExtractionCandidate>
     ): List<Pair<Coupling, Cohesion>> {
@@ -115,7 +117,7 @@ open class StatementsMap(
 
         for (candidate in candidates) {
 
-            val ratio = linkedMapOf<PsiElement, Double>()
+            val ratio = linkedMapOf<Any, Double>()
             for (elem in allElementsList) {
                 val numCandidate = calculateNumOfConcreteElem(candidate, elem)
                 ratio[elem] = numCandidate.toDouble() / sourceNums.getValue(elem)
@@ -144,7 +146,7 @@ open class StatementsMap(
     }
 
     protected open fun calculateCouplingAndCohesionForElem(
-            candidate: ExtractionCandidate, elem: PsiElement, ratio: Map<PsiElement, Double>
+            candidate: ExtractionCandidate, elem: Any, ratio: Map<Any, Double>
     ): Pair<Double, Double> {
         val coup = ratio[elem] ?: 0.0
         val statementsWithElem = calculateStatementsOfConcreteElem(candidate, elem)
@@ -154,7 +156,7 @@ open class StatementsMap(
         return coup to coh
     }
 
-    protected open fun calculateNumOfConcreteElem(candidate: ExtractionCandidate, elem: PsiElement): Int {
+    protected open fun calculateNumOfConcreteElem(candidate: ExtractionCandidate, elem: Any): Int {
         assert(elementsToCount.isNotEmpty())
         var concreteNum = 0
         for (i in 0 until candidate.block.statementsCount) {
@@ -164,7 +166,7 @@ open class StatementsMap(
         return concreteNum
     }
 
-    protected open fun calculateStatementsOfConcreteElem(candidate: ExtractionCandidate, elem: PsiElement): Int {
+    protected open fun calculateStatementsOfConcreteElem(candidate: ExtractionCandidate, elem: Any): Int {
         assert(elementsToNumStmts.isNotEmpty())
         var numStatements = 0
         for (i in 0 until candidate.block.statementsCount) {
@@ -184,11 +186,11 @@ open class StatementsMap(
         return numStatements
     }
 
-    protected open fun findMaxAndSecondMax(ratio: Map<PsiElement, Double>): Pair<PsiElement?, PsiElement?> {
+    protected open fun findMaxAndSecondMax(ratio: Map<Any, Double>): Pair<Any?, Any?> {
         var firstMax = Double.MIN_VALUE
         var secondMax = Double.MIN_VALUE
-        var firstElem: PsiElement? = null
-        var secondElem: PsiElement? = null
+        var firstElem: Any? = null
+        var secondElem: Any? = null
 
         for ((elem, value) in ratio) {
             if (value > firstMax) {
