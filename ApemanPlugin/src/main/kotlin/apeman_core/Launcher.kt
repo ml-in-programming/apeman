@@ -81,6 +81,7 @@ class Launcher(
 
     private fun predictCandidates(candidatesWithFeature: List<CandidateWithFeatures>)
             : List<CandidatesWithFeaturesAndProba> {
+//        val model = SciKitModelProvider(candidatesWithFeature)
         val model = TensorFlowModelProvider(candidatesWithFeature)
         return model.predictCandidates()
     }

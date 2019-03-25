@@ -73,7 +73,8 @@ class FeaturesForEveryCandidate(
                 InvocationCalculator(candidates),
                 PackageAccessCalculator(candidates),
                 TypeAccessCalculator(candidates),
-                VarAccessCalculator(candidates)
+                VarAccessCalculator(candidates),
+                TypedElementsCalculator(candidates)
         ).map { OptimizationMetric(it) }
 
         metrics.addAll(listOf(
@@ -97,7 +98,7 @@ class FeaturesForEveryCandidate(
         assert(candidatesWithFeatures.all { it.features.all { it.value == -1.0 } })
 
         metrics.forEach { m -> m.fetchResult(candidatesWithFeatures) }
-        assert(candidatesWithFeatures.all { it.features.all { it.value != -1.0 || it.key.name.startsWith("TYPED_ELEMEN") || it.key.name.endsWith("_LITERAL")} })
+        assert(candidatesWithFeatures.all { it.features.all { (it.value != -1.0) xor (it.key.name.endsWith("_LITERAL"))} })
 
     }
 

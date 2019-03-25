@@ -17,8 +17,8 @@ class FeaturesCalculationRunner(
         ProgressManager.getInstance().runProcess({
 
             for (method in methods)
-                for (metric: Metric in metrics)
-                    metric.calculators
+                for (calculator in calculators)
+                    calculator.calculateMethod(method)
 
         }, ProgressIndicatorBase ())
     }

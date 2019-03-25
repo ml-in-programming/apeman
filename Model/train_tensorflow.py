@@ -28,9 +28,7 @@ def _read_train_file(filename, _class: int = 0, coef = 1.0):
     _drop_columns([
         'NAME_CANDIDATE',
         'NUM_LITERAL',
-        'CON_LITERAL',
-        'TYPED_ELEMENTS_COUPLING',
-        'TYPED_ELEMENTS_COHESION'
+        'CON_LITERAL'
     ], dataset)
     dataset = dataset.head(n=int(dataset.shape[0] * coef))
     classes = np.repeat(a=_class, repeats=dataset.shape[0])
@@ -79,9 +77,7 @@ print(eval_dataset.head())
 _drop_columns([
     'NAME_CANDIDATE',
     'NUM_LITERAL',
-    'CON_LITERAL',
-    'TYPED_ELEMENTS_COUPLING',
-    'TYPED_ELEMENTS_COHESION',
+    'CON_LITERAL'
 ], eval_dataset)
 
 eval_input_fn = tf.estimator.inputs.pandas_input_fn(

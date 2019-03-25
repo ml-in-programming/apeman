@@ -83,7 +83,7 @@ open class StatementsMap {
 
     fun calculateNumAndCon(sourceCand: ExtractionCandidate, candidates: List<ExtractionCandidate>
     ): List<Pair<Int, Int>> {
-        assert(elementsToCount.isNotEmpty())
+//        assert(elementsToCount.isNotEmpty())
 
         val numsAndCons = arrayListOf<Pair<Int, Int>>()
         var numSource = 0
@@ -157,7 +157,7 @@ open class StatementsMap {
     }
 
     protected open fun calculateNumOfConcreteElem(candidate: ExtractionCandidate, elem: Any): Int {
-        assert(elementsToCount.isNotEmpty())
+//        assert(elementsToCount.isNotEmpty())
         var concreteNum = 0
         for (i in 0 until candidate.block.statementsCount) {
             val statement = candidate.block[i]
@@ -167,7 +167,7 @@ open class StatementsMap {
     }
 
     protected open fun calculateStatementsOfConcreteElem(candidate: ExtractionCandidate, elem: Any): Int {
-        assert(elementsToNumStmts.isNotEmpty())
+//        assert(elementsToNumStmts.isNotEmpty())
         var numStatements = 0
         for (i in 0 until candidate.block.statementsCount) {
             val statement = candidate.block[i]
@@ -177,7 +177,7 @@ open class StatementsMap {
     }
 
     protected open fun calculateOverallStatements(candidate: ExtractionCandidate): Int {
-        assert(statementsCount.isNotEmpty())
+//        assert(statementsCount.isNotEmpty())
         var numStatements = 0
         for (i in 0 until candidate.block.statementsCount) {
             val statement = candidate.block[i]

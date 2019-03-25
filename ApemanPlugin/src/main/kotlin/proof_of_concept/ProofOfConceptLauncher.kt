@@ -26,17 +26,17 @@ class ProofOfConceptLauncher : ApplicationStarter {
         val results = arrayListOf<Results>()
 
         try {
-            val junit = OneProjectAnalyzer(subjectDir + "junit3.8")
-            results.addAll(junit.analyze())
-
-            val jHotDraw = OneProjectAnalyzer(subjectDir + "JHotDraw5.2")
-            results.addAll(jHotDraw.analyze())
-
-            val myWebMarker = OneProjectAnalyzer(subjectDir + "MyWebMarket")
-            results.addAll(myWebMarker.analyze())
-
-            val wikidevFilters = OneProjectAnalyzer(subjectDir + "wikidev-filters")
-            results.addAll(wikidevFilters.analyze())
+//            val junit = OneProjectAnalyzer(subjectDir + "junit3.8")
+//            results.addAll(junit.analyze())
+//
+//            val jHotDraw = OneProjectAnalyzer(subjectDir + "JHotDraw5.2")
+//            results.addAll(jHotDraw.analyze())
+//
+//            val myWebMarker = OneProjectAnalyzer(subjectDir + "MyWebMarket")
+//            results.addAll(myWebMarker.analyze())
+//
+//            val wikidevFilters = OneProjectAnalyzer(subjectDir + "wikidev-filters")
+//            results.addAll(wikidevFilters.analyze())
 
             val myPlanner = OneProjectAnalyzer(subjectDir + "myplanner-data-src")
             results.addAll(myPlanner.analyze())

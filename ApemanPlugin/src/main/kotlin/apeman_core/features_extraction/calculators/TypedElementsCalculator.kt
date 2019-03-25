@@ -8,10 +8,10 @@ class TypedElementsCalculator(candidates: List<ExtractionCandidate>
 ) : BaseCalculator(
         candidates,
         listOf(
-                FeatureType.NUM_INVOCATION,
-                FeatureType.CON_INVOCATION,
-                FeatureType.INVOCATION_COUPLING,
-                FeatureType.INVOCATION_COHESION
+                FeatureType.NUM_TYPED_ELEMENTS,
+                FeatureType.CON_TYPED_ELEMENTS,
+                FeatureType.TYPED_ELEMENTS_COUPLING,
+                FeatureType.TYPED_ELEMENTS_COHESION
         )
 ) {
 
@@ -21,17 +21,14 @@ class TypedElementsCalculator(candidates: List<ExtractionCandidate>
             override fun visitReferenceElement(reference: PsiJavaCodeReferenceElement?) {
                 super.visitReferenceElement(reference)
                 val elem = reference!!.resolve()
-                when (elem) {
-                    is PsiField -> addElem(elem.type)
-                    is PsiParameter -> addElem(elem.type)
-                    is PsiVariable -> addElem(elem.type)
-                    is PsiMethod -> addElem(elem.returnType!!)
+                if (elem is PsiField || elem is PsiParameter || elem is PsiVariable || elem is PsiMethod) {
+                    addElem(elem)
                 }
             }
 
             override fun visitExpression(expression: PsiExpression?) {
                 super.visitExpression(expression)
-                addElem(expression!!.type!!)
+                addElem(expression!!)
             }
         }
     }
