@@ -7,7 +7,7 @@ import com.intellij.psi.PsiIfStatement
 class NumIfMethodCalculator(candidates: List<ExtractionCandidate>
 ) : NumSimpleElementMethodCalculator(candidates, FeatureType.CON_IF) {
 
-    override fun createVisitor() = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
 
     inner class Visitor : NumSimpleElementMethodCalculator.Visitor() {
 

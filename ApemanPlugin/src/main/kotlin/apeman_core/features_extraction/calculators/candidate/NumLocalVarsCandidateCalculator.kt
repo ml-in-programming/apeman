@@ -7,7 +7,7 @@ import com.intellij.psi.PsiLocalVariable
 class NumLocalVarsCandidateCalculator(candidates: List<ExtractionCandidate>
 ) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_LOCAL) {
 
-    override fun createVisitor() = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
 
     inner class Visitor : AbstractNumCandidateCalculator.CandidateVisitor() {
 

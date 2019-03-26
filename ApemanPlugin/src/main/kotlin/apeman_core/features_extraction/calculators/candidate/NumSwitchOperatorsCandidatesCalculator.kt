@@ -7,7 +7,7 @@ import com.intellij.psi.PsiSwitchStatement
 class NumSwitchOperatorsCandidatesCalculator(candidates: List<ExtractionCandidate>
 ) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_SWITCH) {
 
-    override fun createVisitor() = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
 
     inner class Visitor : AbstractNumCandidateCalculator.CandidateVisitor() {
 

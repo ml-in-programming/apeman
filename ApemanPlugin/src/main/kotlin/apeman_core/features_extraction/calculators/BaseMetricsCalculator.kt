@@ -18,9 +18,9 @@ abstract class BaseMetricsCalculator @JvmOverloads constructor(
     protected val firstFeature= this.features[0]
     override val results = Results(this.features, candidates)
 
-    abstract fun createVisitor(): JavaRecursiveElementVisitor
+    abstract fun createVisitor(methodCandidates: List<ExtractionCandidate>): JavaRecursiveElementVisitor
 
-    override fun calculateMethod(method: PsiMethod) {
-        method.accept(createVisitor())
+    override fun calculateMethod(method: PsiMethod, methodCandidates: List<ExtractionCandidate>) {
+        method.accept(createVisitor(methodCandidates))
     }
 }

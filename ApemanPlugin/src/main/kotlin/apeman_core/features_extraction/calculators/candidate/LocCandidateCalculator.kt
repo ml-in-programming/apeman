@@ -11,14 +11,12 @@ import com.intellij.psi.PsiMethod
 class LocCandidateCalculator(candidates: List<ExtractionCandidate>
 ) : BaseMetricsCalculator(candidates, FeatureType.NUM_LOC) {
 
-    override fun createVisitor(): JavaRecursiveElementVisitor {
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>): JavaRecursiveElementVisitor {
         return object : JavaRecursiveElementVisitor() {
 
             override fun visitMethod(method: PsiMethod) {
                 super.visitMethod(method)
-                val candidatesOfMethod = CandidateUtils.getCandidatesOfMethod(method, candidates)
-
-                for (cand in candidatesOfMethod) {
+                for (cand in methodCandidates) {
                     results.set(cand, firstFeature,
                             BlocksUtils.getNumStatementsRecursively(cand.block).toDouble())
                 }

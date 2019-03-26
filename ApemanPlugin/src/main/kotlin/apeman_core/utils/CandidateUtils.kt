@@ -11,9 +11,10 @@ import com.intellij.refactoring.extractMethod.ExtractMethodHandler
 
 object CandidateUtils {
 
-    fun getCandidatesOfMethod(method: PsiMethod, allCandidates: List<ExtractionCandidate>) = allCandidates
-            .filter { it.sourceMethod == method }
-            .toList()
+    fun getCandidatesOfMethod(method: PsiMethod, allCandidates: List<ExtractionCandidate>
+    ): List<ExtractionCandidate> {
+        return allCandidates.filter { it.sourceMethod == method }
+    }
 
     fun checkStartOfCandidates(
             statement: PsiStatement,
@@ -48,30 +49,6 @@ object CandidateUtils {
 
         assert(candStatements.count() > 0)
         return ExtractionCandidate(candStatements.toTypedArray(), currentMethod)
-    }
-
-    // get editor, select candidate and check if we can extract it
-    fun isValid(candidate: ExtractionCandidate): Boolean {
-
-        val editor = getEditor(candidate)
-
-        editor.selectionModel.setSelection(
-                candidate.start.textOffset,
-                candidate.end.textRange.endOffset
-        )
-
-        return ExtractMethodHandler().isAvailableForQuickList(
-                editor,
-                candidate.sourceMethod.containingFile,
-                DataContext.EMPTY_CONTEXT
-        )
-    }
-
-    private fun getEditor(candidate: ExtractionCandidate): Editor {
-        val document = PsiDocumentManager.getInstance(candidate.sourceMethod.project)
-                .getDocument(candidate.sourceMethod.containingFile)!!
-
-        return EditorFactory.getInstance().createEditor(document)!!
     }
 
     public fun getSourceCandidate(method: PsiMethod, candidates: List<ExtractionCandidate>) = candidates

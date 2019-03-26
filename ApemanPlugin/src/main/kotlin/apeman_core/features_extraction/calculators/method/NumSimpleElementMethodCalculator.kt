@@ -3,7 +3,6 @@ package apeman_core.features_extraction.calculators.method
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
-import apeman_core.utils.CandidateUtils
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiMethod
 
@@ -12,9 +11,9 @@ abstract class NumSimpleElementMethodCalculator(
         neededFeature: FeatureType
 ) : BaseMetricsCalculator(candidates, neededFeature) {
 
-    override fun createVisitor() = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
 
-    open inner class Visitor : JavaRecursiveElementVisitor() {
+    open inner class Visitor(val methodCandidates: List<ExtractionCandidate>) : JavaRecursiveElementVisitor() {
         var elementsCounter = 0
         var nestingDepth = 0
 
@@ -27,7 +26,7 @@ abstract class NumSimpleElementMethodCalculator(
             super.visitMethod(method)
             nestingDepth--
             if (nestingDepth == 0) {
-                for (cand in CandidateUtils.getCandidatesOfMethod(method, candidates)) {
+                for (cand in methodCandidates) {
                     results.set(cand, firstFeature, elementsCounter.toDouble())
                 }
             }

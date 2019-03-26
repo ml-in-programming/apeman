@@ -7,7 +7,7 @@ import com.intellij.psi.PsiConditionalExpression
 class NumTernaryOperatorsCandidatesCalculator(candidates: List<ExtractionCandidate>
 ) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_CONDITIONAL) {
 
-    override fun createVisitor() = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
 
     inner class Visitor : AbstractNumCandidateCalculator.CandidateVisitor() {
 

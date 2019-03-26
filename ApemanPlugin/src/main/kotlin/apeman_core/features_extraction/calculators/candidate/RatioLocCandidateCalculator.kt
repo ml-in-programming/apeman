@@ -11,7 +11,7 @@ import com.intellij.psi.PsiMethod
 class RatioLocCandidateCalculator(candidates: List<ExtractionCandidate>
 ) : BaseMetricsCalculator(candidates, FeatureType.LOC_RATIO) {
 
-    override fun createVisitor(): JavaRecursiveElementVisitor {
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>): JavaRecursiveElementVisitor {
         return object : JavaRecursiveElementVisitor() {
 
             override fun visitMethod(method: PsiMethod) {
