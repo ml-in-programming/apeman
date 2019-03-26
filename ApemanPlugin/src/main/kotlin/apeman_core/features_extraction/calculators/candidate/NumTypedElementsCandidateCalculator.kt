@@ -2,12 +2,8 @@ package apeman_core.features_extraction.calculators.candidate
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.utils.TypeUtils
 import com.intellij.psi.*
-
-import java.util.ArrayList
-import java.util.HashSet
 
 class NumTypedElementsCandidateCalculator(candidates: List<ExtractionCandidate>
 ) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_TYPED_ELEMENTS) {

@@ -4,13 +4,10 @@ import apeman_core.base_entities.BlockOfMethod
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
-import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.utils.BlocksUtils
 import apeman_core.utils.CandidateUtils
-import com.intellij.openapi.application.invokeAndWaitIfNeed
 import com.intellij.psi.*
 
-import java.util.ArrayList
 import java.util.HashMap
 
 open class AbstractCouplingCohesionCandidateCalculator<T> (

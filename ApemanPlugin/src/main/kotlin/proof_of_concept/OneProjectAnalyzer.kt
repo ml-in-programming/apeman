@@ -1,8 +1,8 @@
 package proof_of_concept
 
 import apeman_core.Launcher
-import apeman_core.utils.methodsToScope
-import apeman_core.pipes.CandidatesWithFeaturesAndProba
+import apeman_core.base_entities.CandidatesWithFeaturesAndProba
+import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import java.nio.file.Files
@@ -46,7 +46,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
 
         log.fine("launch apeman")
         val launcher = Launcher(analysisMethods = methods)
-        apemanCandidates.addAll(launcher.getCandidatesWithProba())
+        apemanCandidates.addAll(launcher.calculateCandidatesWithProba(EmptyProgressIndicator()))
     }
 
     private fun calculateResults(): List<Results> {

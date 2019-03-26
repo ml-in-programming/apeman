@@ -1,6 +1,6 @@
 package gui
 
-import apeman_core.pipes.CandidatesWithFeaturesAndProba
+import apeman_core.base_entities.CandidatesWithFeaturesAndProba
 import com.intellij.openapi.ui.Messages
 
 fun showInfoDialog(candidates: List<CandidatesWithFeaturesAndProba>) {

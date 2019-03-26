@@ -2,10 +2,7 @@ package apeman_core.features_extraction.calculators.method
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.pipes.CandidateWithFeatures
 import com.intellij.psi.*
-
-import java.util.ArrayList
 
 class NumFieldAccessMethodCalculator(candidates: List<ExtractionCandidate>
 ) : NumSimpleElementMethodCalculator(candidates, FeatureType.CON_FIELD_ACCESS) {

@@ -1,7 +1,7 @@
 package apeman_core.features_extraction.metrics
 
 import apeman_core.features_extraction.calculators.SuperBaseCalculator
-import apeman_core.pipes.CandidateWithFeatures
+import apeman_core.base_entities.CandidateWithFeatures
 
 class OptimizationMetric(val calculator: SuperBaseCalculator) : Metric(listOf(calculator)) {
     override fun fetchResult(candidates: List<CandidateWithFeatures>) {

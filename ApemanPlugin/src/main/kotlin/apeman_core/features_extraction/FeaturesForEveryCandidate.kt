@@ -3,14 +3,13 @@ package apeman_core.features_extraction
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.*
-import apeman_core.pipes.CandidateWithFeatures
+import apeman_core.base_entities.CandidateWithFeatures
 import apeman_core.features_extraction.calculators.candidate.*
 import apeman_core.features_extraction.calculators.method.*
 import apeman_core.features_extraction.metrics.CandidateMetric
 import apeman_core.features_extraction.metrics.ComplementMetric
 import apeman_core.features_extraction.metrics.Metric
 import apeman_core.features_extraction.metrics.OptimizationMetric
-import com.intellij.psi.*
 
 class FeaturesForEveryCandidate(
         private val candidates: List<ExtractionCandidate>

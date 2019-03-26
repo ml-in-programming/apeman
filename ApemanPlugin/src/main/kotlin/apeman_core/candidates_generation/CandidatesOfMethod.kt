@@ -2,6 +2,7 @@ package apeman_core.candidates_generation
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.utils.CandidateUtils
+import apeman_core.utils.CandidateValidation
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
@@ -45,7 +46,7 @@ class CandidatesOfMethod(private val sourceMethod: PsiMethod) {
                         sourceMethod,
                         isSourceCand
                 )
-                if (CandidateUtils.isValid(candidateBlock)) {
+                if (CandidateValidation.isValid(candidateBlock)) {
                     candidates.add(candidateBlock)
                 }
             }

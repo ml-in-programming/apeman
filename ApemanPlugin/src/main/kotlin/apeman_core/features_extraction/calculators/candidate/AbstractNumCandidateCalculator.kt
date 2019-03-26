@@ -3,7 +3,6 @@ package apeman_core.features_extraction.calculators.candidate
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import apeman_core.features_extraction.calculators.BaseMetricsCalculator
-import apeman_core.pipes.CandidateWithFeatures
 import apeman_core.utils.CandidateUtils
 import apeman_core.utils.MethodUtils
 import com.intellij.psi.JavaRecursiveElementVisitor
