@@ -22,6 +22,6 @@ class ExtractionCandidate(statements: Array<PsiStatement>,
 
     override fun toString(): String {
         val statementsRange = (0 until block.statementsCount)
-        return statementsRange.joinToString(separator = "\n") { i -> block[i].text }
+        return statementsRange.joinToString(separator = "\n", limit = 7) { i -> block[i].text }
     }
 }

@@ -74,11 +74,12 @@ def train_model(coef=1.0):
         num_epochs=2
     )
 
-    est = tf.estimator.LinearClassifier(feature_columns)#, n_batches_per_layer=1)
-    est.train(train_input_fn, max_steps=100)
+    est = tf.estimator.BoostedTreesClassifier(feature_columns, n_batches_per_layer=1)
+    est.train(train_input_fn, max_steps=160)
 
+    eval_dataset = eval_dataset.fillna(value=0)
     eval_input_fn = tf.estimator.inputs.pandas_input_fn(
-        eval_dataset, eval_classes['CLASSES'], shuffle=False
+        eval_dataset, eval_classes['CLASSES'], shuffle=False, batch_size=1
     )
     proba = est.evaluate(eval_input_fn)
     print(f'Coef : {coef}')

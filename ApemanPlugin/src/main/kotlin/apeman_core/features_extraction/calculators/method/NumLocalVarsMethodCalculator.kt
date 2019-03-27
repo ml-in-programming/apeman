@@ -7,9 +7,10 @@ import com.intellij.psi.PsiLocalVariable
 class NumLocalVarsMethodCalculator(candidates: List<ExtractionCandidate>
 ) : NumSimpleElementMethodCalculator(candidates, FeatureType.CON_LOCAL) {
 
-    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 
-    inner class Visitor : NumSimpleElementMethodCalculator.Visitor() {
+    inner class Visitor(methodCandidates: List<ExtractionCandidate>
+    ) : NumSimpleElementMethodCalculator.Visitor(methodCandidates) {
 
         override fun visitLocalVariable(variable: PsiLocalVariable) {
             super.visitLocalVariable(variable)

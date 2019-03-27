@@ -7,9 +7,10 @@ import com.intellij.psi.PsiIfStatement
 class NumIfCandidateCalculator(candidates: List<ExtractionCandidate>
 ) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_IF) {
 
-    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 
-    inner class Visitor : AbstractNumCandidateCalculator.CandidateVisitor() {
+    inner class Visitor(methodCandidates: List<ExtractionCandidate>
+    ) : AbstractNumCandidateCalculator.CandidateVisitor(methodCandidates) {
 
         override fun visitIfStatement(statement: PsiIfStatement) {
             super.visitIfStatement(statement)

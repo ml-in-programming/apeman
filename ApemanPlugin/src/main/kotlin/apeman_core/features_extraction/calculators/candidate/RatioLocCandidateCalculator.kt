@@ -20,12 +20,11 @@ class RatioLocCandidateCalculator(candidates: List<ExtractionCandidate>
                 // abstract method or interface
                     return
                 val blockOfMethod = BlocksUtils.getBlockFromMethod(method)
-                val candidatesOfMethod = CandidateUtils.getCandidatesOfMethod(method, candidates)
-                val numStatementsMethod = BlocksUtils.getNumStatementsRecursively(blockOfMethod)
+                val numStatementsMethod = BlocksUtils.getNumStatementsRecursively(blockOfMethod).toDouble()
 
-                for (cand in candidatesOfMethod) {
+                for (cand in methodCandidates) {
                     val candStatements = BlocksUtils.getNumStatementsRecursively(cand.block)
-                    results.set(cand, firstFeature, candStatements / numStatementsMethod.toDouble())
+                    results.set(cand, firstFeature, candStatements / numStatementsMethod)
                 }
             }
         }

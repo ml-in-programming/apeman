@@ -7,9 +7,10 @@ import com.intellij.psi.PsiAssignmentExpression
 class NumAssignmentsCandidateCalculator(candidates: List<ExtractionCandidate>
 ) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_ASSIGN) {
 
-    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 
-    inner class Visitor : AbstractNumCandidateCalculator.CandidateVisitor() {
+    inner class Visitor(methodCandidates: List<ExtractionCandidate>
+    ) : AbstractNumCandidateCalculator.CandidateVisitor(methodCandidates) {
         override fun visitAssignmentExpression(expression: PsiAssignmentExpression) {
             super.visitAssignmentExpression(expression)
 

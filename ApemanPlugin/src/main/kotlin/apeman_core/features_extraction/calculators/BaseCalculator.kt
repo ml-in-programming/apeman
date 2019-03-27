@@ -39,11 +39,10 @@ abstract class BaseCalculator(val candidates: List<ExtractionCandidate>, val fea
     override val results = Results(features, candidates)
     abstract fun getStatementsMap(): StatementsMap
 
-    override fun calculateMethod(method: PsiMethod) {
+    override fun calculateMethod(method: PsiMethod, methodCandidates: List<ExtractionCandidate>) {
 
         val statementsMap = getStatementsMap()
         statementsMap.addElementsAbstract(method)
-        val methodCandidates = CandidateUtils.getCandidatesOfMethod(method, candidates)
         val sourceCandidate = CandidateUtils.getSourceCandidate(method, methodCandidates)
         val numsAndCons = statementsMap.calculateNumAndCon(sourceCandidate, methodCandidates)
         val coupsAndCohs = statementsMap

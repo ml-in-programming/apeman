@@ -7,9 +7,10 @@ import com.intellij.psi.PsiAssertStatement
 class NumAssertCandidateCalculator(candidates: List<ExtractionCandidate>
 ) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_ASSERT) {
 
-    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 
-    inner class Visitor : AbstractNumCandidateCalculator.CandidateVisitor() {
+    inner class Visitor(methodCandidates: List<ExtractionCandidate>
+    ) : AbstractNumCandidateCalculator.CandidateVisitor(methodCandidates) {
 
         override fun visitAssertStatement(statement: PsiAssertStatement?) {
             super.visitAssertStatement(statement)

@@ -5,13 +5,13 @@ import com.intellij.openapi.ui.Messages
 
 fun showInfoDialog(candidates: List<CandidatesWithFeaturesAndProba>) {
     val sortedCandidates = candidates.sortedBy { -it.probability }
-    var info = ""
+    var info = StringBuilder()
     for ((cand, features, proba) in sortedCandidates) {
-        info += "\n\n$cand:\n proba = $proba\n\n"
+        info.append("\n\n$cand:\n proba = $proba\n\n")
         for ((name, value) in features) {
-            info += "$name = $value\n"
+            info.append("$name = $value\n")
         }
     }
 
-    Messages.showInfoMessage(info, "checked")
+    Messages.showInfoMessage(info.toString(), "checked")
 }

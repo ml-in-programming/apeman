@@ -11,7 +11,7 @@ abstract class NumSimpleElementMethodCalculator(
         neededFeature: FeatureType
 ) : BaseMetricsCalculator(candidates, neededFeature) {
 
-    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 
     open inner class Visitor(val methodCandidates: List<ExtractionCandidate>) : JavaRecursiveElementVisitor() {
         var elementsCounter = 0

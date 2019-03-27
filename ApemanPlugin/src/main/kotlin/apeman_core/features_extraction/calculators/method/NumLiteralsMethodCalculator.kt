@@ -7,9 +7,10 @@ import com.intellij.psi.PsiLiteralExpression
 class NumLiteralsMethodCalculator(candidates: List<ExtractionCandidate>
 ) : NumSimpleElementMethodCalculator(candidates, FeatureType.CON_LITERAL) {
 
-    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor()
+    override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 
-    inner class Visitor : NumSimpleElementMethodCalculator.Visitor() {
+    inner class Visitor(methodCandidates: List<ExtractionCandidate>
+    ) : NumSimpleElementMethodCalculator.Visitor(methodCandidates) {
 
         override fun visitLiteralExpression(literal: PsiLiteralExpression) {
             super.visitLiteralExpression(literal)
