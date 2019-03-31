@@ -34,18 +34,8 @@ class OneProjectDatasetGenerator(
 
     private fun analyze() {
         try {
-            log.fine("analyze project")
             log.info(pathToProject)
-
             log.info("load project")
-            loadProject()
-
-            CommandProcessor.getInstance().executeCommand(project, {
-                log.info("inner methods")
-                innerMethods()
-            }, null, null)
-
-            ProjectManager.getInstance().closeProject(project!!)
             loadProject()
 
             log.info("generate positive canidates")
@@ -69,79 +59,8 @@ class OneProjectDatasetGenerator(
         }
     }
 
-    private fun makeCsv(featureCandidates: List<CandidateWithFeatures>) {
-        val positiveAndNegative = featureCandidates.filter { !it.candidate.isSourceCandidate }
-
-        val csv = importCsvFrom(positiveAndNegative, positiveAndNegative[0].features.keys.map { it.name })
-        csv.export("$pathToProject/dataset.csv")
-    }
-
-    private fun getFeatures(): List<CandidateWithFeatures> {
-        val candidates = listOf(
-                positiveCandidates, sourceCandidates, negativeCandidates
-        ).flatten()
-
-        return FeaturesForEveryCandidate(candidates).getCandidatesWithFeatures()
-    }
-
     private fun loadProject() {
-        project = ProjectManager.getInstance().loadAndOpenProject(pathToProject)!!
-    }
-
-    private fun innerMethods() {
-        val scope = AnalysisScope(project!!)
-        scope.accept(object : JavaRecursiveElementVisitor() {
-            override fun visitMethod(method: PsiMethod?) {
-                super.visitMethod(method)
-
-                val reference = getFirstReferenceOrNull(method!!) ?: return
-                if (method.isConstructor || method.body == null || !method.isWritable)
-                    return
-                if (!method.isValid)
-                    return
-//                if (!InlineMethodProcessor.checkUnableToInsertCodeBlock())
-
-
-                addBracketsToMethod(method)
-
-                val editor = getEditor(reference)
-                try {
-                    InlineMethodProcessor(
-                            reference.element.project, method, reference, editor, false
-                    ).run()
-                } catch (e: PsiInvalidElementAccessException) {
-                    print(e)
-                }
-                EditorFactory.getInstance().releaseEditor(editor)
-            }
-        })
-    }
-
-    private fun getFirstReferenceOrNull(method: PsiMethod): PsiJavaCodeReferenceElement? {
-        val query = ReferencesSearch.search(method)
-        var totalRefs = 0
-        var reference: PsiReference? = null
-        query.forEach {
-            if (totalRefs == 0) totalRefs++ else return null
-            reference = it
-        }
-        return reference as? PsiJavaCodeReferenceElement
-    }
-
-    private fun getEditor(reference: PsiReference): Editor {
-        val file = reference.element.containingFile
-        val project = reference.element.project
-        val document = PsiDocumentManager.getInstance(project).getDocument(file)!!
-        return EditorFactory.getInstance().createEditor(document)!!
-    }
-
-    private fun addBracketsToMethod(sourceMethod: PsiMethod) {
-        val factory = JavaPsiFacade.getInstance(project).getElementFactory()
-        val startCandidateComment = factory.createCommentFromText("/*{*/", sourceMethod)
-        val endCandidateComment = factory.createCommentFromText("/*}*/", sourceMethod)
-
-        sourceMethod.body!!.addBefore(startCandidateComment, sourceMethod.body!!.firstBodyElement)
-        sourceMethod.body!!.addAfter(endCandidateComment, sourceMethod.body!!.lastBodyElement)
+        project = ProjectManager.getInstance().loadAndOpenProject(pathToProject!!)!!
     }
 
     private fun generatePositiveCandidates() {
@@ -175,14 +94,11 @@ class OneProjectDatasetGenerator(
 
                 override fun visitCodeBlock(block: PsiCodeBlock?) {
                     super.visitCodeBlock(block)
-
                     if (random.nextInt(3) == 0) {
                         generateNegativeCandidateForBlock(method, block!!, random)
                         generated = true
                     }
-
                 }
-
             })
         }
     }
@@ -202,5 +118,20 @@ class OneProjectDatasetGenerator(
                 break
             }
         }
+    }
+
+    private fun getFeatures(): List<CandidateWithFeatures> {
+        val candidates = listOf(
+                positiveCandidates, sourceCandidates, negativeCandidates
+        ).flatten()
+
+        return FeaturesForEveryCandidate(candidates).getCandidatesWithFeatures()
+    }
+
+    private fun makeCsv(featureCandidates: List<CandidateWithFeatures>) {
+        val positiveAndNegative = featureCandidates.filter { !it.candidate.isSourceCandidate }
+
+        val csv = importCsvFrom(positiveAndNegative, positiveAndNegative[0].features.keys.map { it.name })
+        csv.export("$pathToProject/dataset.csv")
     }
 }
