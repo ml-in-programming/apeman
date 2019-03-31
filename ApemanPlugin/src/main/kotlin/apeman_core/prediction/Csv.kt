@@ -74,7 +74,7 @@ fun importCsvFrom(filepath: String): Csv {
     }
 }
 
-fun importCsvFrom(candidates: ArrayList<CandidateWithFeatures>, featureNames: ArrayList<String>): Csv
+fun importCsvFrom(candidates: List<CandidateWithFeatures>, featureNames: List<String>): Csv
 {
 
     val data = ArrayList<ArrayList<String>>()

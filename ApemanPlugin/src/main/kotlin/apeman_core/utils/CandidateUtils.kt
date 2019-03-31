@@ -36,7 +36,7 @@ object CandidateUtils {
         }
     }
 
-    fun fromTextRange(range: TextRange, currentMethod: PsiMethod): ExtractionCandidate {
+    fun fromTextRange(range: TextRange, currentMethod: PsiMethod): ExtractionCandidate? {
 
         var elem = currentMethod.containingFile.findElementAt(range.endOffset - 1)!!
         while (elem !is PsiFile && elem !is PsiCodeBlock) {
@@ -47,8 +47,9 @@ object CandidateUtils {
         val candStatements = (elem as PsiCodeBlock).statements
                 .filter { statement -> range.contains(statement.textRange) }
 
-        assert(candStatements.count() > 0)
-        return ExtractionCandidate(candStatements.toTypedArray(), currentMethod)
+        return if (candStatements.count() > 0)
+            ExtractionCandidate(candStatements.toTypedArray(), currentMethod)
+        else null
     }
 
     public fun getSourceCandidate(method: PsiMethod, candidates: List<ExtractionCandidate>) = candidates

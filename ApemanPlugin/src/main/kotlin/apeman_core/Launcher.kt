@@ -7,6 +7,7 @@ import apeman_core.base_entities.CandidateWithFeatures
 import apeman_core.features_extraction.FeaturesForEveryCandidate
 import apeman_core.grouping.GettingBestCandidates
 import apeman_core.base_entities.CandidatesWithFeaturesAndProba
+import apeman_core.prediction.SciKitModelProvider
 import apeman_core.prediction.TensorFlowModelProvider
 import apeman_core.utils.scopeToTopMethods
 import com.intellij.analysis.AnalysisScope
@@ -106,8 +107,8 @@ class Launcher(
 
     private fun predictCandidates(candidatesWithFeature: List<CandidateWithFeatures>)
             : List<CandidatesWithFeaturesAndProba> {
-//        val model = SciKitModelProvider(candidatesWithFeature)
-        val model = TensorFlowModelProvider(candidatesWithFeature)
+        val model = SciKitModelProvider(candidatesWithFeature)
+//        val model = TensorFlowModelProvider(candidatesWithFeature)
         return model.predictCandidates()
     }
 

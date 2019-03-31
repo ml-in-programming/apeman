@@ -45,13 +45,13 @@ class Dataset:
         self.features: np.ndarray = None
         self.classes_of_classifier: np.ndarray = None
 
-    def append_positive(self, filename: str):
+    def append_positive(self, filename: str, coef: float = 1.0):
         self.append_to_class(filename, 1)
 
-    def append_negative(self, filename: str):
+    def append_negative(self, filename: str, coef: float = 1.0):
         self.append_to_class(filename, 0)
 
-    def append_to_class(self, filename: str, _class: int = 0):
+    def append_to_class(self, filename: str, _class: int = 0, coef: float = 1.0):
         new_dataset = self._read(filename)
         classes = np.repeat(a=_class, repeats=new_dataset.shape[0])
 
@@ -74,6 +74,10 @@ class Dataset:
         dataset = pd.read_csv(filename)
         if 'NAME_CANDIDATE' in dataset.columns:
             dataset = dataset.drop(columns=['NAME_CANDIDATE'])
+        if 'NUM_LITERAL' in dataset.columns:
+            dataset = dataset.drop(columns=['NUM_LITERAL'])
+        if 'CON_LITERAL' in dataset.columns:
+            dataset = dataset.drop(columns=['CON_LITERAL'])
         return np.nan_to_num(dataset.values, copy=False)
 
     def store_proba(self, filename: str, proba: 'array-like'):

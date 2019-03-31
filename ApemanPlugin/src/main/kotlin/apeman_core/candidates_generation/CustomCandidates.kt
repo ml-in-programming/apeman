@@ -19,9 +19,10 @@ class CustomCandidates(
                     .findElementAt(range.endOffset)!!
                     .parentsOfType<PsiMethod>()
                     .last()
-            candidates.add(CandidateUtils.fromTextRange(range, topMethod))
+            val candidate = CandidateUtils.fromTextRange(range, topMethod)
+            if (candidate != null)
+                candidates.add(candidate)
         }
-
         return candidates
     }
 }

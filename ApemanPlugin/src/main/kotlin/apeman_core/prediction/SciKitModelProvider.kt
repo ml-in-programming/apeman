@@ -17,7 +17,7 @@ const val GEMS_BASE = "/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/"
 const val GEMS_CSV_POSITIVE_REAL = GEMS_BASE + "real_set/con_pos404.csv"
 const val GEMS_CSV_POSITIVE_AUGMENTED = GEMS_BASE + "augmented_set/con_pos404.csv"
 const val GEMS_CSV_NEGATIVE_REAL = GEMS_BASE + "real_set/con_neg404.csv"
-const val GEMS_CSV_NEGATIVE_AUGMENTED = GEMS_BASE + "augmented_set/con_pos404.csv"
+const val GEMS_CSV_NEGATIVE_AUGMENTED = GEMS_BASE + "augmented_set/con_neg404.csv"
 
 const val TRAINING_SCRIPT_NAME = "train_model.py"
 const val PREDICTING_SCRIPT_NAME = "predict.py"

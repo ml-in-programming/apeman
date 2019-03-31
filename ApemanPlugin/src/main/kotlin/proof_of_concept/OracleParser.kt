@@ -1,6 +1,5 @@
 package proof_of_concept
 
-import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.utils.CandidateUtils
 import com.intellij.analysis.AnalysisScope
 import com.intellij.openapi.project.Project
@@ -24,15 +23,15 @@ class OracleParser(
 
     fun parseOracle(): List<OracleEntry> {
 
-        val oraclePath = Paths.get(oraclePathStr)
-        assert(oraclePath.isFile())
+//        val oraclePath = Paths.get(oraclePathStr)
+//        assert(oraclePath.isFile())
 
-        log.fine("begin parsing")
+        log.info("begin parsing")
 
-        log.fine("find all candidates")
+        log.info("find all candidates")
         findCandidates()
 
-        log.fine("generate oracle")
+        log.info("generate oracle")
         generateOracle()
 
         assert(entries.isNotEmpty())
@@ -43,7 +42,6 @@ class OracleParser(
 
         scope.accept(object : JavaRecursiveElementVisitor() {
             private var currentMethod: PsiMethod? = null
-//            private var currentCodeBlock: PsiCodeBlock? = null
             private var startOffset = Stack<Int>()
             private var endOffset = Stack<Int>()
             private var nestingDepth = 0
@@ -62,14 +60,6 @@ class OracleParser(
                 nestingDepth--
             }
 
-//            override fun visitCodeBlock(block: PsiCodeBlock?) {
-//                val oldBlock = currentCodeBlock
-//                currentCodeBlock = block
-//
-//                super.visitCodeBlock(block)
-//                currentCodeBlock = oldBlock
-//            }
-//
             override fun visitComment(comment: PsiComment?) {
                 super.visitComment(comment)
                 if (comment == null)
@@ -83,28 +73,23 @@ class OracleParser(
 
                 if (comment.text!! == "/*}*/") {
 
-//                    assert(currentCodeBlock != null)
                     assert(currentMethod != null)
                     assert(startOffset.isNotEmpty())
 
                     endOffset.push(comment.textRange.endOffset)
                     val candRange = TextRange(startOffset.pop(), endOffset.pop())
-
-                    val cand = CandidateUtils.fromTextRange(candRange, currentMethod!!)
-
+                    val candidate = CandidateUtils.fromTextRange(candRange, currentMethod!!) ?: return
                     val className = currentMethod!!.containingClass?.qualifiedName ?: ""
                     val methodName = getMethodSignature(currentMethod!!)
                     val methodSign = "$className\t$methodName"
 
-                    entries.add(
-                            OracleEntry(
-                                    methodSign,
-                                    candRange.startOffset,
-                                    candRange.length,
-                                    currentMethod!!,
-                                    cand
-                            )
-                    )
+                    entries.add(OracleEntry(
+                            methodSign,
+                            candRange.startOffset,
+                            candRange.length,
+                            currentMethod!!,
+                            candidate
+                    ))
                 }
             }
         })

@@ -30,7 +30,7 @@ object CandidateValidation {
         )
     }
 
-    private fun getEditor(candidate: ExtractionCandidate): Editor {
+    public fun getEditor(candidate: ExtractionCandidate): Editor {
 
         val file = candidate.sourceMethod.containingFile
         return filesToEditors.getOrPut(file) {

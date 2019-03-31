@@ -10,11 +10,12 @@ def _drop_columns(columns, dataset):
     for col in columns:
         if col in dataset.columns:
             dataset = dataset.drop(columns=col)
+    return dataset
 
 
 def _read_train_file(filename, _class: int = 0, coef = 1.0):
     dataset = pd.read_csv(filename)
-    _drop_columns([
+    dataset = _drop_columns([
         'NAME_CANDIDATE',
         'NUM_LITERAL',
         'CON_LITERAL'
@@ -75,13 +76,13 @@ def train_model(coef=1.0):
     )
 
     est = tf.estimator.BoostedTreesClassifier(feature_columns, n_batches_per_layer=1)
-    est.train(train_input_fn, max_steps=160)
+    est.train(train_input_fn, max_steps=90)
 
     eval_dataset = eval_dataset.fillna(value=0)
     eval_input_fn = tf.estimator.inputs.pandas_input_fn(
         eval_dataset, eval_classes['CLASSES'], shuffle=False, batch_size=1
     )
-    proba = est.evaluate(eval_input_fn)
+    proba = None#est.evaluate(eval_input_fn)
     print(f'Coef : {coef}')
     pprint(list(proba.items()))
 
@@ -133,15 +134,24 @@ if __name__ == "__main__":
     DATASET_AUGMENTED_NEGATIVE = pathlib.Path('neg_aug.csv')
     EVALUATION = pathlib.Path('candidates.csv')
 
-    # train_ds, train_classes, eval_ds, eval_classes, column_names = make_train_and_eval_ds(coef=1.0)
-    # est = train_model(coef=1.0)
-    # predict_test_candidates(est)
-    # save_model(est, train_ds, column_names)
+    DATASET_REAL_POSITIVE = pathlib.Path(
+        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/real_set/con_pos404.csv')
+    DATASET_REAL_NEGATIVE = pathlib.Path(
+        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/real_set/con_neg404.csv')
+    DATASET_AUGMENTED_POSITIVE = pathlib.Path(
+        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/augmented_set/con_pos404.csv')
+    DATASET_AUGMENTED_NEGATIVE = pathlib.Path(
+        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/augmented_set/con_neg404.csv')
 
-    test_results = []
-    for i in np.arange(0.1, 1, 0.1):
+    train_ds, train_classes, eval_ds, eval_classes, column_names = make_train_and_eval_ds(coef=1.0)
+    est, _ = train_model(coef=1.0)
+    predict_test_candidates(est)
+    save_model(est, train_ds, column_names)
+
+    # test_results = []
+    # for i in np.arange(0.1, 1, 0.1):
         # train_ds, train_classes, eval_ds, eval_classes, column_names = \
         #     make_train_and_eval_ds(coef=i)
-        _, test_proba = train_model(coef=i)
-        test_results.append(test_proba)
+        # _, test_proba = train_model(coef=i)
+        # test_results.append(test_proba)
         # predict_test_candidates(est)
