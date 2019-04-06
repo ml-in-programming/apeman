@@ -11,10 +11,10 @@ import com.intellij.refactoring.extractMethod.ExtractMethodHandler
 
 object CandidateUtils {
 
-    fun getCandidatesOfMethod(method: PsiMethod, allCandidates: List<ExtractionCandidate>)
-            = allCandidates
-            .filter { it.sourceMethod == method }
-            .toList()
+    fun getCandidatesOfMethod(method: PsiMethod, allCandidates: List<ExtractionCandidate>
+    ): List<ExtractionCandidate> {
+        return allCandidates.filter { it.sourceMethod == method }
+    }
 
     fun checkStartOfCandidates(
             statement: PsiStatement,
@@ -36,7 +36,7 @@ object CandidateUtils {
         }
     }
 
-    fun fromTextRange(range: TextRange, currentMethod: PsiMethod): ExtractionCandidate {
+    fun fromTextRange(range: TextRange, currentMethod: PsiMethod): ExtractionCandidate? {
 
         var elem = currentMethod.containingFile.findElementAt(range.endOffset - 1)!!
         while (elem !is PsiFile && elem !is PsiCodeBlock) {
@@ -47,31 +47,11 @@ object CandidateUtils {
         val candStatements = (elem as PsiCodeBlock).statements
                 .filter { statement -> range.contains(statement.textRange) }
 
-        assert(candStatements.count() > 0)
-        return ExtractionCandidate(candStatements.toTypedArray(), currentMethod)
+        return if (candStatements.count() > 0)
+            ExtractionCandidate(candStatements.toTypedArray(), currentMethod)
+        else null
     }
 
-    // get editor, select candidate and check if we can extract it
-    fun isValid(candidate: ExtractionCandidate): Boolean {
-
-        val editor = getEditor(candidate)
-
-        editor.selectionModel.setSelection(
-                candidate.start.textOffset,
-                candidate.end.textRange.endOffset
-        )
-
-        return ExtractMethodHandler().isAvailableForQuickList(
-                editor,
-                candidate.sourceMethod.containingFile,
-                DataContext.EMPTY_CONTEXT
-        )
-    }
-
-    private fun getEditor(candidate: ExtractionCandidate): Editor {
-        val document = PsiDocumentManager.getInstance(candidate.sourceMethod.project)
-                .getDocument(candidate.sourceMethod.containingFile)!!
-
-        return EditorFactory.getInstance().createEditor(document)!!
-    }
+    public fun getSourceCandidate(method: PsiMethod, candidates: List<ExtractionCandidate>) = candidates
+            .first { it.isSourceCandidate && it.sourceMethod === method }
 }

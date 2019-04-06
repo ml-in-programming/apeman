@@ -1,7 +1,7 @@
 package apeman_core.prediction
 
 import apeman_core.base_entities.FeatureType
-import apeman_core.pipes.CandidateWithFeatures
+import apeman_core.base_entities.CandidateWithFeatures
 import org.apache.commons.csv.CSVFormat
 import java.io.File
 
@@ -74,7 +74,7 @@ fun importCsvFrom(filepath: String): Csv {
     }
 }
 
-fun importCsvFrom(candidates: ArrayList<CandidateWithFeatures>, featureNames: ArrayList<String>): Csv
+fun importCsvFrom(candidates: List<CandidateWithFeatures>, featureNames: List<String>): Csv
 {
 
     val data = ArrayList<ArrayList<String>>()

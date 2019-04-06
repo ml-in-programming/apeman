@@ -16,6 +16,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <appStarter implementation="proof_of_concept.ProofOfConceptLauncher"/>
+        <appStarter implementation="dataset_generation.DatasetGeneration" />
     </extensions>
 
     <actions>

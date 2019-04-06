@@ -1,8 +1,8 @@
 package apeman_core.prediction
 
 import apeman_core.base_entities.FeatureType
-import apeman_core.pipes.CandidateWithFeatures
-import apeman_core.pipes.CandidatesWithFeaturesAndProba
+import apeman_core.base_entities.CandidateWithFeatures
+import apeman_core.base_entities.CandidatesWithFeaturesAndProba
 import com.intellij.util.io.isDirectory
 
 import org.tensorflow.SavedModelBundle

@@ -2,7 +2,7 @@ package apeman_core.features_extraction
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.features_extraction.metrics.Metric
-import apeman_core.pipes.CandidateWithFeatures
+import apeman_core.utils.CandidateUtils
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.util.ProgressIndicatorBase
 
@@ -12,15 +12,16 @@ class FeaturesCalculationRunner(
 ) {
 
     fun calculate() {
-        val calculators = metrics.flatMap { it.metrics }.distinct()
-        val visitors = calculators.map { it.createVisitor() }
+        val calculators = metrics.flatMap { it.calculators }.distinct()
         val methods = candidates.map { it.sourceMethod }.distinct()
 
         ProgressManager.getInstance().runProcess({
 
-            for (method in methods)
-                for (visitor in visitors)
-                    method.accept(visitor)
+            for (method in methods) {
+                val methodCandidates = CandidateUtils.getCandidatesOfMethod(method, candidates)
+                for (calculator in calculators)
+                    calculator.calculateMethod(method, methodCandidates)
+            }
 
         }, ProgressIndicatorBase ())
     }

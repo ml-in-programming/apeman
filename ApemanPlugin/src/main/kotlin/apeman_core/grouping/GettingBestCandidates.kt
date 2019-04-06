@@ -1,6 +1,6 @@
 package apeman_core.grouping
 
-import apeman_core.pipes.CandidatesWithFeaturesAndProba
+import apeman_core.base_entities.CandidatesWithFeaturesAndProba
 import org.jetbrains.annotations.Contract
 
 class GettingBestCandidates(

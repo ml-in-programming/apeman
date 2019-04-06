@@ -1,8 +1,4 @@
-package apeman_core.pipes
-
-import apeman_core.base_entities.ExtractionCandidate
-import apeman_core.base_entities.FeatureType
-import apeman_core.base_entities.Features
+package apeman_core.base_entities
 
 data class CandidatesWithFeaturesAndProba(
         val candidate: ExtractionCandidate,
