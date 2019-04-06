@@ -12,18 +12,18 @@ class DatasetGeneration : ApplicationStarter {
     override fun main(args: Array<out String>?) {
 
         InlineMethodsProcessor(listOf(
-                "antlr4",
-                "bulk",
-                "deeplearning4j",
-                "elasticsearch",
-                "facebook-android-sdk",
-                "guava",
-                "intellij-community",
-                "mockito",
-                "PocketHub",
-                "presto",
-                "RxJava"
+//                "antlr4",
+//                "buck",
+//                "deeplearning4j"
+//                "elasticsearch-6.6.0",
+//                "guava",
+                "intellij-community"
+//                "mockito",
+//                "presto",
+//                "RxJava"
         ).map { BASE_PATH + it })
+
+        log.info("inlining success!")
 
 //        val antlr4 = OneProjectDatasetGenerator(BASE_PATH + "antlr4")
 //        val bulk = OneProjectDatasetGenerator(BASE_PATH + "bulk")

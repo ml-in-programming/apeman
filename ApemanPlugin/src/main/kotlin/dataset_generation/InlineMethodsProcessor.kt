@@ -1,14 +1,20 @@
 package dataset_generation
 
-import com.intellij.analysis.AnalysisScope
+import com.intellij.facet.impl.ProjectFacetManagerEx
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.fileTypes.StdFileTypes
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
+import com.intellij.openapi.project.ex.ProjectManagerEx
+import com.intellij.openapi.vfs.VfsUtilCore
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileVisitor
 import com.intellij.psi.*
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.refactoring.inline.InlineMethodProcessor
+import java.nio.file.Paths
 import java.util.logging.Logger
 
 class InlineMethodsProcessor(
@@ -46,36 +52,73 @@ class InlineMethodsProcessor(
     }
 
     private fun loadProject() {
+        assert(Paths.get(pathToProject).toFile().isDirectory)
         project = ProjectManager.getInstance().loadAndOpenProject(pathToProject!!)!!
     }
 
     private fun innerMethods() {
-        val scope = AnalysisScope(project!!)
-        scope.accept(object : JavaRecursiveElementVisitor() {
-            override fun visitMethod(method: PsiMethod?) {
-                super.visitMethod(method)
 
-                val reference = getFirstReferenceOrNull(method!!) ?: return
-                if (method.isConstructor || method.body == null || !method.isWritable)
-                    return
-                if (!method.isValid)
-                    return
-//                if (!InlineMethodProcessor.checkUnableToInsertCodeBlock())
+        val overallLength = getJavaFilesFromProject().count()
+        ProjectManager.getInstance().closeProject(project!!)
 
+        var offset = 0
+        val limit = 1000
 
-                addBracketsToMethod(method)
+        while (offset < overallLength) {
+            log.info("start with offset: $offset")
+            project = ProjectManager.getInstance().loadAndOpenProject(pathToProject!!)!!
+            val files = getJavaFilesFromProject()
+            files.withIndex()
+                    .filter { offset <= it.index && it.index < (offset + limit) }
+                    .forEach { (index, file) ->
+                        if (index % 50 == 0)
+                            log.info(index.toString())
 
-                val editor = getEditor(reference)
-                try {
-                    InlineMethodProcessor(
-                            reference.element.project, method, reference, editor, false
-                    ).run()
-                } catch (e: PsiInvalidElementAccessException) {
-                    print(e)
+                        file.accept(object : JavaRecursiveElementVisitor() {
+                            override fun visitMethod(method: PsiMethod?) {
+                                super.visitMethod(method)
+
+                                val reference = getFirstReferenceOrNull(method!!) ?: return
+                                if (method.isConstructor || method.body == null || !method.isWritable)
+                                    return
+                                if (!method.isValid)
+                                    return
+
+                                addBracketsToMethod(method)
+
+                                val editor = getEditor(reference)
+                                try {
+                                    InlineMethodProcessor(
+                                            reference.element.project, method, reference, editor, false
+                                    ).run()
+                                } catch (e: PsiInvalidElementAccessException) {
+                                    print(e)
+                                }
+                                EditorFactory.getInstance().releaseEditor(editor)
+                                PsiDocumentManager.getInstance(project!!).commitAllDocuments()
+                            }
+                        })
+                    }
+            ProjectManager.getInstance().closeProject(project!!)
+            offset += limit
+        }
+    }
+
+    private fun getJavaFilesFromProject(): List<PsiFile> {
+        val files = arrayListOf<VirtualFile>()
+
+        VfsUtilCore.visitChildrenRecursively(project!!.baseDir,
+                object : VirtualFileVisitor<ArrayList<VirtualFile>>() {
+                    override fun visitFile(file: VirtualFile): Boolean {
+                        super.visitFile(file)
+                        if (file.fileType == StdFileTypes.JAVA)
+                            files.add(file)
+                        return true
+                    }
                 }
-                EditorFactory.getInstance().releaseEditor(editor)
-            }
-        })
+        )
+        val manager = PsiManager.getInstance(project!!)
+        return files.mapNotNull { manager.findFile(it) }
     }
 
     private fun getFirstReferenceOrNull(method: PsiMethod): PsiJavaCodeReferenceElement? {

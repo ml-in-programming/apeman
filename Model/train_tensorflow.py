@@ -82,11 +82,11 @@ def train_model(coef=1.0):
     eval_input_fn = tf.estimator.inputs.pandas_input_fn(
         eval_dataset, eval_classes['CLASSES'], shuffle=False, batch_size=1
     )
-    proba = None#est.evaluate(eval_input_fn)
-    print(f'Coef : {coef}')
-    pprint(list(proba.items()))
+    # proba = est.evaluate(eval_input_fn)
+    # print(f'Coef : {coef}')
+    # pprint(list(proba.items()))
 
-    return est, proba
+    return est, None#proba
 
 
 def predict_test_candidates(est):
@@ -148,10 +148,10 @@ if __name__ == "__main__":
     predict_test_candidates(est)
     save_model(est, train_ds, column_names)
 
-    # test_results = []
-    # for i in np.arange(0.1, 1, 0.1):
-        # train_ds, train_classes, eval_ds, eval_classes, column_names = \
-        #     make_train_and_eval_ds(coef=i)
-        # _, test_proba = train_model(coef=i)
-        # test_results.append(test_proba)
-        # predict_test_candidates(est)
+    test_results = []
+    for i in np.arange(0.1, 1, 0.1):
+        train_ds, train_classes, eval_ds, eval_classes, column_names = \
+            make_train_and_eval_ds(coef=i)
+        _, test_proba = train_model(coef=i)
+        test_results.append(test_proba)
+        predict_test_candidates(est)
