@@ -235,12 +235,12 @@ public class TaskManager implements Serializable, Cloneable, CrystalObject  {
                 t.add(orTasks[i]);
             }
             clone.setTasks(t);
-            ArrayList<Solution> s = new ArrayList<Solution>();
+            /*{*/ArrayList<Solution> s = new ArrayList<Solution>();
             if (pastSolutions != null) {
                 for (int i = 0; i < pastSolutions.size(); i++) {
                     s.add(pastSolutions.get(i));
                 }
-            }
+            }/*}*/
             clone.setPastSolutions(s);
             return clone;
         } catch (CloneNotSupportedException e) {
@@ -406,10 +406,10 @@ public class TaskManager implements Serializable, Cloneable, CrystalObject  {
 
     public static Task[] getPeriodicPartsOf(Task t, Task[] expandedTasks) {
         int periods = 0;
-        for (int i = 0; i < expandedTasks.length; i++) {
+        /*{*/for (int i = 0; i < expandedTasks.length; i++) {
             if (expandedTasks[i].name().equals(t.name()))
                 periods++;
-        }
+        }/*}*/
         Task[] instances = new Task[periods];
         int k = 0;
         for (int i = 0; i < expandedTasks.length; i++) {
@@ -484,7 +484,7 @@ public class TaskManager implements Serializable, Cloneable, CrystalObject  {
             ord[i] = false;
         }
         while (num < tasks.length) {
-            min = Integer.MAX_VALUE;
+            /*{*/min = Integer.MAX_VALUE;
             for (int i = 0; i < tasks.length; i++) {
                 if ((!ord[i] && min == Integer.MAX_VALUE) ||
                     (!ord[i] &&
@@ -492,7 +492,7 @@ public class TaskManager implements Serializable, Cloneable, CrystalObject  {
                         releaseDate()) < 0)) {
                     min = i;
                 }
-            }
+            }/*}*/
             ord[min] = true;
             sorted[num] = tasks[min];
             num++;

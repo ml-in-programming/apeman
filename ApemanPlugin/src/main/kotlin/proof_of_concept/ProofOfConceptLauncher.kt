@@ -21,8 +21,8 @@ class ProofOfConceptLauncher : ApplicationStarter {
         fileHandler.formatter = SimpleFormatter()
         log.addHandler(fileHandler)
 
-//        val subjectDir = "/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/subjects/"
-        val subjectDir = "/home/snyss/Prog/mm/diploma/gems_datasets/subjects/"
+        val subjectDir = "/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/subjects/"
+//        val subjectDir = "/home/snyss/Prog/mm/diploma/gems_datasets/subjects/"
         val results = arrayListOf<Results>()
 
         try {
