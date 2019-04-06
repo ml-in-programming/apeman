@@ -83,6 +83,8 @@ class InlineMethodsProcessor(
                                     return
                                 if (!method.isValid)
                                     return
+                                if (method.name.startsWith("get") && (method.body?.statementCount == 1))
+                                    return
 
                                 addBracketsToMethod(method)
 

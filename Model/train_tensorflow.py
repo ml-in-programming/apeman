@@ -75,7 +75,7 @@ def train_model(coef=1.0):
         num_epochs=2
     )
 
-    est = tf.estimator.BoostedTreesClassifier(feature_columns, n_batches_per_layer=1)
+    est = tf.estimator.BoostedTreesRegressor(feature_columns, n_batches_per_layer=1)
     est.train(train_input_fn, max_steps=90)
 
     eval_dataset = eval_dataset.fillna(value=0)
@@ -128,10 +128,10 @@ def save_model(est, train_dataset, column_names):
 if __name__ == "__main__":
     tf.random.set_random_seed(123)
 
-    DATASET_REAL_POSITIVE = pathlib.Path('pos_real.csv')
-    DATASET_REAL_NEGATIVE = pathlib.Path('neg_real.csv')
-    DATASET_AUGMENTED_POSITIVE = pathlib.Path('pos_aug.csv')
-    DATASET_AUGMENTED_NEGATIVE = pathlib.Path('neg_aug.csv')
+    # DATASET_REAL_POSITIVE = pathlib.Path('pos_real.csv')
+    # DATASET_REAL_NEGATIVE = pathlib.Path('neg_real.csv')
+    # DATASET_AUGMENTED_POSITIVE = pathlib.Path('pos_aug.csv')
+    # DATASET_AUGMENTED_NEGATIVE = pathlib.Path('neg_aug.csv')
     EVALUATION = pathlib.Path('candidates.csv')
 
     DATASET_REAL_POSITIVE = pathlib.Path(
@@ -148,10 +148,10 @@ if __name__ == "__main__":
     predict_test_candidates(est)
     save_model(est, train_ds, column_names)
 
-    test_results = []
-    for i in np.arange(0.1, 1, 0.1):
-        train_ds, train_classes, eval_ds, eval_classes, column_names = \
-            make_train_and_eval_ds(coef=i)
-        _, test_proba = train_model(coef=i)
-        test_results.append(test_proba)
-        predict_test_candidates(est)
+    # test_results = []
+    # for i in np.arange(0.1, 1, 0.1):
+    #     train_ds, train_classes, eval_ds, eval_classes, column_names = \
+    #         make_train_and_eval_ds(coef=i)
+    #     _, test_proba = train_model(coef=i)
+    #     test_results.append(test_proba)
+    #     predict_test_candidates(est)

@@ -1,12 +1,11 @@
-package apeman_core.features_extraction.calculators
+package apeman_core.features_extraction.calculators.optimized
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
+import apeman_core.features_extraction.calculators.BaseCalculator
+import apeman_core.features_extraction.calculators.StatementsMap
 import apeman_core.utils.ClassUtils
 import com.intellij.psi.PsiJavaCodeReferenceElement
-import com.intellij.psi.PsiPackage
-import com.intellij.psi.PsiPackageAccessibilityStatement
-import com.intellij.psi.PsiVariable
 
 class PackageAccessCalculator(candidates: List<ExtractionCandidate>
 ) : BaseCalculator(
@@ -31,6 +30,8 @@ class PackageAccessCalculator(candidates: List<ExtractionCandidate>
                     addElem(pack)
             }
         }
+
+        override fun getVisitor() = Visitor()
     }
 
     override fun getStatementsMap() = PackageAccessStatementsMap()
