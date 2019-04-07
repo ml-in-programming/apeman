@@ -37,10 +37,8 @@ class InlineMethodsProcessor(
             log.info("load project")
             loadProject()
 
-            CommandProcessor.getInstance().executeCommand(project, {
-                log.info("inner methods")
-                innerMethods()
-            }, null, null)
+            log.info("inner methods")
+            innerMethods()
 
             ProjectManager.getInstance().closeProject(project!!)
 
@@ -61,46 +59,51 @@ class InlineMethodsProcessor(
         val overallLength = getJavaFilesFromProject().count()
         ProjectManager.getInstance().closeProject(project!!)
 
-        var offset = 0
+        var offset = 3000
         val limit = 1000
 
         while (offset < overallLength) {
+
             log.info("start with offset: $offset")
             project = ProjectManager.getInstance().loadAndOpenProject(pathToProject!!)!!
             val files = getJavaFilesFromProject()
-            files.withIndex()
-                    .filter { offset <= it.index && it.index < (offset + limit) }
-                    .forEach { (index, file) ->
-                        if (index % 50 == 0)
-                            log.info(index.toString())
+            CommandProcessor.getInstance().executeCommand(project, {
 
-                        file.accept(object : JavaRecursiveElementVisitor() {
-                            override fun visitMethod(method: PsiMethod?) {
-                                super.visitMethod(method)
+                files.withIndex()
+                        .filter { offset <= it.index && it.index < (offset + limit) }
+                        .forEach { (index, file) ->
+                            if (index % 50 == 0)
+                                log.info(index.toString())
 
-                                val reference = getFirstReferenceOrNull(method!!) ?: return
-                                if (method.isConstructor || method.body == null || !method.isWritable)
-                                    return
-                                if (!method.isValid)
-                                    return
-                                if (method.name.startsWith("get") && (method.body?.statementCount == 1))
-                                    return
+                            file.accept(object : JavaRecursiveElementVisitor() {
+                                override fun visitMethod(method: PsiMethod?) {
+                                    super.visitMethod(method)
 
-                                addBracketsToMethod(method)
+                                    val reference = getFirstReferenceOrNull(method!!) ?: return
+                                    if (method.isConstructor || method.body == null || !method.isWritable)
+                                        return
+                                    if (!method.isValid)
+                                        return
+                                    if (method.name.startsWith("get") && (method.body?.statementCount == 1))
+                                        return
 
-                                val editor = getEditor(reference)
-                                try {
-                                    InlineMethodProcessor(
-                                            reference.element.project, method, reference, editor, false
-                                    ).run()
-                                } catch (e: PsiInvalidElementAccessException) {
-                                    print(e)
+                                    addBracketsToMethod(method)
+
+                                    val editor = getEditor(reference)
+                                    try {
+                                        log.info("inline...")
+                                        InlineMethodProcessor(
+                                                reference.element.project, method, reference, editor, false
+                                        ).run()
+                                    } catch (e: Exception) {
+                                        log.info(e.toString())
+                                    }
+                                    EditorFactory.getInstance().releaseEditor(editor)
+                                    PsiDocumentManager.getInstance(project!!).commitAllDocuments()
                                 }
-                                EditorFactory.getInstance().releaseEditor(editor)
-                                PsiDocumentManager.getInstance(project!!).commitAllDocuments()
-                            }
-                        })
-                    }
+                            })
+                        }
+            }, null, null)
             ProjectManager.getInstance().closeProject(project!!)
             offset += limit
         }

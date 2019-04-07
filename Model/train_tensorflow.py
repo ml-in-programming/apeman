@@ -134,14 +134,10 @@ if __name__ == "__main__":
     # DATASET_AUGMENTED_NEGATIVE = pathlib.Path('neg_aug.csv')
     EVALUATION = pathlib.Path('candidates.csv')
 
-    DATASET_REAL_POSITIVE = pathlib.Path(
-        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/real_set/con_pos404.csv')
-    DATASET_REAL_NEGATIVE = pathlib.Path(
-        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/real_set/con_neg404.csv')
-    DATASET_AUGMENTED_POSITIVE = pathlib.Path(
-        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/augmented_set/con_pos404.csv')
-    DATASET_AUGMENTED_NEGATIVE = pathlib.Path(
-        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/augmented_set/con_neg404.csv')
+    DATASET_REAL_POSITIVE = pathlib.Path('../GemsDataset/real_set/con_pos404.csv')
+    DATASET_REAL_NEGATIVE = pathlib.Path('../GemsDataset/real_set/con_neg404.csv')
+    DATASET_AUGMENTED_POSITIVE = pathlib.Path('../GemsDataset/augmented_set/con_pos404.csv')
+    DATASET_AUGMENTED_NEGATIVE = pathlib.Path('../GemsDataset/augmented_set/con_neg404.csv')
 
     train_ds, train_classes, eval_ds, eval_classes, column_names = make_train_and_eval_ds(coef=1.0)
     est, _ = train_model(coef=1.0)

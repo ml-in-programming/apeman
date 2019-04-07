@@ -64,10 +64,12 @@ class OracleParser(
                 super.visitComment(comment)
                 if (comment == null)
                     return
+                if (currentMethod == null)
+                    return
 
                 if (comment.text!! == "/*{*/") {
-                    assert(currentMethod != null)
 
+                    assert(currentMethod != null)
                     startOffset.push(comment.textRange.startOffset)
                 }
 

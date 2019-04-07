@@ -7,10 +7,10 @@ from sklearn.tree import DecisionTreeClassifier
 from model import Classifier, Dataset, GRADIENT_BOOSTING
 
 
-DATASET_REAL_POSITIVE = pathlib.Path('/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/real_set/con_pos404.csv')
-DATASET_REAL_NEGATIVE = pathlib.Path('/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/real_set/con_neg404.csv')
-DATASET_AUGMENTED_POSITIVE = pathlib.Path('/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/augmented_set/con_pos404.csv')
-DATASET_AUGMENTED_NEGATIVE = pathlib.Path('/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/augmented_set/con_neg404.csv')
+DATASET_REAL_NEGATIVE = pathlib.Path('../GemsDataset/real_set/con_neg404.csv')
+DATASET_REAL_POSITIVE = pathlib.Path('../GemsDataset/real_set/con_pos404.csv')
+DATASET_AUGMENTED_POSITIVE = pathlib.Path('../GemsDataset/augmented_set/con_pos404.csv')
+DATASET_AUGMENTED_NEGATIVE = pathlib.Path('../GemsDataset/augmented_set/con_neg404.csv')
 
 
 def _drop_columns(columns, dataset):
@@ -118,22 +118,22 @@ def predict_something():
 
 
 if __name__ == "__main__":
-    # classifier = Classifier(GRADIENT_BOOSTING)
-    # fit_dataset = Dataset()
-    #
-    # fit_dataset.append_positive(str(DATASET_REAL_POSITIVE))
-    # fit_dataset.append_negative(str(DATASET_REAL_NEGATIVE))
-    # fit_dataset.append_positive(str(DATASET_AUGMENTED_POSITIVE))
-    # fit_dataset.append_negative(str(DATASET_AUGMENTED_NEGATIVE))
-    #
-    # classifier.fit(fit_dataset.features, fit_dataset.classes_of_classifier)
-    #
-    # with open(DATASET_REAL_POSITIVE) as f:
-    #     headers = f.readline().split(',')
-    #     print(len(headers))
-    #     print(len(classifier.model.feature_importances_))
-    #     import pprint
-    #     pprint.pprint(sorted(zip(headers, classifier.model.feature_importances_), key=lambda n: -n[1]))
-    # classifier.serialize_model()
+    classifier = Classifier(GRADIENT_BOOSTING)
+    fit_dataset = Dataset()
 
-    predict_something()
+    fit_dataset.append_positive(str(DATASET_REAL_POSITIVE))
+    fit_dataset.append_negative(str(DATASET_REAL_NEGATIVE))
+    fit_dataset.append_positive(str(DATASET_AUGMENTED_POSITIVE))
+    fit_dataset.append_negative(str(DATASET_AUGMENTED_NEGATIVE))
+
+    classifier.fit(fit_dataset.features, fit_dataset.classes_of_classifier)
+
+    with open(DATASET_REAL_POSITIVE) as f:
+        headers = f.readline().split(',')
+        print(len(headers))
+        print(len(classifier.model.feature_importances_))
+        import pprint
+        pprint.pprint(sorted(zip(headers, classifier.model.feature_importances_), key=lambda n: -n[1]))
+    classifier.serialize_model()
+    #
+    # predict_something()

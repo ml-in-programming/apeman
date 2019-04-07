@@ -103,11 +103,11 @@ class OneProjectDatasetGenerator(
         }
     }
 
-    private fun generateNegativeCandidateForBlock(method: PsiMethod, block: PsiCodeBlock, random: Random) {
+    private fun generateNegativeCandidateForBlock(method: PsiMethod, block: PsiCodeBlock, random: Random): Boolean {
         while (true) {
             val n = block.statementCount
-            val startInclusive = random.nextInt(n - 1)
-            val endInclusive = random.nextInt(n - startInclusive - 1) + startInclusive + 1
+            val startInclusive = random.nextInt(n)
+            val endInclusive = random.nextInt(n - startInclusive) + startInclusive
             val candidate = ExtractionCandidate(
                     Arrays.copyOfRange(block.statements, startInclusive, endInclusive + 1),
                     method,
@@ -115,7 +115,7 @@ class OneProjectDatasetGenerator(
             )
             if (CandidateValidation.isValid(candidate)) {
                 negativeCandidates.add(candidate)
-                break
+                return true
             }
         }
     }
