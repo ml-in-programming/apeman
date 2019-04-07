@@ -3,17 +3,13 @@ package dataset_generation
 import apeman_core.base_entities.CandidateWithFeatures
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.features_extraction.FeaturesForEveryCandidate
+import apeman_core.prediction.Csv
+import apeman_core.prediction.SciKitModelProvider
 import apeman_core.prediction.importCsvFrom
 import apeman_core.utils.CandidateValidation
-import com.intellij.analysis.AnalysisScope
-import com.intellij.openapi.command.CommandProcessor
-import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.psi.*
-import com.intellij.psi.search.searches.ReferencesSearch
-import com.intellij.refactoring.inline.InlineMethodProcessor
 import proof_of_concept.OracleParser
 import java.util.*
 import java.util.logging.Logger
@@ -51,6 +47,7 @@ class OneProjectDatasetGenerator(
             makeCsv(getFeatures())
 
             ProjectManager.getInstance().closeProject(project!!)
+            log.info("generation success!")
 
         } catch (e: Exception) {
             println(e)
@@ -94,9 +91,10 @@ class OneProjectDatasetGenerator(
 
                 override fun visitCodeBlock(block: PsiCodeBlock?) {
                     super.visitCodeBlock(block)
-                    if (random.nextInt(3) == 0) {
-                        generateNegativeCandidateForBlock(method, block!!, random)
-                        generated = true
+                    if (random.nextInt(3) == 0 && !generated) {
+                        if (generateNegativeCandidateForBlock(method, block!!, random)) {
+                            generated = true
+                        }
                     }
                 }
             })
@@ -104,14 +102,17 @@ class OneProjectDatasetGenerator(
     }
 
     private fun generateNegativeCandidateForBlock(method: PsiMethod, block: PsiCodeBlock, random: Random): Boolean {
+        val n = block.statementCount
+        if (n == 0) return false
+
         while (true) {
-            val n = block.statementCount
             val startInclusive = random.nextInt(n)
             val endInclusive = random.nextInt(n - startInclusive) + startInclusive
             val candidate = ExtractionCandidate(
                     Arrays.copyOfRange(block.statements, startInclusive, endInclusive + 1),
                     method,
-                    isSourceCandidate = false
+                    isSourceCandidate = false,
+                    positive = false
             )
             if (CandidateValidation.isValid(candidate)) {
                 negativeCandidates.add(candidate)
@@ -129,9 +130,16 @@ class OneProjectDatasetGenerator(
     }
 
     private fun makeCsv(featureCandidates: List<CandidateWithFeatures>) {
-        val positiveAndNegative = featureCandidates.filter { !it.candidate.isSourceCandidate }
+        log.info("make csv")
 
-        val csv = importCsvFrom(positiveAndNegative, positiveAndNegative[0].features.keys.map { it.name })
-        csv.export("$pathToProject/dataset.csv")
+        val positiveCandidates = featureCandidates.filter { it.candidate.positive != null && it.candidate.positive }
+        val columnNames = SciKitModelProvider(positiveCandidates).getColumnNames()
+
+        val positiveCsv = importCsvFrom(positiveCandidates, columnNames)
+        positiveCsv.export("$pathToProject/dataset_pos.csv")
+
+        val negativeCandidates = featureCandidates.filter { it.candidate.positive != null && !it.candidate.positive }
+        val negativeCsv = importCsvFrom(negativeCandidates, columnNames)
+        negativeCsv.export("$pathToProject/dataset_neg.csv")
     }
 }

@@ -46,7 +46,7 @@ abstract class BaseCalculator(val candidates: List<ExtractionCandidate>, val fea
         val sourceCandidate = CandidateUtils.getSourceCandidate(method, methodCandidates)
         val numsAndCons = statementsMap.calculateNumAndCon(sourceCandidate, methodCandidates)
         val coupsAndCohs = statementsMap
-                .calculateCouplingAndCohesions(sourceCandidate, candidates)
+                .calculateCouplingAndCohesions(sourceCandidate, methodCandidates)
         methodCandidates.withIndex().forEach { (i, cand) ->
             results.set(cand, numFeature, numsAndCons[i].first.toDouble())
             results.set(cand, conFeature, numsAndCons[i].second.toDouble())

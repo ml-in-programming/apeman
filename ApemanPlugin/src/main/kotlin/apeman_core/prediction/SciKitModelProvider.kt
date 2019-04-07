@@ -46,7 +46,7 @@ class SciKitModelProvider(
         csv.export(to)
     }
 
-    private fun getColumnNames(): List<String> {
+    fun getColumnNames(): List<String> {
         assert(candidates.isNotEmpty())
         return candidates[0].features
                 .filter { it.value != -1.0 && it.key != FeatureType.NUM_ASSERT}
