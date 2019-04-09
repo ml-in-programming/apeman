@@ -10,18 +10,14 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.util.parents
+import setupLogs
 import java.time.LocalDateTime
 import java.util.logging.FileHandler
 import java.util.logging.Level
 import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
 
-private val log = Logger.getGlobal().also {
-    it.level = Level.INFO
-    val fileHandler = FileHandler("/home/snyss/Prog/mm/diploma/main/logs_gui_" + LocalDateTime.now() + ".txt")
-    fileHandler.formatter = SimpleFormatter()
-    it.addHandler(fileHandler)
-}
+private val log = Logger.getGlobal().also { setupLogs(it) }
 
 class AnalysisScopeLauncher : BaseAnalysisAction("check1", "check2") {
 

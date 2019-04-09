@@ -1,16 +1,20 @@
 import pathlib
+from pprint import pprint
+
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import validation_curve
 from sklearn.tree import DecisionTreeClassifier
 
 from model import Classifier, Dataset, GRADIENT_BOOSTING
 
 
-DATASET_REAL_NEGATIVE = pathlib.Path('../GemsDataset/real_set/con_neg404.csv')
-DATASET_REAL_POSITIVE = pathlib.Path('../GemsDataset/real_set/con_pos404.csv')
-DATASET_AUGMENTED_POSITIVE = pathlib.Path('../GemsDataset/augmented_set/con_pos404.csv')
-DATASET_AUGMENTED_NEGATIVE = pathlib.Path('../GemsDataset/augmented_set/con_neg404.csv')
+DATASET_REAL_NEGATIVE = pathlib.Path('../../../train_dataset3/dataset_neg.csv')#'../GemsDataset/real_set/con_neg404.csv')
+DATASET_REAL_POSITIVE = pathlib.Path('../../../train_dataset3/dataset_pos.csv')#'../GemsDataset/real_set/con_pos404.csv')
+# DATASET_AUGMENTED_POSITIVE = pathlib.Path('../GemsDataset/augmented_set/con_pos404.csv')
+# DATASET_AUGMENTED_NEGATIVE = pathlib.Path('../GemsDataset/augmented_set/con_neg404.csv')
 
 
 def _drop_columns(columns, dataset):
@@ -47,19 +51,27 @@ def make_train_and_eval_ds(coef: float):
         DATASET_REAL_POSITIVE, _class=1, coef=coef)
     real_neg, y_real_neg, eval_real_neg, y_eval_real_neg, _ = _read_train_file(
         DATASET_REAL_NEGATIVE, _class=0, coef=coef)
-    aug_pos, y_aug_pos, eval_aug_pos, y_eval_aug_pos, _ = _read_train_file(
-        DATASET_AUGMENTED_POSITIVE, _class=1, coef=coef)
-    aug_neg, y_aug_neg, eval_aug_neg, y_eval_aug_neg, _ = _read_train_file(
-        DATASET_AUGMENTED_NEGATIVE, _class=0, coef=coef)
+    # aug_pos, y_aug_pos, eval_aug_pos, y_eval_aug_pos, column_names = _read_train_file(
+    #     DATASET_AUGMENTED_POSITIVE, _class=1, coef=coef)
+    # aug_neg, y_aug_neg, eval_aug_neg, y_eval_aug_neg, _ = _read_train_file(
+    #     DATASET_AUGMENTED_NEGATIVE, _class=0, coef=coef)
 
-    train_dataset = pd.concat((real_pos, real_neg, aug_pos, aug_neg))
-    train_classes = pd.concat((y_real_pos, y_real_neg, y_aug_pos, y_aug_neg))
+    # train_dataset = pd.concat((aug_pos, aug_neg))
+    # train_classes = pd.concat((y_aug_pos, y_aug_neg))
+    # train_df: pd.DataFrame = pd.concat((train_dataset, train_classes), axis=1)
+    #
+    # eval_dataset = pd.concat((eval_aug_pos, eval_aug_neg))
+    # eval_classes = pd.concat((y_eval_aug_pos, y_eval_aug_neg))
+    # eval_df = pd.concat((eval_dataset, eval_classes), axis=1)
+    #
+    train_dataset = pd.concat((real_pos, real_neg))#, aug_pos, aug_neg))
+    train_classes = pd.concat((y_real_pos, y_real_neg))#, y_aug_pos, y_aug_neg))
     train_df: pd.DataFrame = pd.concat((train_dataset, train_classes), axis=1)
 
-    eval_dataset = pd.concat((eval_real_pos, eval_real_neg, eval_aug_pos, eval_aug_neg))
-    eval_classes = pd.concat((y_eval_real_pos, y_eval_real_neg, y_eval_aug_pos, y_eval_aug_neg))
+    eval_dataset = pd.concat((eval_real_pos, eval_real_neg))#, eval_aug_pos, eval_aug_neg))
+    eval_classes = pd.concat((y_eval_real_pos, y_eval_real_neg))#, y_eval_aug_pos, y_eval_aug_neg))
     eval_df = pd.concat((eval_dataset, eval_classes), axis=1)
-
+    #
     train_df.reset_index()
     eval_df.reset_index()
 
@@ -85,16 +97,16 @@ def predict_something():
         # print(eval_df1.min())
 
         eval_df0 = eval_df[eval_df['CLASSES'] == 0]
-        # print(pd.concat((eval_df0.mean(), eval_df1.mean()), axis=1))
-        # print(pd.concat((eval_df0.median(), eval_df1.median()), axis=1))
-        # print(pd.concat((eval_df0.max(), eval_df1.max()), axis=1))
+        print(pd.concat((eval_df0.mean(), eval_df1.mean()), axis=1))
+        print(pd.concat((eval_df0.median(), eval_df1.median()), axis=1))
+        print(pd.concat((eval_df0.max(), eval_df1.max()), axis=1))
         # print(eval_df0.min())
 
-        # train_df = train_df[is_label]
+        train_df = train_df[is_label]
         # print(train_df.mean())
         # print(train_df.max())
         # print(train_df.min())
-
+        #
         # print(eval_ds.isna().any())
         # print(eval_cls.isna().any())
         # print(all([not lol for lol in eval_ds.isin([np.nan, np.inf, -np.inf]).any(1)]))
@@ -103,7 +115,7 @@ def predict_something():
         train_ds = train_ds.values[:, features]
         eval_ds = eval_ds.values[:, features]
 
-        est = DecisionTreeClassifier()#SGDClassifier(loss="modified_huber")#max_depth=4)
+        est = GradientBoostingClassifier()#SGDClassifier(loss="modified_huber")#max_depth=4)
         est = est.fit(train_ds, train_cls.values)
         eval_pred = est.predict(eval_ds)
         eval_proba = est.predict_proba(eval_ds)
@@ -116,24 +128,35 @@ def predict_something():
         print(f'roc_auc: {roc_auc_score(eval_cls.values, eval_proba[:, 1])}')
         print()
 
+        train_scores, valid_scores = validation_curve(
+            est,
+            np.concatenate((train_ds, eval_ds), axis=0),
+            np.concatenate((train_cls, eval_cls), axis=0),
+            "n_estimators", np.linspace(50, 200, num=10, dtype=np.int_),
+            cv=5, n_jobs=-1
+        )
+
+        pprint(f"Validation_curve train: \n{train_scores}")
+        pprint(f"Validation_curve valid: \n{valid_scores}")
+
 
 if __name__ == "__main__":
-    classifier = Classifier(GRADIENT_BOOSTING)
-    fit_dataset = Dataset()
-
-    fit_dataset.append_positive(str(DATASET_REAL_POSITIVE))
-    fit_dataset.append_negative(str(DATASET_REAL_NEGATIVE))
-    fit_dataset.append_positive(str(DATASET_AUGMENTED_POSITIVE))
-    fit_dataset.append_negative(str(DATASET_AUGMENTED_NEGATIVE))
-
-    classifier.fit(fit_dataset.features, fit_dataset.classes_of_classifier)
-
-    with open(DATASET_REAL_POSITIVE) as f:
-        headers = f.readline().split(',')
-        print(len(headers))
-        print(len(classifier.model.feature_importances_))
-        import pprint
-        pprint.pprint(sorted(zip(headers, classifier.model.feature_importances_), key=lambda n: -n[1]))
-    classifier.serialize_model()
+    # classifier = Classifier(GRADIENT_BOOSTING)
+    # fit_dataset = Dataset()
     #
-    # predict_something()
+    # fit_dataset.append_positive(str(DATASET_REAL_POSITIVE))
+    # fit_dataset.append_negative(str(DATASET_REAL_NEGATIVE))
+    # fit_dataset.append_positive(str(DATASET_AUGMENTED_POSITIVE))
+    # fit_dataset.append_negative(str(DATASET_AUGMENTED_NEGATIVE))
+    #
+    # classifier.fit(fit_dataset.features, fit_dataset.classes_of_classifier)
+    #
+    # with open(DATASET_REAL_POSITIVE) as f:
+    #     headers = f.readline().split(',')
+    #     print(len(headers))
+    #     print(len(classifier.model.feature_importances_))
+    #     import pprint
+    #     pprint.pprint(sorted(zip(headers, classifier.model.feature_importances_), key=lambda n: -n[1]))
+    # classifier.serialize_model()
+    #
+    predict_something()

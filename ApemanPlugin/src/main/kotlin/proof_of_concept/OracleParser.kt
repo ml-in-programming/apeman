@@ -114,6 +114,11 @@ class OracleParser(
     }
 
     private fun generateOracle() {
+        val oraclePath = Paths.get(oraclePathStr)
+        if (!oraclePath.toFile().exists()) {
+            oraclePath.toFile().createNewFile()
+        }
+
         Files.newBufferedWriter(Paths.get(oraclePathStr)).use {
             it.append(entries.joinToString("\n") { entry -> entry.methodName })
         }
