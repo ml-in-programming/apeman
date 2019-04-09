@@ -16,6 +16,12 @@ class LocCandidateCalculator(candidates: List<ExtractionCandidate>
 
             override fun visitMethod(method: PsiMethod) {
                 super.visitMethod(method)
+
+                if (methodCandidates.count() == 0)
+                    return
+                if (method !== methodCandidates[0].sourceMethod)
+                    return
+
                 for (cand in methodCandidates) {
                     results.set(cand, firstFeature,
                             BlocksUtils.getNumStatementsRecursively(cand.block).toDouble())

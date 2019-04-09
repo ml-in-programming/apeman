@@ -16,8 +16,11 @@ class RatioLocCandidateCalculator(candidates: List<ExtractionCandidate>
 
             override fun visitMethod(method: PsiMethod) {
                 super.visitMethod(method)
-                if (method.body == null)
-                // abstract method or interface
+                if (methodCandidates.count() == 0)
+                    return
+                if (method.body == null) // abstract method or interface
+                    return
+                if (method !== methodCandidates[0].sourceMethod)
                     return
                 val blockOfMethod = BlocksUtils.getBlockFromMethod(method)
                 val numStatementsMethod = BlocksUtils.getNumStatementsRecursively(blockOfMethod).toDouble()

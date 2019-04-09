@@ -48,7 +48,7 @@ object CandidateUtils {
                 .filter { statement -> range.contains(statement.textRange) }
 
         return if (candStatements.count() > 0)
-            ExtractionCandidate(candStatements.toTypedArray(), currentMethod)
+            ExtractionCandidate(candStatements.toTypedArray(), currentMethod, positive = true)
         else null
     }
 

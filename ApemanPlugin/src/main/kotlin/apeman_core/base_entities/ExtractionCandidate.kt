@@ -5,7 +5,8 @@ import com.intellij.psi.PsiStatement
 
 class ExtractionCandidate(statements: Array<PsiStatement>,
                           val sourceMethod: PsiMethod,
-                          val isSourceCandidate: Boolean = false
+                          val isSourceCandidate: Boolean = false,
+                          val positive: Boolean? = null
 ) {
     init {
         assert(statements.count() > 0)
@@ -22,6 +23,6 @@ class ExtractionCandidate(statements: Array<PsiStatement>,
 
     override fun toString(): String {
         val statementsRange = (0 until block.statementsCount)
-        return statementsRange.joinToString(separator = "\n", limit = 7) { i -> block[i].text }
+        return statementsRange.joinToString(separator = "\n") { i -> block[i].text }
     }
 }

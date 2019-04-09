@@ -1,8 +1,9 @@
-package apeman_core.features_extraction.calculators
+package apeman_core.features_extraction.calculators.optimized
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import com.intellij.psi.PsiTypeCastExpression
+import apeman_core.features_extraction.calculators.BaseCalculator
+import apeman_core.features_extraction.calculators.StatementsMap
 import com.intellij.psi.PsiTypeElement
 
 class TypeAccessCalculator(candidates: List<ExtractionCandidate>
@@ -25,6 +26,8 @@ class TypeAccessCalculator(candidates: List<ExtractionCandidate>
                 addElem(type!!)
             }
         }
+
+        override fun getVisitor() = Visitor()
     }
 
     override fun getStatementsMap() = TypeAccessStatementsMap()

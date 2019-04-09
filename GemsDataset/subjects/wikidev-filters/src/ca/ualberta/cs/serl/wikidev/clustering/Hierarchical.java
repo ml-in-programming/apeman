@@ -111,8 +111,8 @@ public class Hierarchical extends Clustering {
 				distanceMatrix = insertRows(distanceMatrix, minCol, newDistances);
 				distanceMatrix = deleteColumns(distanceMatrix, minRow);
 				distanceMatrix = insertColumns(distanceMatrix, minCol, newDistances);
-				clusters.remove(minRow);
-			}/*}*/
+				clusters.remove(minRow);/*}*/
+			}
 		}
 		return clusters;
 	}

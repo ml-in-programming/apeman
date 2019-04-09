@@ -40,17 +40,17 @@ def make_train_and_eval_ds(coef: float):
         DATASET_REAL_POSITIVE, _class=1, coef=coef)
     real_neg, y_real_neg, eval_real_neg, y_eval_real_neg, _ = _read_train_file(
         DATASET_REAL_NEGATIVE, _class=0, coef=coef)
-    aug_pos, y_aug_pos, eval_aug_pos, y_eval_aug_pos, _ = _read_train_file(
-        DATASET_AUGMENTED_POSITIVE, _class=1, coef=coef)
-    aug_neg, y_aug_neg, eval_aug_neg, y_eval_aug_neg, _ = _read_train_file(
-        DATASET_AUGMENTED_NEGATIVE, _class=0, coef=coef)
+    # aug_pos, y_aug_pos, eval_aug_pos, y_eval_aug_pos, _ = _read_train_file(
+    #     DATASET_AUGMENTED_POSITIVE, _class=1, coef=coef)
+    # aug_neg, y_aug_neg, eval_aug_neg, y_eval_aug_neg, _ = _read_train_file(
+    #     DATASET_AUGMENTED_NEGATIVE, _class=0, coef=coef)
 
-    train_dataset = pd.concat((real_pos, real_neg, aug_pos, aug_neg))
-    train_classes = pd.concat((y_real_pos, y_real_neg, y_aug_pos, y_aug_neg))
+    train_dataset = pd.concat((real_pos, real_neg))#, aug_pos, aug_neg))
+    train_classes = pd.concat((y_real_pos, y_real_neg))#, y_aug_pos, y_aug_neg))
     train_df = pd.concat((train_dataset, train_classes), axis=1)
 
-    eval_dataset = pd.concat((eval_real_pos, eval_real_neg, eval_aug_pos, eval_aug_neg))
-    eval_classes = pd.concat((y_eval_real_pos, y_eval_real_neg, y_eval_aug_pos, y_eval_aug_neg))
+    eval_dataset = pd.concat((eval_real_pos, eval_real_neg))#, eval_aug_pos, eval_aug_neg))
+    eval_classes = pd.concat((y_eval_real_pos, y_eval_real_neg))#, y_eval_aug_pos, y_eval_aug_neg))
     eval_df = pd.concat((eval_dataset, eval_classes), axis=1)
 
     return train_dataset, train_classes, eval_dataset, eval_classes, column_names
@@ -75,7 +75,7 @@ def train_model(coef=1.0):
         num_epochs=2
     )
 
-    est = tf.estimator.BoostedTreesClassifier(feature_columns, n_batches_per_layer=1)
+    est = tf.estimator.BoostedTreesRegressor(feature_columns, n_batches_per_layer=1)
     est.train(train_input_fn, max_steps=90)
 
     eval_dataset = eval_dataset.fillna(value=0)
@@ -128,30 +128,28 @@ def save_model(est, train_dataset, column_names):
 if __name__ == "__main__":
     tf.random.set_random_seed(123)
 
-    DATASET_REAL_POSITIVE = pathlib.Path('pos_real.csv')
-    DATASET_REAL_NEGATIVE = pathlib.Path('neg_real.csv')
-    DATASET_AUGMENTED_POSITIVE = pathlib.Path('pos_aug.csv')
-    DATASET_AUGMENTED_NEGATIVE = pathlib.Path('neg_aug.csv')
+    # DATASET_REAL_POSITIVE = pathlib.Path('pos_real.csv')
+    # DATASET_REAL_NEGATIVE = pathlib.Path('neg_real.csv')
+    # DATASET_AUGMENTED_POSITIVE = pathlib.Path('pos_aug.csv')
+    # DATASET_AUGMENTED_NEGATIVE = pathlib.Path('neg_aug.csv')
     EVALUATION = pathlib.Path('candidates.csv')
 
-    DATASET_REAL_POSITIVE = pathlib.Path(
-        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/real_set/con_pos404.csv')
-    DATASET_REAL_NEGATIVE = pathlib.Path(
-        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/real_set/con_neg404.csv')
-    DATASET_AUGMENTED_POSITIVE = pathlib.Path(
-        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/augmented_set/con_pos404.csv')
-    DATASET_AUGMENTED_NEGATIVE = pathlib.Path(
-        '/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/augmented_set/con_neg404.csv')
+    intellij_path = '../../../train_dataset3/intellij-community/'
+
+    DATASET_REAL_POSITIVE = pathlib.Path(intellij_path + "dataset_pos.csv")#('../GemsDataset/real_set/con_pos404.csv')
+    DATASET_REAL_NEGATIVE = pathlib.Path(intellij_path + "dataset_neg.csv")#('../GemsDataset/real_set/con_neg404.csv')
+    DATASET_AUGMENTED_POSITIVE = pathlib.Path#('../GemsDataset/augmented_set/con_pos404.csv')
+    DATASET_AUGMENTED_NEGATIVE = pathlib.Path#('../GemsDataset/augmented_set/con_neg404.csv')
 
     train_ds, train_classes, eval_ds, eval_classes, column_names = make_train_and_eval_ds(coef=1.0)
     est, _ = train_model(coef=1.0)
     predict_test_candidates(est)
     save_model(est, train_ds, column_names)
 
-    test_results = []
-    for i in np.arange(0.1, 1, 0.1):
-        train_ds, train_classes, eval_ds, eval_classes, column_names = \
-            make_train_and_eval_ds(coef=i)
-        _, test_proba = train_model(coef=i)
-        test_results.append(test_proba)
-        predict_test_candidates(est)
+    # test_results = []
+    # for i in np.arange(0.1, 1, 0.1):
+    #     train_ds, train_classes, eval_ds, eval_classes, column_names = \
+    #         make_train_and_eval_ds(coef=i)
+    #     _, test_proba = train_model(coef=i)
+    #     test_results.append(test_proba)
+    #     predict_test_candidates(est)

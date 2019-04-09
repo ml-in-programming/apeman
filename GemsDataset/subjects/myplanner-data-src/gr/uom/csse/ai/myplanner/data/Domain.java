@@ -778,7 +778,7 @@ public class Domain implements Serializable, Cloneable, CrystalObject {
                 dates = templateDates.get(i);
 //                if (dates == null)
 //                    clone.addTemplate(t, null, null, t.getAppliedAction());
-                if (dates[0] != null && dates[1] != null)
+                /*{*/if (dates[0] != null && dates[1] != null)
                     clone.addTemplate(t, new Date(dates[0].getTime()),
                                       new Date(dates[1].getTime()),
                                       t.getAppliedAction());
@@ -791,7 +791,7 @@ public class Domain implements Serializable, Cloneable, CrystalObject {
                                       null,
                                       t.getAppliedAction());
                 else
-                    clone.addTemplate(t, null, null, t.getAppliedAction());
+                    clone.addTemplate(t, null, null, t.getAppliedAction());/*}*/
             } else {
                 m = (ManualAction) d;
                 clone.addManualAction((ManualAction) m.clone());

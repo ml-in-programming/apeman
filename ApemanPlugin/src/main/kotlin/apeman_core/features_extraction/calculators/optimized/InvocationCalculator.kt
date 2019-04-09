@@ -1,10 +1,10 @@
-package apeman_core.features_extraction.calculators
+package apeman_core.features_extraction.calculators.optimized
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
+import apeman_core.features_extraction.calculators.BaseCalculator
+import apeman_core.features_extraction.calculators.StatementsMap
 import com.intellij.psi.PsiMethodCallExpression
-import com.intellij.psi.PsiMethodReferenceExpression
-import com.intellij.psi.PsiVariable
 
 class InvocationCalculator(candidates: List<ExtractionCandidate>
 ) : BaseCalculator(
@@ -25,6 +25,8 @@ class InvocationCalculator(candidates: List<ExtractionCandidate>
                 addElem(method)
             }
         }
+
+        override fun getVisitor() = Visitor()
     }
 
     override fun getStatementsMap() = InvocationStatementsMap()

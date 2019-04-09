@@ -1,6 +1,7 @@
 package proof_of_concept
 
 import com.intellij.openapi.application.ApplicationStarter
+import setupLogs
 import java.time.LocalDateTime
 import java.util.logging.FileHandler
 import java.util.logging.Level
@@ -16,13 +17,9 @@ class ProofOfConceptLauncher : ApplicationStarter {
     override fun premain(args: Array<out String>?) {}
 
     override fun main(args: Array<String>) {
-        log.level = Level.INFO
-        val fileHandler = FileHandler("/home/snyss/Prog/mm/diploma/main/logs_" + LocalDateTime.now() + ".txt")
-        fileHandler.formatter = SimpleFormatter()
-        log.addHandler(fileHandler)
+        setupLogs(log)
 
-//        val subjectDir = "/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/subjects/"
-        val subjectDir = "/home/snyss/Prog/mm/diploma/gems_datasets/subjects/"
+        val subjectDir = "/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/subjects/"
         val results = arrayListOf<Results>()
 
         try {

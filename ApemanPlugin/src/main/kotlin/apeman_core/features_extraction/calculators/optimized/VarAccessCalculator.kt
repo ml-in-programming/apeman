@@ -1,7 +1,9 @@
-package apeman_core.features_extraction.calculators
+package apeman_core.features_extraction.calculators.optimized
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
+import apeman_core.features_extraction.calculators.BaseCalculator
+import apeman_core.features_extraction.calculators.StatementsMap
 import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiVariable
@@ -49,6 +51,8 @@ class VarAccessCalculator(candidates: List<ExtractionCandidate>
                 }
             }
         }
+
+        override fun getVisitor() = Visitor()
     }
 
     override fun getStatementsMap() = VarAccessStatementsMap()

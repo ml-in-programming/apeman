@@ -64,10 +64,12 @@ class OracleParser(
                 super.visitComment(comment)
                 if (comment == null)
                     return
+                if (currentMethod == null)
+                    return
 
                 if (comment.text!! == "/*{*/") {
-                    assert(currentMethod != null)
 
+                    assert(currentMethod != null)
                     startOffset.push(comment.textRange.startOffset)
                 }
 
@@ -112,6 +114,11 @@ class OracleParser(
     }
 
     private fun generateOracle() {
+        val oraclePath = Paths.get(oraclePathStr)
+        if (!oraclePath.toFile().exists()) {
+            oraclePath.toFile().createNewFile()
+        }
+
         Files.newBufferedWriter(Paths.get(oraclePathStr)).use {
             it.append(entries.joinToString("\n") { entry -> entry.methodName })
         }

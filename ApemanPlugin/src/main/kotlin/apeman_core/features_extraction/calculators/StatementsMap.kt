@@ -3,7 +3,6 @@ package apeman_core.features_extraction.calculators
 import apeman_core.base_entities.ExtractionCandidate
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiStatement
 import java.util.*
 import kotlin.collections.LinkedHashMap
@@ -12,7 +11,7 @@ import kotlin.collections.LinkedHashSet
 typealias Cohesion = Pair<Double, Double>
 typealias Coupling = Pair<Double, Double>
 
-open class StatementsMap {
+abstract class StatementsMap {
 
     protected val elementsToCount = linkedMapOf<PsiStatement, LinkedHashMap<Any, Int>>()
     protected val elementsToNumStmts = linkedMapOf<PsiStatement, LinkedHashMap<Any, Int>>()
@@ -78,18 +77,20 @@ open class StatementsMap {
     }
 
     fun addElementsAbstract(method: PsiElement) {
-        method.accept(Visitor())
+        method.accept(getVisitor())
+        allElementsList.addAll(allElements.sortedBy { (it as PsiElement).text })
     }
+
+    abstract fun getVisitor(): Visitor
 
     fun calculateNumAndCon(sourceCand: ExtractionCandidate, candidates: List<ExtractionCandidate>
     ): List<Pair<Int, Int>> {
-//        assert(elementsToCount.isNotEmpty())
 
         val numsAndCons = arrayListOf<Pair<Int, Int>>()
         var numSource = 0
         for (i in 0 until sourceCand.block.statementsCount) {
             val statement = sourceCand.block[i]
-            numSource = elementsToCount[statement]?.map { it.value }?.sum() ?: 0
+            numSource += elementsToCount[statement]?.map { it.value }?.sum() ?: 0
         }
 
         for (candidate in candidates) {
@@ -161,7 +162,7 @@ open class StatementsMap {
         var concreteNum = 0
         for (i in 0 until candidate.block.statementsCount) {
             val statement = candidate.block[i]
-            concreteNum += elementsToCount[statement]!![elem] ?: 0
+            concreteNum += elementsToCount[statement]?.get(elem) ?: 0
         }
         return concreteNum
     }

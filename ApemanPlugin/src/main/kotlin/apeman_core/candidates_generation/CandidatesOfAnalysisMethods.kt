@@ -41,8 +41,10 @@ class CandidatesOfAnalysisMethods(
                     indicator.text = method.name
                     nestingDepth++
 
-                    if (nestingDepth > 1) // process only top methods (deep methods processed in CandidatesOfMethod)
+                    if (nestingDepth > 1) { // process only top methods (deep methods processed in CandidatesOfMethod)
+                        nestingDepth--
                         return
+                    }
 
                     super.visitMethod(method)
                     if (nestingDepth == 1)
