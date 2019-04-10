@@ -1,12 +1,8 @@
 <idea-plugin>
     <id>com.snyssfx.apeman.plugin</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
-
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-    ]]></description>
+    <name>apeman</name>
+    <vendor email="snyssfx@gmail.com" url="github.com/ml-in-programming/apeman">JetBrains Research Lab</vendor>
+    <description>apeman -- Another Plugin for 'Extract Method' Automatically and Neatly</description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->

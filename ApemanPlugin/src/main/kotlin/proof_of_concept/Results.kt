@@ -11,9 +11,18 @@ data class Results(
     val truePositives = calculateTruePositives()
     val apemanSize = candidates.count()
     val oracleSize = oracleCandidates.count()
-    val precision = truePositives.count() / apemanSize.toDouble()
-    val recall = truePositives.count() / oracleSize.toDouble()
-    val fScore = 2 * precision * recall / (precision + recall)
+    val precision = if (apemanSize != 0)
+        truePositives.count() / apemanSize.toDouble()
+    else
+        0.0
+    val recall = if (oracleSize != 0)
+        truePositives.count() / oracleSize.toDouble()
+    else
+        0.0
+    val fScore = if (precision + recall > 0.001)
+        2 * precision * recall / (precision + recall)
+    else
+        0.0
 
     private fun calculateTruePositives(): List<CandidatesWithFeaturesAndProba> {
         val truePositives = arrayListOf<CandidatesWithFeaturesAndProba>()

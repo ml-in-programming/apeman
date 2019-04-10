@@ -92,24 +92,12 @@ def predict_something():
 
         is_label = train_df['CLASSES'] == 1
         eval_df1 = eval_df[eval_df['CLASSES'] == 1]
-        # print(eval_df1.mean())
-        # print(eval_df1.max())
-        # print(eval_df1.min())
-
         eval_df0 = eval_df[eval_df['CLASSES'] == 0]
         print(pd.concat((eval_df0.mean(), eval_df1.mean()), axis=1))
         print(pd.concat((eval_df0.median(), eval_df1.median()), axis=1))
         print(pd.concat((eval_df0.max(), eval_df1.max()), axis=1))
-        # print(eval_df0.min())
 
         train_df = train_df[is_label]
-        # print(train_df.mean())
-        # print(train_df.max())
-        # print(train_df.min())
-        #
-        # print(eval_ds.isna().any())
-        # print(eval_cls.isna().any())
-        # print(all([not lol for lol in eval_ds.isin([np.nan, np.inf, -np.inf]).any(1)]))
 
         features = range(46)#np.random.choice(range(46), 10, replace=False)
         train_ds = train_ds.values[:, features]

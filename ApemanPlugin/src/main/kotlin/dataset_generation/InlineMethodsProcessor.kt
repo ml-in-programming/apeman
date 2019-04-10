@@ -59,7 +59,7 @@ class InlineMethodsProcessor(
         val overallLength = getJavaFilesFromProject().count()
         ProjectManager.getInstance().closeProject(project!!)
 
-        var offset = 20000
+        var offset = 28000
         val limit = 1000
 
         while (offset < overallLength) {
@@ -87,6 +87,8 @@ class InlineMethodsProcessor(
                                     if (method.containingClass?.isInterface ?: true)
                                         return
                                     if (method.name.startsWith("get") && (method.body?.statementCount == 1))
+                                        return
+                                    if (method.name.startsWith("set") && (method.body?.statementCount == 1))
                                         return
 
                                     addBracketsToMethod(method)

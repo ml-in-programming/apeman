@@ -12,7 +12,7 @@ allprojects {
 
 intellij {
     version '2018.2'
-    updateSinceUntilBuild = false
+    pluginName 'apeman'
 }
 
 group 'com.snyssfx.apeman'
@@ -39,9 +39,12 @@ compileTestKotlin {
 }
 
 patchPluginXml {
-    changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+    changeNotes """0.0.1 add algo and metrics"""
+}
+
+publishPlugin {
+    username intellijPublishUsername
+    password intellijPublishPassword
 }
 
 task runProofOfConcept(dependsOn: runIde) {}
