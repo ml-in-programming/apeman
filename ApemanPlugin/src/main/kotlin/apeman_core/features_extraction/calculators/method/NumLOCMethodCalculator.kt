@@ -2,6 +2,9 @@ package apeman_core.features_extraction.calculators.method
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
+import apeman_core.utils.BlocksUtils
+import apeman_core.utils.MethodUtils
+import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiStatement
 
 class NumLOCMethodCalculator(candidates: List<ExtractionCandidate>
@@ -11,9 +14,9 @@ class NumLOCMethodCalculator(candidates: List<ExtractionCandidate>
 
     inner class Visitor(methodCandidates: List<ExtractionCandidate>
     ) : NumSimpleElementMethodCalculator.Visitor(methodCandidates) {
-        override fun visitStatement(statement: PsiStatement?) {
-            super.visitStatement(statement)
-            elementsCounter++
+        override fun initElementsCounter(method: PsiMethod) {
+            val methodBlock = BlocksUtils.getBlockFromMethod(method)
+            elementsCounter = BlocksUtils.getNumStatementsRecursively(methodBlock)
         }
     }
 }

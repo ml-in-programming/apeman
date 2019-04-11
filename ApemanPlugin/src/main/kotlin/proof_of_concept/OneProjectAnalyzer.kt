@@ -53,7 +53,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         val methods = entries.map { it.method }.distinct()
 
         log.fine("launch apeman")
-        val launcher = Launcher(analysisMethods = methods)
+        val launcher = Launcher(analysisMethods = methods, project = entries[0].method.project)
         return launcher.calculateCandidatesWithProba(EmptyProgressIndicator())
     }
 

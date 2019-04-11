@@ -114,7 +114,7 @@ class OneProjectDatasetGenerator(
                     isSourceCandidate = false,
                     positive = false
             )
-            if (CandidateValidation.isValid(candidate)) {
+            if (CandidateValidation.isValid(candidate, project!!)) {
                 negativeCandidates.add(candidate)
                 return true
             }

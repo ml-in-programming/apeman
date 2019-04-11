@@ -6,12 +6,13 @@ import apeman_core.utils.CandidateValidation
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.refactoring.extractMethod.ExtractMethodHandler
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CandidatesOfMethod(private val sourceMethod: PsiMethod) {
+class CandidatesOfMethod(private val sourceMethod: PsiMethod, private val project: Project) {
 
     val candidates = ArrayList<ExtractionCandidate>()
     var sourceCodeBlock = false
@@ -46,7 +47,7 @@ class CandidatesOfMethod(private val sourceMethod: PsiMethod) {
                         sourceMethod,
                         isSourceCand
                 )
-                if (CandidateValidation.isValid(candidateBlock)) {
+                if (CandidateValidation.isValid(candidateBlock, project)) {
                     candidates.add(candidateBlock)
                 }
             }

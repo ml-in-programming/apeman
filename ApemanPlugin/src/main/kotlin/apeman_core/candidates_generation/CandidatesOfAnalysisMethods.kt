@@ -15,7 +15,8 @@ val log = Logger.getLogger("CandidatesOfAnalysisMethods")!!
 
 class CandidatesOfAnalysisMethods(
         private val analysisMethods: List<PsiMethod>,
-        private val indicator: ProgressIndicator
+        private val indicator: ProgressIndicator,
+        private val project: Project
 ) {
 
     private var candidates = ArrayList<ExtractionCandidate>()
@@ -48,7 +49,7 @@ class CandidatesOfAnalysisMethods(
 
                     super.visitMethod(method)
                     if (nestingDepth == 1)
-                        candidates.addAll(CandidatesOfMethod(method).candidates)
+                        candidates.addAll(CandidatesOfMethod(method, project).candidates)
 
                     nestingDepth--
                 }

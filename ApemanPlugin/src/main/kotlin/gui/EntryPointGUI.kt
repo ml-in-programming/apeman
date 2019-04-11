@@ -22,7 +22,7 @@ private val log = Logger.getGlobal().also { setupLogs(it) }
 class AnalysisScopeLauncher : BaseAnalysisAction("check1", "check2") {
 
     override fun analyze(project: Project, scope: AnalysisScope) {
-        val launcher = Launcher(scope)
+        val launcher = Launcher(scope, project = project)
         val candidates = launcher.calculateCandidatesWithProbaAsync(project)
         showInfoDialog(candidates)
     }
@@ -41,7 +41,7 @@ class AnalysisMethodLauncher : AnAction("check only 1 method") {
             return
         }
 
-        val launcher = Launcher(analysisMethods = listOf(method as PsiMethod))
+        val launcher = Launcher(analysisMethods = listOf(method as PsiMethod), project = method.project)
         val candidates = launcher.calculateCandidatesWithProbaAsync(method.project)
         showInfoDialog(candidates)
     }
@@ -54,7 +54,7 @@ class AnalysisSelectionLauncher : AnAction("check only 1 selection of candidate"
                 editor.selectionModel.selectionStart,
                 editor.selectionModel.selectionEnd)
         val file = e!!.getData(CommonDataKeys.PSI_FILE)!!
-        val launcher = Launcher(analysisCandidates = listOf(textRange to file))
+        val launcher = Launcher(analysisCandidates = listOf(textRange to file), project = file.project)
         val candidates = launcher.calculateCandidatesWithProbaAsync(file.project)
         showInfoDialog(candidates)
     }

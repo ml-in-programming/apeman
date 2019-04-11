@@ -27,9 +27,9 @@ private val log = Logger.getGlobal()
 class Launcher(
         analysisScope: AnalysisScope? = null,
         private var analysisMethods: List<PsiMethod>? = null,
-        private val analysisCandidates: List<Pair<TextRange, PsiFile>>? = null
+        private val analysisCandidates: List<Pair<TextRange, PsiFile>>? = null,
+        private val project: Project
 ) {
-
     var predictedCandidates: List<CandidatesWithFeaturesAndProba>? = null
 
     init {
@@ -93,7 +93,7 @@ class Launcher(
 
     private fun generateCandidates(indicator: ProgressIndicator): List<ExtractionCandidate> {
         return if (analysisMethods != null) {
-            CandidatesOfAnalysisMethods(analysisMethods!!, indicator).getCandidates()
+            CandidatesOfAnalysisMethods(analysisMethods!!, indicator, project).getCandidates()
         } else {
             assert(analysisCandidates != null)
             CustomCandidates(analysisCandidates!!).getCandidates()

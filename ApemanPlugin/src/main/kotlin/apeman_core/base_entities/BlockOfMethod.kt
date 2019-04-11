@@ -12,4 +12,5 @@ class BlockOfMethod(statements: Array<PsiStatement>) {
     val statementsCount = statements.size
 
     operator fun get(index: Int) = statements[index]!!
+    public fun get() = statements
 }
