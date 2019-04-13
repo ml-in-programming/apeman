@@ -44,15 +44,8 @@ class Launcher(
 
     fun calculateCandidatesWithProbaAsync(project: Project): List<CandidatesWithFeaturesAndProba> {
         return WriteAction.compute<List<CandidatesWithFeaturesAndProba>, Exception> {
-//            val indicator = ProgressIndicatorProvider.getGlobalProgressIndicator()!!
             calculateCandidatesWithProba(EmptyProgressIndicator())
         }
-
-//        val task = object : Task.WithResult<List<CandidatesWithFeaturesAndProba>, Exception>(project, "Search For Refactorings", true) {
-//            override fun compute(indicator: ProgressIndicator) = calculateCandidatesWithProba(indicator)
-//        }
-//        task.queue()
-//        return task.result
     }
 
     fun calculateCandidatesWithProba(indicator: ProgressIndicator): List<CandidatesWithFeaturesAndProba> {

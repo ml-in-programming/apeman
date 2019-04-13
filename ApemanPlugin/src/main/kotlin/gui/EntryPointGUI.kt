@@ -29,9 +29,9 @@ class AnalysisScopeLauncher : BaseAnalysisAction("check1", "check2") {
 }
 
 class AnalysisMethodLauncher : AnAction("check only 1 method") {
-    override fun actionPerformed(e: AnActionEvent?) {
-        val caret = e!!.getData(CommonDataKeys.CARET)!!
-        val file = e!!.getData(CommonDataKeys.PSI_FILE)!!
+    override fun actionPerformed(e: AnActionEvent) {
+        val caret = e.getData(CommonDataKeys.CARET)!!
+        val file = e.getData(CommonDataKeys.PSI_FILE)!!
 
         val elem = file.findElementAt(caret.offset)
         val parents = elem!!.parents().toList()
@@ -48,12 +48,12 @@ class AnalysisMethodLauncher : AnAction("check only 1 method") {
 }
 
 class AnalysisSelectionLauncher : AnAction("check only 1 selection of candidate") {
-    override fun actionPerformed(e: AnActionEvent?) {
-        val editor = e!!.getData(CommonDataKeys.EDITOR)!!
+    override fun actionPerformed(e: AnActionEvent) {
+        val editor = e.getData(CommonDataKeys.EDITOR)!!
         val textRange = TextRange(
                 editor.selectionModel.selectionStart,
                 editor.selectionModel.selectionEnd)
-        val file = e!!.getData(CommonDataKeys.PSI_FILE)!!
+        val file = e.getData(CommonDataKeys.PSI_FILE)!!
         val launcher = Launcher(analysisCandidates = listOf(textRange to file), project = file.project)
         val candidates = launcher.calculateCandidatesWithProbaAsync(file.project)
         showInfoDialog(candidates)

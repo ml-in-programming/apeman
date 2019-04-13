@@ -1,0 +1,84 @@
+import org.gradle.api.JavaVersion.VERSION_1_8
+import org.jetbrains.intellij.IntelliJPlugin
+import org.jetbrains.intellij.tasks.PatchPluginXmlTask
+import org.jetbrains.intellij.tasks.PrepareSandboxTask
+import org.jetbrains.intellij.tasks.RunIdeTask
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+    id("org.jetbrains.intellij") version "0.3.12"
+    id("org.jetbrains.kotlin.jvm") version "1.2.51"
+}
+
+allprojects {
+    apply {
+        plugin("java")
+        plugin("org.jetbrains.intellij")
+    }
+    configure<JavaPluginConvention> {
+        sourceCompatibility = VERSION_1_8
+    }
+
+    intellij {
+        version = "2018.2"
+        pluginName = "apeman"
+    }
+}
+
+group = "com.snyssfx.apeman"
+version = "0.0.1"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    compile("org.apache.commons", name = "commons-csv", version = "1.4")
+    compile("org.tensorflow", name = "tensorflow", version = "1.13.1")
+    compile("org.tensorflow", name = "proto", version = "1.13.1")
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+tasks.withType<PatchPluginXmlTask> {
+    changeNotes("""0.0.1 add algo and metrics""")
+}
+
+task("runProofOfConcept") {
+    dependsOn("runIde")
+}
+
+gradle.taskGraph.whenReady {
+    if (gradle.taskGraph.hasTask("runProofOfConcept")) {
+        tasks.withType<RunIdeTask> {
+            args = listOf("proof-launcher")
+            jvmArgs = listOf("-Djava.awt.headless=true", "-Xmx2048m")
+        }
+    }
+}
+
+task("runDatasetGenerator") {
+    dependsOn("runIde")
+}
+
+gradle.taskGraph.whenReady {
+    if (gradle.taskGraph.hasTask("runDatasetGenerator")) {
+        tasks.withType<RunIdeTask> {
+            args = listOf("dataset_generator")
+            jvmArgs = listOf("-Djava.awt.headless=true", "-Xmx2048m")
+        }
+    }
+}
+
+tasks.withType<PrepareSandboxTask> {
+    from("../Models/model_tf_base") {
+        into("${intellij.pluginName}/model_tf_base")
+        include("**")
+    }
+}

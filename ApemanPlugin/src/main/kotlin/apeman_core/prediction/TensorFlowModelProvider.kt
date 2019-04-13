@@ -9,10 +9,11 @@ import org.tensorflow.SavedModelBundle
 import org.tensorflow.Tensor
 import org.tensorflow.Tensors
 import org.tensorflow.framework.MetaGraphDef
+import plugin
 import java.io.File
 import java.nio.file.Paths
 
-val SAVED_MODEL_DIR = "/home/snyss/Prog/mm/diploma/main/apeman/Model/model_tf_base/"
+val SAVED_MODEL_DIR = "model_tf_base"
 
 class TensorFlowModelProvider(
         private val candidates: List<CandidateWithFeatures>
