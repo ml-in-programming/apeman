@@ -13,7 +13,7 @@ import plugin
 import java.io.File
 import java.nio.file.Paths
 
-val SAVED_MODEL_DIR = "model_tf_base"
+val SAVED_MODEL_DIR = plugin().path.resolve("model_tf_base").absolutePath
 
 class TensorFlowModelProvider(
         private val candidates: List<CandidateWithFeatures>

@@ -77,8 +77,18 @@ gradle.taskGraph.whenReady {
 }
 
 tasks.withType<PrepareSandboxTask> {
-    from("../Models/model_tf_base") {
+    from("../Model/model_tf_base") {
         into("${intellij.pluginName}/model_tf_base")
         include("**")
     }
+//    if (name == IntelliJPlugin.PREPARE_SANDBOX_TASK_NAME) {
+//        for (subproject in rootProject.subprojects) {
+//            val jar: Jar by subproject.tasks
+//            from(jar.outputs.files) {
+//                into("${intellij.pluginName}/lib")
+//                include("*.jar")
+//            }
+//            dependsOn(jar)
+//        }
+//    }
 }
