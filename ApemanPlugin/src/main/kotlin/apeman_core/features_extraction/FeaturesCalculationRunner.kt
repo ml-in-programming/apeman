@@ -20,8 +20,10 @@ class FeaturesCalculationRunner(
         ProgressManager.getInstance().runProcess({
 
             for ((index, method) in methods.withIndex()) {
-                if (index % 100 == 0)
+                if (index % 100 == 0) {
                     log.info(index.toString())
+                    System.gc()
+                }
                 val methodCandidates = CandidateUtils.getCandidatesOfMethod(method, candidates)
                 for (calculator in calculators)
                     calculator.calculateMethod(method, methodCandidates)

@@ -76,6 +76,23 @@ object BlocksUtils {
         return ourStatementsCount
     }
 
+    fun getStatementsRecursivly(block: BlockOfMethod): Set<PsiStatement> {
+        val result = hashSetOf<PsiStatement>()
+
+        for (i in 0 until block.statementsCount) {
+            block[i].accept(object : JavaRecursiveElementVisitor() {
+
+                override fun visitStatement(statement: PsiStatement) {
+                    super.visitStatement(statement)
+                    if (statement.parent is PsiCodeBlock) {
+                        result.add(statement)
+                    }
+                }
+            })
+        }
+        return result
+    }
+
     fun <T> getStatementsWithElement(block: BlockOfMethod, element: T): Int {
         val statementsMap = hashSetOf<PsiStatement>()
         var currentStatement: PsiStatement? = null

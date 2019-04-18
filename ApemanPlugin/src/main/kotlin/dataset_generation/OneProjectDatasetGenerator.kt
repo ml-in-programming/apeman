@@ -44,7 +44,7 @@ class OneProjectDatasetGenerator(
             generateNegativeCandidates()
 
             log.info("calculate features and make csv")
-            makeCsv(getFeatures())
+            getFeaturesAndMakeCsv()
 
             ProjectManager.getInstance().closeProject(project!!)
             log.info("generation success!")
@@ -81,20 +81,23 @@ class OneProjectDatasetGenerator(
         assert(sourceCandidates.isNotEmpty())
         val methods = sourceCandidates.map { it.sourceMethod }
         val random = Random(123L)
-        methods.forEach {generateNegativeCandidateForMethod(it, random)}
+        methods.forEach {
+            generateNegativeCandidateForMethod(it, random)
+            if (negativeCandidates.count() > 3600)
+                return
+        }
     }
 
     private fun generateNegativeCandidateForMethod(method: PsiMethod, random: Random) {
-        var generated = false
+        var generated = true
         while (!generated) {
             method.accept(object : JavaRecursiveElementVisitor() {
 
                 override fun visitCodeBlock(block: PsiCodeBlock?) {
                     super.visitCodeBlock(block)
-                    if (random.nextInt(3) == 0 && !generated) {
-                        if (generateNegativeCandidateForBlock(method, block!!, random)) {
-                            generated = true
-                        }
+                    if (random.nextInt(2) == 0 && !generated) {
+                        generateNegativeCandidateForBlock(method, block!!, random)
+                        generated = true
                     }
                 }
             })
@@ -105,7 +108,8 @@ class OneProjectDatasetGenerator(
         val n = block.statementCount
         if (n == 0) return false
 
-        while (true) {
+        var tries = 0
+        while (tries < 2) {
             val startInclusive = random.nextInt(n)
             val endInclusive = random.nextInt(n - startInclusive) + startInclusive
             val candidate = ExtractionCandidate(
@@ -118,7 +122,32 @@ class OneProjectDatasetGenerator(
                 negativeCandidates.add(candidate)
                 return true
             }
+            tries++
         }
+        return false
+    }
+
+    private fun getFeaturesAndMakeCsv() {
+        var offset = 4400
+        val limit = 400
+
+        val methods = sourceCandidates.map { it.sourceMethod }.distinct()
+
+        while (offset + limit < methods.count()) {
+
+            log.info("start with offset: $offset")
+            val ourMethods = methods.filterIndexed { index, psiMethod ->  offset <= index && index < offset + limit }
+            val candidates = listOf(
+                    positiveCandidates.filter { ourMethods.contains(it.sourceMethod) },
+                    negativeCandidates.filter { ourMethods.contains(it.sourceMethod) },
+                    sourceCandidates.filter { ourMethods.contains(it.sourceMethod) }
+            ).flatten()
+
+            val features = FeaturesForEveryCandidate(candidates).getCandidatesWithFeatures()
+            makeCsv(features, offset)
+            offset += limit
+        }
+
     }
 
     private fun getFeatures(): List<CandidateWithFeatures> {
@@ -129,17 +158,17 @@ class OneProjectDatasetGenerator(
         return FeaturesForEveryCandidate(candidates).getCandidatesWithFeatures()
     }
 
-    private fun makeCsv(featureCandidates: List<CandidateWithFeatures>) {
+    private fun makeCsv(featureCandidates: List<CandidateWithFeatures>, offset: Int) {
         log.info("make csv")
 
         val positiveCandidates = featureCandidates.filter { it.candidate.positive != null && it.candidate.positive }
         val columnNames = SciKitModelProvider(positiveCandidates).getColumnNames()
 
         val positiveCsv = importCsvFrom(positiveCandidates, columnNames)
-        positiveCsv.export("$pathToProject/dataset_pos.csv")
+        positiveCsv.export("$pathToProject/dataset_pos_$offset.csv")
 
         val negativeCandidates = featureCandidates.filter { it.candidate.positive != null && !it.candidate.positive }
         val negativeCsv = importCsvFrom(negativeCandidates, columnNames)
-        negativeCsv.export("$pathToProject/dataset_neg.csv")
+        negativeCsv.export("$pathToProject/dataset_neg_$offset.csv")
     }
 }

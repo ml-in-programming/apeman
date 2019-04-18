@@ -57,8 +57,8 @@ task("runProofOfConcept") {
 gradle.taskGraph.whenReady {
     if (gradle.taskGraph.hasTask("runProofOfConcept")) {
         tasks.withType<RunIdeTask> {
-            args = listOf("proof-launcher")
-            jvmArgs = listOf("-Djava.awt.headless=true", "-Xmx2048m")
+            args("proof-launcher")
+            jvmArgs("-Djava.awt.headless=true", "-Xmx2048m")
         }
     }
 }
@@ -70,8 +70,8 @@ task("runDatasetGenerator") {
 gradle.taskGraph.whenReady {
     if (gradle.taskGraph.hasTask("runDatasetGenerator")) {
         tasks.withType<RunIdeTask> {
-            args = listOf("dataset_generator")
-            jvmArgs = listOf("-Djava.awt.headless=true", "-Xmx2048m")
+            args("dataset_generator")
+            jvmArgs("-Djava.awt.headless=true", "-Xmx2048m")
         }
     }
 }
@@ -81,14 +81,4 @@ tasks.withType<PrepareSandboxTask> {
         into("${intellij.pluginName}/model_tf_base")
         include("**")
     }
-//    if (name == IntelliJPlugin.PREPARE_SANDBOX_TASK_NAME) {
-//        for (subproject in rootProject.subprojects) {
-//            val jar: Jar by subproject.tasks
-//            from(jar.outputs.files) {
-//                into("${intellij.pluginName}/lib")
-//                include("*.jar")
-//            }
-//            dependsOn(jar)
-//        }
-//    }
 }

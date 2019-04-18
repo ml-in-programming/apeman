@@ -44,6 +44,9 @@ object CandidateValidation {
 
         } catch (e: PrepareFailedException) {
             false
+        } catch (e: AssertionError) {
+            return e.message?.contains("editor must be showing on the screen")
+                    ?: false
         }
 //        return ExtractMethodHandler().isAvailableForQuickList(
 //                editor,

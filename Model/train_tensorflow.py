@@ -136,10 +136,10 @@ if __name__ == "__main__":
 
     intellij_path = '../../../train_dataset3/intellij-community/'
 
-    DATASET_REAL_POSITIVE = pathlib.Path(intellij_path + "dataset_pos.csv")#('../GemsDataset/real_set/con_pos404.csv')
-    DATASET_REAL_NEGATIVE = pathlib.Path(intellij_path + "dataset_neg.csv")#('../GemsDataset/real_set/con_neg404.csv')
-    DATASET_AUGMENTED_POSITIVE = pathlib.Path#('../GemsDataset/augmented_set/con_pos404.csv')
-    DATASET_AUGMENTED_NEGATIVE = pathlib.Path#('../GemsDataset/augmented_set/con_neg404.csv')
+    DATASET_REAL_POSITIVE = pathlib.Path(intellij_path + "dataset_pos_overall.csv")#('../GemsDataset/real_set/con_pos404.csv')
+    DATASET_REAL_NEGATIVE = pathlib.Path(intellij_path + "dataset_neg_overall.csv")#('../GemsDataset/real_set/con_neg404.csv')
+    # DATASET_AUGMENTED_POSITIVE = pathlib.Path#('../GemsDataset/augmented_set/con_pos404.csv')
+    # DATASET_AUGMENTED_NEGATIVE = pathlib.Path#('../GemsDataset/augmented_set/con_neg404.csv')
 
     train_ds, train_classes, eval_ds, eval_classes, column_names = make_train_and_eval_ds(coef=1.0)
     est, _ = train_model(coef=1.0)

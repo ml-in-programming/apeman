@@ -16,7 +16,7 @@
     </extensions>
 
     <actions>
-        <group id="MyPlugin.SampleMenu" text="Check methods with apeman" description="">
+        <group id="MyPlugin.SampleMenu" text="Check methods with apeman" description="desc">
             <add-to-group group-id="MainMenu" anchor="last"/>
             <action id="plugin.gui.AnalysisScopeLauncher" class="gui.AnalysisScopeLauncher" text="analyse scope" description="Says hello"/>
             <action id="plugin.gui.AnalysisMethodLauncher" class="gui.AnalysisMethodLauncher" text="analyse 1 method" description="Says hello"/>
