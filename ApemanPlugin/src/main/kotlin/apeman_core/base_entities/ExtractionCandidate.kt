@@ -6,7 +6,7 @@ import com.intellij.psi.PsiStatement
 class ExtractionCandidate(statements: Array<PsiStatement>,
                           val sourceMethod: PsiMethod,
                           val isSourceCandidate: Boolean = false,
-                          val positive: Boolean? = null
+                          var positive: Boolean? = null
 ) {
     init {
         assert(statements.count() > 0)

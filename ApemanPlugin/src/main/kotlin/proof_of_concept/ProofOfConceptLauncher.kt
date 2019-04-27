@@ -1,6 +1,8 @@
 package proof_of_concept
 
 import com.intellij.openapi.application.ApplicationStarter
+import handleError
+import handleException
 import setupLogs
 import java.util.logging.Logger
 
@@ -19,7 +21,13 @@ class ProofOfConceptLauncher : ApplicationStarter {
         val longResults = arrayListOf<Results>()
 
         try {
-            listOf("junit3.8", "JHotDraw5.2", "MyWebMarket", "wikidev-filters", "myplanner-data-src").forEach {
+            listOf(
+                    "junit3.8",
+                    "JHotDraw5.2",
+                    "MyWebMarket",
+                    "wikidev-filters",
+                    "myplanner-data-src"
+            ).forEach {
                 val (shortResultsTemp, longResultsTemp) = OneProjectAnalyzer(
                         subjectDir + it
                 ).analyze()
@@ -35,9 +43,11 @@ class ProofOfConceptLauncher : ApplicationStarter {
         } catch (e: Error) {
             val log = Logger.getLogger("error")
             log.severe("Error: $e")
+            handleError(e)
         } catch (e: Exception) {
             val log = Logger.getLogger("exception")
             log.severe("Exception: $e")
+            handleException(e)
         }
     }
 

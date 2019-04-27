@@ -24,7 +24,7 @@ class AnalysisScopeLauncher : BaseAnalysisAction("check1", "check2") {
     override fun analyze(project: Project, scope: AnalysisScope) {
         val launcher = Launcher(scope, project = project)
         val candidates = launcher.calculateCandidatesWithProbaAsync(project)
-        showInfoDialog(candidates)
+        CandidatesTable(candidates, project)
     }
 }
 
@@ -43,7 +43,9 @@ class AnalysisMethodLauncher : AnAction("check only 1 method") {
 
         val launcher = Launcher(analysisMethods = listOf(method as PsiMethod), project = method.project)
         val candidates = launcher.calculateCandidatesWithProbaAsync(method.project)
-        showInfoDialog(candidates)
+        CandidatesTable(candidates, e.getData(CommonDataKeys.PROJECT)!!)
+//        createJBTable(candidates, e.getData(CommonDataKeys.EDITOR)!!, e.getData(CommonDataKeys.PROJECT)!!)
+//        showInfoDialog(candidates)
     }
 }
 
@@ -56,6 +58,9 @@ class AnalysisSelectionLauncher : AnAction("check only 1 selection of candidate"
         val file = e.getData(CommonDataKeys.PSI_FILE)!!
         val launcher = Launcher(analysisCandidates = listOf(textRange to file), project = file.project)
         val candidates = launcher.calculateCandidatesWithProbaAsync(file.project)
-        showInfoDialog(candidates)
+        CandidatesTable(candidates, e.getData(CommonDataKeys.PROJECT)!!)
+
+//   createJBTable(candidates, e.getData(CommonDataKeys.EDITOR)!!, e.getData(CommonDataKeys.PROJECT)!!)
+//        showInfoDialog(candidates)
     }
 }

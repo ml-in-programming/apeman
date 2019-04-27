@@ -4,13 +4,13 @@ import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
 import com.intellij.psi.PsiAssertStatement
 
-class NumAssertMethodCalculator(candidates: List<ExtractionCandidate>
-) : NumSimpleElementMethodCalculator(candidates, FeatureType.CON_ASSERT) {
+class NumAssertMethod(candidates: List<ExtractionCandidate>
+) : NumSimpleElementMethod(candidates, FeatureType.CON_ASSERT) {
 
     override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 
     inner class Visitor(methodCandidates: List<ExtractionCandidate>
-    ) : NumSimpleElementMethodCalculator.Visitor(methodCandidates) {
+    ) : NumSimpleElementMethod.Visitor(methodCandidates) {
 
         override fun visitAssertStatement(statement: PsiAssertStatement?) {
             super.visitAssertStatement(statement)

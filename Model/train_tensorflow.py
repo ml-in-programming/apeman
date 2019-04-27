@@ -134,10 +134,10 @@ if __name__ == "__main__":
     # DATASET_AUGMENTED_NEGATIVE = pathlib.Path('neg_aug.csv')
     EVALUATION = pathlib.Path('candidates.csv')
 
-    intellij_path = '../../../train_dataset3/intellij-community/'
+    base_path = '../../../train_dataset4/'  # intellij-community
 
-    DATASET_REAL_POSITIVE = pathlib.Path(intellij_path + "dataset_pos_overall.csv")#('../GemsDataset/real_set/con_pos404.csv')
-    DATASET_REAL_NEGATIVE = pathlib.Path(intellij_path + "dataset_neg_overall.csv")#('../GemsDataset/real_set/con_neg404.csv')
+    DATASET_REAL_POSITIVE = pathlib.Path(base_path + "pos_filtered.csv")#('../GemsDataset/real_set/con_pos404.csv')
+    DATASET_REAL_NEGATIVE = pathlib.Path(base_path + "neg_filtered.csv")#('../GemsDataset/real_set/con_neg404.csv')
     # DATASET_AUGMENTED_POSITIVE = pathlib.Path#('../GemsDataset/augmented_set/con_pos404.csv')
     # DATASET_AUGMENTED_NEGATIVE = pathlib.Path#('../GemsDataset/augmented_set/con_neg404.csv')
 

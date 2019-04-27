@@ -1,26 +1,26 @@
-ca.ualberta.cs.serl.wikidev.city3d.Layout	protected void getLayout(ArrayList<IArtifact>, double[][]) throws IOException
-ca.ualberta.cs.serl.wikidev.city3d.Layout	protected void getLayout(ArrayList<IArtifact>, double[][]) throws IOException
-ca.ualberta.cs.serl.wikidev.city3d.Layout	private void cityBlockInitialization(ArrayList<IArtifact>, double[][], double, double, double, double)
+ca.ualberta.cs.serl.wikidev.city3d.Layout	protected void getLayout(java.util.ArrayList<ca.ualberta.cs.serl.wikidev.artifacts.IArtifact>, double[][]) throws java.io.IOException
+ca.ualberta.cs.serl.wikidev.city3d.Layout	protected void getLayout(java.util.ArrayList<ca.ualberta.cs.serl.wikidev.artifacts.IArtifact>, double[][]) throws java.io.IOException
+ca.ualberta.cs.serl.wikidev.city3d.Layout	private void cityBlockInitialization(java.util.ArrayList<ca.ualberta.cs.serl.wikidev.artifacts.IArtifact>, double[][], double, double, double, double)
 ca.ualberta.cs.serl.wikidev.city3d.Layout	private void pushBuildings(double, double, double)
 ca.ualberta.cs.serl.wikidev.city3d.Layout	private void pushBuildings(double, double, double)
-ca.ualberta.cs.serl.wikidev.city3d.CityLayout	public static void printCityBlocks(ArrayList<CityBlock>, HashMap<Message,Integer>) throws IOException
-ca.ualberta.cs.serl.wikidev.city3d.IndustrialLayout	public static void printCityBlocks(ArrayList<CityBlock>, HashMap<SVNFile,Integer>) throws IOException
-ca.ualberta.cs.serl.wikidev.clustering.Hierarchical	public ArrayList<Cluster> clustering(ArrayList<IArtifact>)
-ca.ualberta.cs.serl.wikidev.clustering.Hierarchical	public ArrayList<Cluster> clustering(ArrayList<IArtifact>)
-ca.ualberta.cs.serl.wikidev.clustering.Hierarchical	public ArrayList<Cluster> clustering(ArrayList<IArtifact>)
+ca.ualberta.cs.serl.wikidev.city3d.CityLayout	public static void printCityBlocks(java.util.ArrayList<ca.ualberta.cs.serl.wikidev.city3d.CityBlock>, java.util.HashMap<ca.ualberta.cs.serl.wikidev.artifacts.Message,java.lang.Integer>) throws java.io.IOException
+ca.ualberta.cs.serl.wikidev.city3d.IndustrialLayout	public static void printCityBlocks(java.util.ArrayList<ca.ualberta.cs.serl.wikidev.city3d.CityBlock>, java.util.HashMap<ca.ualberta.cs.serl.wikidev.artifacts.SVNFile,java.lang.Integer>) throws java.io.IOException
+ca.ualberta.cs.serl.wikidev.clustering.Hierarchical	public java.util.ArrayList<ca.ualberta.cs.serl.wikidev.clustering.Cluster> clustering(java.util.ArrayList<ca.ualberta.cs.serl.wikidev.artifacts.IArtifact>)
+ca.ualberta.cs.serl.wikidev.clustering.Hierarchical	public java.util.ArrayList<ca.ualberta.cs.serl.wikidev.clustering.Cluster> clustering(java.util.ArrayList<ca.ualberta.cs.serl.wikidev.artifacts.IArtifact>)
+ca.ualberta.cs.serl.wikidev.clustering.Hierarchical	public java.util.ArrayList<ca.ualberta.cs.serl.wikidev.clustering.Cluster> clustering(java.util.ArrayList<ca.ualberta.cs.serl.wikidev.artifacts.IArtifact>)
 ca.ualberta.cs.serl.wikidev.clustering.MatrixOperator	public static double[] getFiedlerVector(double[][])
 ca.ualberta.cs.serl.wikidev.clustering.MatrixOperator	public static double[] getFiedlerVector(double[][])
 ca.ualberta.cs.serl.wikidev.clustering.MatrixOperator	public static double[] getFiedlerVector(double[][])
 ca.ualberta.cs.serl.wikidev.clustering.MatrixOperator	public static double[] getFiedlerVector(double[][])
-ca.ualberta.cs.serl.wikidev.clustering.MatrixOperator	public static TreeMap<Integer,ArrayList<Integer>> getConnectedComponents()
-ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws SQLException
-ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws SQLException
-ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws SQLException
-ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws SQLException
-ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws SQLException
-ca.ualberta.cs.serl.wikidev.ClusteringMain	public static void main(String[])
-ca.ualberta.cs.serl.wikidev.ClusteringMain	public static void main(String[])
-ca.ualberta.cs.serl.wikidev.RelationshipMiner	public void getRelationships() throws SQLException
-ca.ualberta.cs.serl.wikidev.RelationshipMiner	public void getRelationships() throws SQLException
-ca.ualberta.cs.serl.wikidev.RelationshipMiner	public void getRelationships() throws SQLException
-ca.ualberta.cs.serl.wikidev.RelationshipMiner	public void relateChangeSetToTicket(ca.ualberta.cs.serl.wikidev.artifacts.ChangeSet) throws SQLException
+ca.ualberta.cs.serl.wikidev.clustering.MatrixOperator	public static java.util.TreeMap<java.lang.Integer,java.util.ArrayList<java.lang.Integer>> getConnectedComponents()
+ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws java.sql.SQLException
+ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws java.sql.SQLException
+ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws java.sql.SQLException
+ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws java.sql.SQLException
+ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws java.sql.SQLException
+ca.ualberta.cs.serl.wikidev.ClusteringMain	public static void main(java.lang.String[])
+ca.ualberta.cs.serl.wikidev.ClusteringMain	public static void main(java.lang.String[])
+ca.ualberta.cs.serl.wikidev.RelationshipMiner	public void getRelationships() throws java.sql.SQLException
+ca.ualberta.cs.serl.wikidev.RelationshipMiner	public void getRelationships() throws java.sql.SQLException
+ca.ualberta.cs.serl.wikidev.RelationshipMiner	public void getRelationships() throws java.sql.SQLException
+ca.ualberta.cs.serl.wikidev.RelationshipMiner	public void relateChangeSetToTicket(ca.ualberta.cs.serl.wikidev.artifacts.ChangeSet) throws java.sql.SQLException

@@ -11,8 +11,8 @@ from sklearn.tree import DecisionTreeClassifier
 from model import Classifier, Dataset, GRADIENT_BOOSTING
 
 
-DATASET_AUGMENTED_NEGATIVE = pathlib.Path('../../../train_dataset3/intellij-community/dataset_neg_overall.csv')#'../GemsDataset/real_set/con_neg404.csv')
-DATASET_AUGMENTED_POSITIVE = pathlib.Path('../../../train_dataset3/intellij-community/dataset_pos_overall.csv')#'../GemsDataset/real_set/con_pos404.csv')
+DATASET_AUGMENTED_NEGATIVE = pathlib.Path('../../../train_dataset4/neg_filtered.csv')#'../GemsDataset/real_set/con_neg404.csv')
+DATASET_AUGMENTED_POSITIVE = pathlib.Path('../../../train_dataset4/pos_filtered.csv')#'../GemsDataset/real_set/con_pos404.csv')
 # DATASET_REAL_NEGATIVE = pathlib.Path('../GemsDataset/real_set/con_neg404.csv')
 # DATASET_REAL_POSITIVE = pathlib.Path('../GemsDataset/real_set/con_pos404.csv')
 #

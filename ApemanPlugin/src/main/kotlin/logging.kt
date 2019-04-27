@@ -18,3 +18,13 @@ fun setupLogs(log: Logger) {
 //    fileHandler.formatter = SimpleFormatter()
 //    log.addHandler(fileHandler)
 }
+
+fun handleError(e: Error) {
+    print(e)
+    e.printStackTrace()
+}
+
+fun handleException(e: Exception) {
+    print(e)
+    e.printStackTrace()
+}

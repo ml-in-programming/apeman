@@ -2,14 +2,13 @@ package apeman_core.features_extraction.calculators.candidate
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.features_extraction.calculators.BaseMetricsCalculator
+import apeman_core.features_extraction.calculators.NotOptimizedMetrics
 import apeman_core.utils.BlocksUtils
-import apeman_core.utils.CandidateUtils
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiMethod
 
-class LocCandidateCalculator(candidates: List<ExtractionCandidate>
-) : BaseMetricsCalculator(candidates, FeatureType.NUM_LOC) {
+class LocCandidate(candidates: List<ExtractionCandidate>
+) : NotOptimizedMetrics(candidates, FeatureType.NUM_LOC) {
 
     override fun createVisitor(methodCandidates: List<ExtractionCandidate>): JavaRecursiveElementVisitor {
         return object : JavaRecursiveElementVisitor() {

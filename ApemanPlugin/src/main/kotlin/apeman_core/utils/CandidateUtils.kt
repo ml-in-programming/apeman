@@ -52,6 +52,13 @@ object CandidateUtils {
         else null
     }
 
+    fun toTextRange(candidate: ExtractionCandidate): TextRange {
+        return TextRange(
+                candidate.start.textRange.startOffset,
+                candidate.end.textRange.endOffset
+        )
+    }
+
     public fun getSourceCandidate(method: PsiMethod, candidates: List<ExtractionCandidate>) = candidates
             .first { it.isSourceCandidate && it.sourceMethod === method }
 }

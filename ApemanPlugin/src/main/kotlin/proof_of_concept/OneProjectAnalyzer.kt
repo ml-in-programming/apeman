@@ -23,7 +23,7 @@ class OneProjectAnalyzer(private val dirOfProject: String) {
         val oracleEntries = parser.parseOracle()
 
         val longEntries = oracleEntries.filter {
-            BlocksUtils.getNumStatementsRecursively(it.candidate.block) < 30
+            BlocksUtils.getNumStatementsRecursively(it.candidate.block) >= 30
         }
 
         val allCandidates = launchApemanOnNeededMethods(oracleEntries)

@@ -1,7 +1,9 @@
 package apeman_core.candidates_generation
 
 import apeman_core.base_entities.ExtractionCandidate
+import apeman_core.utils.BlocksUtils
 import apeman_core.utils.CandidateUtils
+import apeman_core.utils.MethodUtils
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
@@ -20,8 +22,15 @@ class CustomCandidates(
                     .parentsOfType<PsiMethod>()
                     .last()
             val candidate = CandidateUtils.fromTextRange(range, topMethod)
-            if (candidate != null)
+            if (candidate != null) {
                 candidates.add(candidate)
+                candidates.add(ExtractionCandidate(
+                        topMethod.body!!.statements,
+                        topMethod,
+                        isSourceCandidate = true
+                ))
+            }
+
         }
         return candidates
     }

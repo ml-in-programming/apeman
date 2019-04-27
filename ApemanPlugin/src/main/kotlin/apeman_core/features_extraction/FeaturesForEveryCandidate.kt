@@ -41,25 +41,25 @@ class FeaturesForEveryCandidate(
     private fun declareMetrics() {
 
         val candidateCalculators = listOf(
-                NumTernaryOperatorsCandidatesCalculator(candidates),
-                NumIfCandidateCalculator(candidates),
-                NumAssignmentsCandidateCalculator(candidates),
-                NumSwitchOperatorsCandidatesCalculator(candidates),
-                NumLocalVarsCandidateCalculator(candidates),
-                NumAssertCandidateCalculator(candidates),
-                LocCandidateCalculator(candidates),
+                NumTernaryOperatorsCandidates(candidates),
+                NumIfCandidate(candidates),
+                NumAssignmentsCandidate(candidates),
+                NumSwitchOperatorsCandidates(candidates),
+                NumLocalVarsCandidate(candidates),
+                NumAssertCandidate(candidates),
+                LocCandidate(candidates),
 
-                RatioLocCandidateCalculator(candidates)
+                RatioLocCandidate(candidates)
         )
 
         val complementCalculators = listOf(
-                NumTernaryMethodCalculator(candidates),
-                NumIfMethodCalculator(candidates),
-                NumAssignmentsMethodCalculator(candidates),
-                NumSwitchMethodCalculator(candidates),
-                NumLocalVarsMethodCalculator(candidates),
-                NumAssertMethodCalculator(candidates),
-                NumLOCMethodCalculator(candidates)
+                NumTernaryMethod(candidates),
+                NumIfMethod(candidates),
+                NumAssignmentsMethod(candidates),
+                NumSwitchMethod(candidates),
+                NumLocalVarsMethod(candidates),
+                NumAssertMethod(candidates),
+                NumLOCMethod(candidates)
         )
 
         val candidateMetrics = candidateCalculators.map { CandidateMetric(it) }

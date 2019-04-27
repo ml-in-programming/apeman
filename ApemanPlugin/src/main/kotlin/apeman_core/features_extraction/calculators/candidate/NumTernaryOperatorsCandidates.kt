@@ -2,18 +2,18 @@ package apeman_core.features_extraction.calculators.candidate
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import com.intellij.psi.PsiLiteralExpression
+import com.intellij.psi.PsiConditionalExpression
 
-class NumLiteralsCandidateCalculator(candidates: List<ExtractionCandidate>
-) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_LITERAL) {
+class NumTernaryOperatorsCandidates(candidates: List<ExtractionCandidate>
+) : AbstractNumCandidate(candidates, FeatureType.NUM_CONDITIONAL) {
 
     override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 
     inner class Visitor(methodCandidates: List<ExtractionCandidate>
-    ) : AbstractNumCandidateCalculator.CandidateVisitor(methodCandidates) {
+    ) : AbstractNumCandidate.CandidateVisitor(methodCandidates) {
 
-        override fun visitLiteralExpression(literal: PsiLiteralExpression) {
-            super.visitLiteralExpression(literal)
+        override fun visitConditionalExpression(expression: PsiConditionalExpression) {
+            super.visitConditionalExpression(expression)
 
             if (!isInsideMethod)
                 return

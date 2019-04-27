@@ -13,7 +13,10 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileVisitor
 import com.intellij.psi.*
 import com.intellij.psi.search.searches.ReferencesSearch
+import com.intellij.psi.util.parents
 import com.intellij.refactoring.inline.InlineMethodProcessor
+import handleError
+import handleException
 import java.nio.file.Paths
 import java.util.logging.Logger
 
@@ -57,58 +60,79 @@ class InlineMethodsProcessor(
     private fun innerMethods() {
 
         val overallLength = getJavaFilesFromProject().count()
-        ProjectManager.getInstance().closeProject(project!!)
+//        ProjectManager.getInstance().closeProject(project!!)
 
-        var offset = 47000
-        val limit = 1000
+        var offset = 21000 // 5500 for buck
+        val limit = 500
 
         while (offset < overallLength) {
 
             log.info("start with offset: $offset")
-            project = ProjectManager.getInstance().loadAndOpenProject(pathToProject!!)!!
+
+            if (project == null)
+                project = ProjectManager.getInstance().loadAndOpenProject(pathToProject!!)!!
             val files = getJavaFilesFromProject()
             CommandProcessor.getInstance().executeCommand(project, {
 
                 files.withIndex()
                         .filter { offset <= it.index && it.index < (offset + limit) }
                         .forEach { (index, file) ->
-                            if (index % 50 == 0)
+                            if (index % 50 == 0) {
                                 log.info(index.toString())
+                                System.gc()
+                            }
+                            log.info(index.toString())
 
                             file.accept(object : JavaRecursiveElementVisitor() {
                                 override fun visitMethod(method: PsiMethod?) {
                                     super.visitMethod(method)
-
-                                    val reference = getFirstReferenceOrNull(method!!) ?: return
-                                    if (method.isConstructor || method.body == null || !method.isWritable)
-                                        return
-                                    if (!method.isValid)
-                                        return
-                                    if (method.containingClass?.isInterface ?: true)
-                                        return
-                                    if (method.name.startsWith("get") && (method.body?.statementCount == 1))
-                                        return
-                                    if (method.name.startsWith("set") && (method.body?.statementCount == 1))
-                                        return
-
-                                    addBracketsToMethod(method)
-
-                                    val editor = getEditor(reference)
                                     try {
-                                        log.info("inline...")
-                                        InlineMethodProcessor(
-                                                reference.element.project, method, reference, editor, false
-                                        ).run()
+//                                        log.info("met")
+                                        val reference = getFirstReferenceOrNull(method!!) ?: return
+                                        if (method.isConstructor || method.body == null || !method.isWritable)
+                                            return
+                                        if (!method.isValid)
+                                            return
+                                        if (method.containingClass?.isInterface ?: true)
+                                            return
+                                        if (method.name.startsWith("get") && (method.body?.statementCount == 1))
+                                            return
+                                        if (method.name.startsWith("set") && (method.body?.statementCount == 1))
+                                            return
+                                        val refClass = reference.parents().lastOrNull { it is PsiClass } ?: return
+                                        if (method.containingClass !== (refClass as PsiClass))
+                                            return
+
+                                        addBracketsToMethod(method)
+
+                                        val editor = getEditor(reference)
+                                        try {
+                                            log.info("inline...")
+                                            InlineMethodProcessor(
+                                                    reference.element.project, method, reference, editor, false
+                                            ).run()
+                                        } catch (e: Exception) {
+                                            log.info(e.toString())
+                                            log.info(e.stackTrace.toString())
+                                        } catch (e: Error) {
+                                            log.info(e.toString())
+                                            log.info(e.stackTrace.toString())
+                                        }
+                                        EditorFactory.getInstance().releaseEditor(editor)
+                                        PsiDocumentManager.getInstance(project!!).commitAllDocuments()
+                                    } catch (e: Error) {
+                                        handleError(e)
+                                        log.info("here!")
                                     } catch (e: Exception) {
-                                        log.info(e.toString())
+                                        handleException(e)
+                                        log.info("exc!")
                                     }
-                                    EditorFactory.getInstance().releaseEditor(editor)
-                                    PsiDocumentManager.getInstance(project!!).commitAllDocuments()
                                 }
                             })
                         }
             }, null, null)
             ProjectManager.getInstance().closeProject(project!!)
+            project = null
             offset += limit
         }
     }

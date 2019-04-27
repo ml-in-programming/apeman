@@ -20,6 +20,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiMethod
+import handleError
+import handleException
 import java.util.logging.Logger
 
 private val log = Logger.getGlobal()
@@ -75,10 +77,12 @@ class Launcher(
         } catch (e: Error) {
             val log = Logger.getLogger("error")
             log.severe("Error: $e")
+            handleError(e)
             return listOf()
         } catch (e: Exception) {
             val log = Logger.getLogger("exception")
             log.severe("Exception: $e")
+            handleException(e)
             return listOf()
         }
         return predictedCandidates!!
@@ -111,7 +115,7 @@ class Launcher(
 
         val top5 = filter.getTopKCandidates(candToProba, k = 4)
 //        val grouped = filter.getGroupedCandidates(candToProba, k = 5)
-        val barrier = filter.getByBarrier(top5, proba = 0.7)
-        return barrier
+//        val barrier = filter.getByBarrier(top5, proba = 0.7)
+        return top5
     }
 }

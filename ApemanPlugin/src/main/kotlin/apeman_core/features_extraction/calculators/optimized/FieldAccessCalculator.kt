@@ -2,13 +2,14 @@ package apeman_core.features_extraction.calculators.optimized
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.features_extraction.calculators.BaseCalculator
+import apeman_core.features_extraction.calculators.OptimizedMetric
 import apeman_core.features_extraction.calculators.StatementsMap
+import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiField
 import com.intellij.psi.PsiJavaCodeReferenceElement
 
 class FieldAccessCalculator(candidates: List<ExtractionCandidate>
-) : BaseCalculator(
+) : OptimizedMetric(
         candidates,
         listOf(
                 FeatureType.NUM_FIELD_ACCESS,
@@ -21,11 +22,16 @@ class FieldAccessCalculator(candidates: List<ExtractionCandidate>
 ) {
 
     inner class FieldAccessStatementsMap : StatementsMap() {
+        var containingClass: PsiClass? = null
+
         inner class Visitor : StatementsMap.Visitor() {
             override fun visitReferenceElement(reference: PsiJavaCodeReferenceElement?) {
+                if (containingClass == null)
+                    containingClass = method!!.containingClass
+
                 super.visitReferenceElement(reference)
                 val elem = reference?.resolve() ?: return
-                if (elem is PsiField)
+                if (elem is PsiField && elem.containingClass === containingClass)
                     addElem(elem)
             }
         }

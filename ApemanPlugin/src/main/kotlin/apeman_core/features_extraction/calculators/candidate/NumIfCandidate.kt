@@ -2,18 +2,18 @@ package apeman_core.features_extraction.calculators.candidate
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import com.intellij.psi.PsiAssertStatement
+import com.intellij.psi.PsiIfStatement
 
-class NumAssertCandidateCalculator(candidates: List<ExtractionCandidate>
-) : AbstractNumCandidateCalculator(candidates, FeatureType.NUM_ASSERT) {
+class NumIfCandidate(candidates: List<ExtractionCandidate>
+) : AbstractNumCandidate(candidates, FeatureType.NUM_IF) {
 
     override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 
     inner class Visitor(methodCandidates: List<ExtractionCandidate>
-    ) : AbstractNumCandidateCalculator.CandidateVisitor(methodCandidates) {
+    ) : AbstractNumCandidate.CandidateVisitor(methodCandidates) {
 
-        override fun visitAssertStatement(statement: PsiAssertStatement?) {
-            super.visitAssertStatement(statement)
+        override fun visitIfStatement(statement: PsiIfStatement) {
+            super.visitIfStatement(statement)
             if (isInsideMethod) {
                 updateCounters()
             }

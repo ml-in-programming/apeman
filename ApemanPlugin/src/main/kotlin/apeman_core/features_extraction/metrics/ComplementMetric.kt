@@ -1,11 +1,11 @@
 package apeman_core.features_extraction.metrics
 
-import apeman_core.features_extraction.calculators.BaseMetricsCalculator
+import apeman_core.features_extraction.calculators.NotOptimizedMetrics
 import apeman_core.base_entities.CandidateWithFeatures
 import kotlin.math.abs
 
 class ComplementMetric(
-        override val calculators: List<BaseMetricsCalculator>
+        override val calculators: List<NotOptimizedMetrics>
 
 ): Metric(calculators) {
 

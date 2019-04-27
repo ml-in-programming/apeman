@@ -3,6 +3,7 @@ package apeman_core.features_extraction.calculators
 import apeman_core.base_entities.ExtractionCandidate
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiStatement
 import java.util.*
 import kotlin.collections.LinkedHashMap
@@ -23,6 +24,8 @@ abstract class StatementsMap {
     protected val allElements = linkedSetOf<Any>()
     protected val allElementsList = arrayListOf<Any>()
     protected val statementsTrace = ArrayList<PsiStatement>()
+
+    var method: PsiMethod? = null
 
     protected open fun addElem(elem: Any) {
         allElements.add(elem)
@@ -76,8 +79,8 @@ abstract class StatementsMap {
         }
     }
 
-    fun addElementsAbstract(method: PsiElement) {
-        method.accept(getVisitor())
+    fun addElementsAbstract() {
+        method!!.accept(getVisitor())
         allElementsList.addAll(allElements.sortedBy { (it as PsiElement).text })
     }
 

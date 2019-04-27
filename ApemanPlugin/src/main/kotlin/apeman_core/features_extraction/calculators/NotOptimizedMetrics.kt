@@ -5,11 +5,11 @@ import apeman_core.base_entities.FeatureType
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiMethod
 
-abstract class BaseMetricsCalculator @JvmOverloads constructor(
+abstract class NotOptimizedMetrics @JvmOverloads constructor(
         protected val candidates: List<ExtractionCandidate>,
         feature: FeatureType? = null,
         features: List<FeatureType>? = null
-) : SuperBaseCalculator() {
+) : BaseCalculator() {
     init {
         assert((feature != null) xor (features != null))
     }

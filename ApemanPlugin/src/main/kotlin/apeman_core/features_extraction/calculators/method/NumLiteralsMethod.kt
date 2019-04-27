@@ -2,18 +2,18 @@ package apeman_core.features_extraction.calculators.method
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import com.intellij.psi.PsiSwitchStatement
+import com.intellij.psi.PsiLiteralExpression
 
-class NumSwitchMethodCalculator(candidates: List<ExtractionCandidate>
-) : NumSimpleElementMethodCalculator(candidates, FeatureType.CON_SWITCH) {
+class NumLiteralsMethod(candidates: List<ExtractionCandidate>
+) : NumSimpleElementMethod(candidates, FeatureType.CON_LITERAL) {
 
     override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 
     inner class Visitor(methodCandidates: List<ExtractionCandidate>
-    ) : NumSimpleElementMethodCalculator.Visitor(methodCandidates) {
+    ) : NumSimpleElementMethod.Visitor(methodCandidates) {
 
-        override fun visitSwitchStatement(statement: PsiSwitchStatement) {
-            super.visitSwitchStatement(statement)
+        override fun visitLiteralExpression(literal: PsiLiteralExpression) {
+            super.visitLiteralExpression(literal)
             elementsCounter++
         }
     }
