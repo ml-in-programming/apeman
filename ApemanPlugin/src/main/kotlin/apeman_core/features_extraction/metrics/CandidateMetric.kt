@@ -1,9 +1,9 @@
 package apeman_core.features_extraction.metrics
 
-import apeman_core.features_extraction.calculators.NotOptimizedMetrics
+import apeman_core.features_extraction.calculators.NotOptimizedCalculator
 import apeman_core.base_entities.CandidateWithFeatures
 
-class CandidateMetric(metric: NotOptimizedMetrics
+class CandidateMetric(metric: NotOptimizedCalculator
 ): Metric(listOf(metric)) {
 
     override fun fetchResult(candidates: List<CandidateWithFeatures>) {

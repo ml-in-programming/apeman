@@ -1,10 +1,7 @@
 package apeman_core.features_extraction.calculators
 
 import apeman_core.base_entities.ExtractionCandidate
-import com.intellij.psi.JavaRecursiveElementVisitor
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiStatement
+import com.intellij.psi.*
 import java.util.*
 import kotlin.collections.LinkedHashMap
 import kotlin.collections.LinkedHashSet
@@ -14,74 +11,85 @@ typealias Coupling = Pair<Double, Double>
 
 abstract class StatementsMap {
 
-    protected val elementsToCount = linkedMapOf<PsiStatement, LinkedHashMap<Any, Int>>()
-    protected val elementsToNumStmts = linkedMapOf<PsiStatement, LinkedHashMap<Any, Int>>()
-    protected val elementToStatements = linkedMapOf<Any, LinkedHashSet<PsiStatement>>()
+    protected val numElementsInStatement = linkedMapOf<PsiStatement, LinkedHashMap<PsiElement, Int>>()
+    protected val numDescendantStatementsWithElement = linkedMapOf<PsiStatement, LinkedHashMap<PsiElement, Int>>()
+    protected val statementsWithGivenElement = linkedMapOf<PsiElement, LinkedHashSet<PsiStatement>>()
 
-    protected val statementsCount = linkedMapOf<PsiStatement, Int>()
-    protected val uniqueStatements = linkedSetOf<PsiStatement>()
+    protected val numDescendantStatementsOverall = linkedMapOf<PsiStatement, Int>()
+    protected val alreadySeenStatements = linkedSetOf<PsiStatement>()
 
-    protected val allElements = linkedSetOf<Any>()
-    protected val allElementsList = arrayListOf<Any>()
-    protected val statementsTrace = ArrayList<PsiStatement>()
+    protected val allElementsSet = linkedSetOf<PsiElement>()
+    protected val allElementsSorted = arrayListOf<PsiElement>()
+    protected val stackOfCurrentStatements = ArrayList<PsiStatement>()
 
     var method: PsiMethod? = null
 
-    protected open fun addElem(elem: Any) {
-        allElements.add(elem)
+    protected open fun addElement(element: PsiElement) {
+        if (stackOfCurrentStatements.isEmpty())
+            return
+        addElementToOverallSet(element)
+        refreshNumberOfOccurrencesInStatements(element)
+        refreshStatementsWhereOccurred(element)
+    }
 
-        // refresh elementsToCount for NUM, CON and COUPLING calculators
-        for (statement in statementsTrace) {
-            val elemToCount = elementsToCount.getOrPut(statement) { LinkedHashMap() }
-            val count = elemToCount.getOrPut(elem) { 0 }
-            elemToCount[elem] = count + 1
+    private fun addElementToOverallSet(element: PsiElement) = allElementsSet.add(element)
+
+    private fun refreshNumberOfOccurrencesInStatements(elem: PsiElement) {
+        for (statement in stackOfCurrentStatements) {
+            val numElements = numElementsInStatement.getOrPut(statement) { LinkedHashMap() }
+            val count = numElements.getOrPut(elem) { 0 }
+            numElements[elem] = count + 1
         }
+    }
 
-        var numberOfUnique = 0
-        elementToStatements.getOrPut(elem) { LinkedHashSet() }
+    private fun refreshStatementsWhereOccurred(element: PsiElement) {
+        statementsWithGivenElement.getOrPut(element) { LinkedHashSet() }
 
-        // refresh elementsToNumStmts for COHESION metric
-        for (i in statementsTrace.count() - 1 downTo 0) {
-            val statement = statementsTrace[i]
+        val elementStatement = stackOfCurrentStatements.last()
 
-            if (!elementToStatements[elem]!!.contains(statement)) {
-                elementToStatements[elem]!!.add(statement)
-                numberOfUnique++
-            }
+        if (statementsWithGivenElement[element]!!.contains(elementStatement))
+            return
+        statementsWithGivenElement[element]!!.add(elementStatement)
 
-            val elemToStmts = elementsToNumStmts.getOrPut(statement) { LinkedHashMap() }
-            val statementsContains = elemToStmts.getOrDefault(elem, 0)
-            elemToStmts[elem] = statementsContains + numberOfUnique
+        for (statement in stackOfCurrentStatements) {
+            if (elementStatement is PsiBlockStatement)
+                continue
+
+            val numStatementsWithElement = numDescendantStatementsWithElement.getOrPut(statement) { LinkedHashMap() }
+            val numChildrenStatements = numStatementsWithElement.getOrDefault(element, 0)
+            numStatementsWithElement[element] = numChildrenStatements + 1
         }
     }
 
     protected open fun addStatement() {
-        // refresh statementsCount for loc in Coupling
+        // refresh numDescendantStatementsOverall for loc in Coupling
 
-        var numberOfUnique = 0
-        for (i in statementsTrace.count() - 1 downTo 0) {
-            val statement = statementsTrace[i]
+        var firstOccurrencesCount = 0
+        for (i in stackOfCurrentStatements.count() - 1 downTo 0) {
+            val statement = stackOfCurrentStatements[i]
+            if (statement is PsiBlockStatement)
+                continue
 
-            if (!uniqueStatements.contains(statement)) {
-                uniqueStatements.add(statement)
-                numberOfUnique++
+            if (!alreadySeenStatements.contains(statement)) {
+                alreadySeenStatements.add(statement)
+                firstOccurrencesCount++
             }
-            statementsCount.merge(statement, numberOfUnique) { a, b -> a + b }
+            numDescendantStatementsOverall.merge(statement, firstOccurrencesCount) { a, b -> a + b }
         }
     }
 
     open inner class Visitor : JavaRecursiveElementVisitor() {
         override fun visitStatement(statement: PsiStatement?) {
-            statementsTrace.add(statement!!)
+            stackOfCurrentStatements.add(statement!!)
             super.visitStatement(statement)
             addStatement()
-            statementsTrace.removeAt(statementsTrace.count() - 1)
+            stackOfCurrentStatements.removeAt(stackOfCurrentStatements.count() - 1)
         }
     }
 
     fun addElementsAbstract() {
         method!!.accept(getVisitor())
-        allElementsList.addAll(allElements.sortedBy { (it as PsiElement).text })
+        allElementsSorted.addAll(allElementsSet.sortedBy { it.text })
     }
 
     abstract fun getVisitor(): Visitor
@@ -90,22 +98,22 @@ abstract class StatementsMap {
     ): List<Pair<Int, Int>> {
 
         val numsAndCons = arrayListOf<Pair<Int, Int>>()
-        var numSource = 0
-        for (i in 0 until sourceCand.block.statementsCount) {
-            val statement = sourceCand.block[i]
-            numSource += elementsToCount[statement]?.map { it.value }?.sum() ?: 0
-        }
+        val sourceElements = countElementsForCandidate(sourceCand)
 
         for (candidate in candidates) {
-            var allNum = 0
-            for (i in 0 until candidate.block.statementsCount) {
-                val statement = candidate.block[i]
-                val numElements = elementsToCount[statement]?.map { it.value }?.sum() ?: 0
-                allNum += numElements
-            }
-            numsAndCons.add(allNum to numSource - allNum)
+            val candidateElements = countElementsForCandidate(candidate)
+            numsAndCons.add(candidateElements to sourceElements - candidateElements)
         }
         return numsAndCons
+    }
+
+    private fun countElementsForCandidate(candidate: ExtractionCandidate): Int {
+        var overallElementsNum = 0
+        for (statement in candidate.block) {
+            val elementsInStatement = numElementsInStatement[statement]?.map { it.value }?.sum() ?: 0
+            overallElementsNum += elementsInStatement
+        }
+        return overallElementsNum
     }
 
     fun calculateCouplingAndCohesions(
@@ -115,15 +123,15 @@ abstract class StatementsMap {
 
         val couplingsAndCohesions = arrayListOf<Pair<Coupling, Cohesion>>()
 
-        val sourceNums = allElementsList
-                .map { it to calculateNumOfConcreteElem(sourceCand, it) }
+        val sourceNums = allElementsSorted.asSequence()
+                .map { it to numOfElementsForCand(sourceCand, it) }
                 .toMap()
 
         for (candidate in candidates) {
 
-            val ratio = linkedMapOf<Any, Double>()
-            for (elem in allElementsList) {
-                val numCandidate = calculateNumOfConcreteElem(candidate, elem)
+            val ratio = linkedMapOf<PsiElement, Double>()
+            for (elem in allElementsSorted) {
+                val numCandidate = numOfElementsForCand(candidate, elem)
                 ratio[elem] = numCandidate.toDouble() / sourceNums.getValue(elem)
             }
             val (firstElem, secondElem) = findMaxAndSecondMax(ratio)
@@ -150,51 +158,45 @@ abstract class StatementsMap {
     }
 
     protected open fun calculateCouplingAndCohesionForElem(
-            candidate: ExtractionCandidate, elem: Any, ratio: Map<Any, Double>
+            candidate: ExtractionCandidate, elem: PsiElement, ratio: Map<PsiElement, Double>
     ): Pair<Double, Double> {
         val coup = ratio[elem] ?: 0.0
-        val statementsWithElem = calculateStatementsOfConcreteElem(candidate, elem)
-        val overallStatements = calculateOverallStatements(candidate)
+        val statementsWithElem = numOfStatementsForElementForCand(candidate, elem)
+        val overallStatements = numStatementsInCandidate(candidate)
         val coh = statementsWithElem.toDouble() / overallStatements
 
         return coup to coh
     }
 
-    protected open fun calculateNumOfConcreteElem(candidate: ExtractionCandidate, elem: Any): Int {
-//        assert(elementsToCount.isNotEmpty())
-        var concreteNum = 0
-        for (i in 0 until candidate.block.statementsCount) {
-            val statement = candidate.block[i]
-            concreteNum += elementsToCount[statement]?.get(elem) ?: 0
+    protected open fun numOfElementsForCand(candidate: ExtractionCandidate, elem: PsiElement): Int {
+        var overallCount = 0
+        for (statement in candidate.block) {
+            overallCount += numElementsInStatement[statement]?.get(elem) ?: 0
         }
-        return concreteNum
+        return overallCount
     }
 
-    protected open fun calculateStatementsOfConcreteElem(candidate: ExtractionCandidate, elem: Any): Int {
-//        assert(elementsToNumStmts.isNotEmpty())
+    protected open fun numOfStatementsForElementForCand(candidate: ExtractionCandidate, elem: PsiElement): Int {
         var numStatements = 0
-        for (i in 0 until candidate.block.statementsCount) {
-            val statement = candidate.block[i]
-            numStatements += elementsToNumStmts[statement]?.get(elem) ?: 0
+        for (statement in candidate.block) {
+            numStatements += numDescendantStatementsWithElement[statement]?.get(elem) ?: 0
         }
         return numStatements
     }
 
-    protected open fun calculateOverallStatements(candidate: ExtractionCandidate): Int {
-//        assert(statementsCount.isNotEmpty())
+    protected open fun numStatementsInCandidate(candidate: ExtractionCandidate): Int {
         var numStatements = 0
-        for (i in 0 until candidate.block.statementsCount) {
-            val statement = candidate.block[i]
-            numStatements += statementsCount[statement]!!
+        for (statement in candidate.block) {
+            numStatements += numDescendantStatementsOverall[statement]!!
         }
         return numStatements
     }
 
-    protected open fun findMaxAndSecondMax(ratio: Map<Any, Double>): Pair<Any?, Any?> {
+    protected open fun findMaxAndSecondMax(ratio: Map<PsiElement, Double>): Pair<PsiElement?, PsiElement?> {
         var firstMax = Double.MIN_VALUE
         var secondMax = Double.MIN_VALUE
-        var firstElem: Any? = null
-        var secondElem: Any? = null
+        var firstElem: PsiElement? = null
+        var secondElem: PsiElement? = null
 
         for ((elem, value) in ratio) {
             if (value > firstMax) {

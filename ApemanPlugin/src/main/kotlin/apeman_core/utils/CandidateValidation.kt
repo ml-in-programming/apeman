@@ -33,7 +33,7 @@ object CandidateValidation {
             val processor = ExtractMethodProcessor(
                     project,
                     editor,
-                    candidate.block.get(),
+                    candidate.block.get().toTypedArray(),
                     null,
                     REFACTORING_NAME,
                     "candidate",

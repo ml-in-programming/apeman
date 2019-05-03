@@ -16,7 +16,7 @@ class DatasetGeneration : ApplicationStarter {
 //                "buck",
 //                "deeplearning4j"
 //                "elasticsearch-6.6.0",
-//                    "intellij-community"
+                    "intellij-community"
 //                "guava"
 //                "mockito",
 //                "presto",
@@ -25,13 +25,13 @@ class DatasetGeneration : ApplicationStarter {
 
             log.info("inlining success!")
 
-            val antlr4 = OneProjectDatasetGenerator(BASE_PATH + "antlr4")
-            val buck = OneProjectDatasetGenerator(BASE_PATH + "buck")
+//            val antlr4 = OneProjectDatasetGenerator(BASE_PATH + "antlr4")
+//            val buck = OneProjectDatasetGenerator(BASE_PATH + "buck")
 //        val deeplearning4j = OneProjectDatasetGenerator(BASE_PATH + "deeplearning4j")
 //        val elasticsearch = OneProjectDatasetGenerator(BASE_PATH + "elasticsearch")
 //        val facebookAndroidSdk = OneProjectDatasetGenerator(BASE_PATH + "facebook-android-sdk")
 //            val guava = OneProjectDatasetGenerator(BASE_PATH + "guava")
-            val intellijCommunity = OneProjectDatasetGenerator(BASE_PATH + "intellij-community")
+//            val intellijCommunity = OneProjectDatasetGenerator(BASE_PATH + "intellij-community")
 //        val mockito = OneProjectDatasetGenerator(BASE_PATH + "mockito")
 //        val pocketHub = OneProjectDatasetGenerator(BASE_PATH + "PocketHub")
 //        val presto = OneProjectDatasetGenerator(BASE_PATH + "presto")

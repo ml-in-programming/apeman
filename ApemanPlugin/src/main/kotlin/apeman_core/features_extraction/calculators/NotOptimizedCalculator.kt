@@ -5,7 +5,7 @@ import apeman_core.base_entities.FeatureType
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiMethod
 
-abstract class NotOptimizedMetrics @JvmOverloads constructor(
+abstract class NotOptimizedCalculator @JvmOverloads constructor(
         protected val candidates: List<ExtractionCandidate>,
         feature: FeatureType? = null,
         features: List<FeatureType>? = null

@@ -2,12 +2,12 @@ package apeman_core.features_extraction.calculators.optimized
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.features_extraction.calculators.OptimizedMetric
+import apeman_core.features_extraction.calculators.OptimizedCalculator
 import apeman_core.features_extraction.calculators.StatementsMap
 import com.intellij.psi.PsiMethodCallExpression
 
 class InvocationCalculator(candidates: List<ExtractionCandidate>
-) : OptimizedMetric(
+) : OptimizedCalculator(
         candidates,
         listOf(
                 FeatureType.NUM_INVOCATION,
@@ -22,7 +22,7 @@ class InvocationCalculator(candidates: List<ExtractionCandidate>
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression?) {
                 super.visitMethodCallExpression(expression)
                 val method = expression!!.methodExpression.resolve() ?: return
-                addElem(method)
+                addElement(method)
             }
         }
 

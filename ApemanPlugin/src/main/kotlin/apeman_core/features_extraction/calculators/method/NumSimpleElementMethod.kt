@@ -2,14 +2,14 @@ package apeman_core.features_extraction.calculators.method
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.features_extraction.calculators.NotOptimizedMetrics
+import apeman_core.features_extraction.calculators.NotOptimizedCalculator
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiMethod
 
 abstract class NumSimpleElementMethod(
         candidates: List<ExtractionCandidate>,
         neededFeature: FeatureType
-) : NotOptimizedMetrics(candidates, neededFeature) {
+) : NotOptimizedCalculator(candidates, neededFeature) {
 
     override fun createVisitor(methodCandidates: List<ExtractionCandidate>) = Visitor(methodCandidates)
 

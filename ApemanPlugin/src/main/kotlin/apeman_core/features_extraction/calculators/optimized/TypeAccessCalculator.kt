@@ -2,12 +2,12 @@ package apeman_core.features_extraction.calculators.optimized
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.features_extraction.calculators.OptimizedMetric
+import apeman_core.features_extraction.calculators.OptimizedCalculator
 import apeman_core.features_extraction.calculators.StatementsMap
 import com.intellij.psi.PsiTypeElement
 
 class TypeAccessCalculator(candidates: List<ExtractionCandidate>
-) : OptimizedMetric(
+) : OptimizedCalculator(
         candidates,
         listOf(
                 FeatureType.NUM_TYPE_ACCESS,
@@ -23,7 +23,7 @@ class TypeAccessCalculator(candidates: List<ExtractionCandidate>
         inner class Visitor : StatementsMap.Visitor() {
             override fun visitTypeElement(type: PsiTypeElement?) {
                 super.visitTypeElement(type)
-                addElem(type!!)
+                addElement(type!!)
             }
         }
 

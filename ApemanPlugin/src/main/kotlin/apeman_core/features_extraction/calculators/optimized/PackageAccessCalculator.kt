@@ -2,13 +2,13 @@ package apeman_core.features_extraction.calculators.optimized
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.features_extraction.calculators.OptimizedMetric
+import apeman_core.features_extraction.calculators.OptimizedCalculator
 import apeman_core.features_extraction.calculators.StatementsMap
 import apeman_core.utils.ClassUtils
 import com.intellij.psi.PsiJavaCodeReferenceElement
 
 class PackageAccessCalculator(candidates: List<ExtractionCandidate>
-) : OptimizedMetric(
+) : OptimizedCalculator(
         candidates,
         listOf(
                 FeatureType.NUM_PACKAGE,
@@ -27,7 +27,7 @@ class PackageAccessCalculator(candidates: List<ExtractionCandidate>
                 val elem = reference!!.resolve()
                 val pack = ClassUtils.findPackage(elem)
                 if (pack != null)
-                    addElem(pack)
+                    addElement(pack)
             }
         }
 

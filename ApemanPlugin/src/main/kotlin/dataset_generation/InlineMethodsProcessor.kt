@@ -62,7 +62,7 @@ class InlineMethodsProcessor(
         val overallLength = getJavaFilesFromProject().count()
 //        ProjectManager.getInstance().closeProject(project!!)
 
-        var offset = 21000 // 5500 for buck
+        var offset = 63000 // 5500 for buck
         val limit = 500
 
         while (offset < overallLength) {

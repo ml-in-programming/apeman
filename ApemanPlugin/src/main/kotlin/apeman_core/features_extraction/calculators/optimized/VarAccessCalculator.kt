@@ -2,7 +2,7 @@ package apeman_core.features_extraction.calculators.optimized
 
 import apeman_core.base_entities.ExtractionCandidate
 import apeman_core.base_entities.FeatureType
-import apeman_core.features_extraction.calculators.OptimizedMetric
+import apeman_core.features_extraction.calculators.OptimizedCalculator
 import apeman_core.features_extraction.calculators.StatementsMap
 import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiMethod
@@ -10,7 +10,7 @@ import com.intellij.psi.PsiVariable
 import com.intellij.psi.util.PsiTreeUtil
 
 class VarAccessCalculator(candidates: List<ExtractionCandidate>
-) : OptimizedMetric(
+) : OptimizedCalculator(
         candidates,
         listOf(
                 FeatureType.NUM_VAR_ACCESS,
@@ -40,14 +40,14 @@ class VarAccessCalculator(candidates: List<ExtractionCandidate>
 
             override fun visitVariable(variable: PsiVariable?) {
                 super.visitVariable(variable)
-                addElem(variable!!)
+                addElement(variable!!)
             }
 
             override fun visitReferenceElement(reference: PsiJavaCodeReferenceElement?) {
                 super.visitReferenceElement(reference)
                 val elem = reference!!.resolve() ?: return
                 if (elem is PsiVariable && PsiTreeUtil.isAncestor(currentMethod, elem, true)) {
-                    addElem(elem)
+                    addElement(elem)
                 }
             }
         }

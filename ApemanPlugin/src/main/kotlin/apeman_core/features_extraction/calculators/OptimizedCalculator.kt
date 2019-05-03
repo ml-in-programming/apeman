@@ -5,7 +5,7 @@ import apeman_core.base_entities.FeatureType
 import apeman_core.utils.CandidateUtils
 import com.intellij.psi.PsiMethod
 
-abstract class OptimizedMetric(val candidates: List<ExtractionCandidate>, val features: List<FeatureType>
+abstract class OptimizedCalculator(val candidates: List<ExtractionCandidate>, val features: List<FeatureType>
 ) : BaseCalculator()
 {
 
@@ -56,7 +56,7 @@ abstract class OptimizedMetric(val candidates: List<ExtractionCandidate>, val fe
 
             if (coupling2Feature != null) {
                 results.set(cand, coupling2Feature!!, coupsAndCohs[i].first.second)
-                results.set(cand, cohesion2Feature!!, coupsAndCohs[i].second.first)
+                results.set(cand, cohesion2Feature!!, coupsAndCohs[i].second.second)
             }
         }
     }
