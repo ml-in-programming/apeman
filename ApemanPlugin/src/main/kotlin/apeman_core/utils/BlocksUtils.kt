@@ -76,7 +76,7 @@ object BlocksUtils {
         return ourStatementsCount
     }
 
-    fun getStatementsRecursivly(block: BlockOfMethod): Set<PsiStatement> {
+    fun getStatementsRecursively(block: BlockOfMethod): Set<PsiStatement> {
         val result = hashSetOf<PsiStatement>()
 
         for (i in 0 until block.statementsCount) {

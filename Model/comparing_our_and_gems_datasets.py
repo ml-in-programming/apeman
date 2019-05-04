@@ -15,6 +15,7 @@ def _drop_columns(columns, dataset):
 def read_csv(path):
     assert os.path.exists(path)
     df = pd.read_csv(path)
+
     df = _drop_columns(["NAME_CANDIDATE", "NUM_LOCAL", "CON_LOCAL"], df)
     return df
 
@@ -46,7 +47,7 @@ def compare_datasets(
         ax0.set_xlabel(f"{column}")
         ax1.set_xlabel(f"{column}")
         plt.savefig(f"./plots/{column}.png", bbox_inches='tight')
-        plt.show()
+        # plt.show()
 
 
 if __name__ == "__main__":

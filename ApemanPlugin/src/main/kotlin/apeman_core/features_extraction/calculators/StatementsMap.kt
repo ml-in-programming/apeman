@@ -52,9 +52,6 @@ abstract class StatementsMap {
         statementsWithGivenElement[element]!!.add(elementStatement)
 
         for (statement in stackOfCurrentStatements) {
-            if (elementStatement is PsiBlockStatement)
-                continue
-
             val numStatementsWithElement = numDescendantStatementsWithElement.getOrPut(statement) { LinkedHashMap() }
             val numChildrenStatements = numStatementsWithElement.getOrDefault(element, 0)
             numStatementsWithElement[element] = numChildrenStatements + 1
@@ -65,14 +62,12 @@ abstract class StatementsMap {
         // refresh numDescendantStatementsOverall for loc in Coupling
 
         var firstOccurrencesCount = 0
-        for (i in stackOfCurrentStatements.count() - 1 downTo 0) {
-            val statement = stackOfCurrentStatements[i]
-            if (statement is PsiBlockStatement)
-                continue
+        for (statement in stackOfCurrentStatements.reversed()) {
 
             if (!alreadySeenStatements.contains(statement)) {
                 alreadySeenStatements.add(statement)
-                firstOccurrencesCount++
+                if (statement !is PsiBlockStatement)
+                    firstOccurrencesCount++
             }
             numDescendantStatementsOverall.merge(statement, firstOccurrencesCount) { a, b -> a + b }
         }

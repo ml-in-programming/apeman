@@ -43,10 +43,10 @@ class GettingBestCandidates {
                 val topCand = topCands[0]
                 topCands.removeAt(0)
 
-                val statements = BlocksUtils.getStatementsRecursivly(topCand.candidate.block)
+                val statements = BlocksUtils.getStatementsRecursively(topCand.candidate.block)
                 groupForMethod.add(topCand)
                 topCands.removeIf {
-                    val statements2 = BlocksUtils.getStatementsRecursivly(it.candidate.block)
+                    val statements2 = BlocksUtils.getStatementsRecursively(it.candidate.block)
                     val (maxStatements, minStatements) = if (statements.count() > statements2.count())
                         statements.toHashSet() to statements2.toHashSet()
                     else
