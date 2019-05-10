@@ -16,9 +16,91 @@ def _drop_columns(columns, dataset):
 def _read_train_file(filename, _class: int = 0, coef = 1.0):
     dataset = pd.read_csv(filename)
     dataset = _drop_columns([
-        'NAME_CANDIDATE',
-        'NUM_LITERAL',
-        'CON_LITERAL'
+        "NAME_CANDIDATE",
+        "NUM_LITERAL",
+        "CON_LITERAL",
+        "CON_ASSERT",
+        "VAR_ACCESS_COUPLING",
+        "VAR_ACCESS_COHESION_2",
+        "TYPE_ACCESS_COUPLING_2",
+        "TYPE_ACCESS_COUPLING",
+        "PACKAGE_COHESION_2",
+        "NUM_SWITCH",
+        "NUM_CONDITIONAL",
+        "INVOCATION_COUPLING",
+        "FIELD_ACCESS_COUPLING_2",
+        "FIELD_ACCESS_COUPLING",
+        "FIELD_ACCESS_COHESION",
+        "VAR_ACCESS_COUPLING_2",
+        "VAR_ACCESS_COHESION",
+        "TYPED_ELEMENTS_COUPLING",
+        "PACKAGE_COUPLING_2",
+        "NUM_LOCAL",
+        "NUM_INVOCATION",
+        "NUM_IF",
+        "NUM_FIELD_ACCESS",
+        "NUM_ASSIGN",
+        "INVOCATION_COHESION",
+        "FIELD_ACCESS_COHESION_2",
+        "CON_SWITCH",
+        "CON_CONDITIONAL",
+        "TYPE_ACCESS_COHESION_2",
+        "TYPE_ACCESS_COHESION",
+        "TYPED_ELEMENTS_COHESION",
+        "PACKAGE_COUPLING",
+        "NUM_LOC",
+        "NUM_COMMENTS",
+        "LOC_RATIO",
+        "CON_IF",
+
+        # 'NAME_CANDIDATE',
+        # 'NUM_LITERAL',
+        # 'CON_LITERAL',
+        # 'CON_ASSERT',
+        # # 'CON_SWITCH',
+        # # 'CON_INVOCATION',
+        # # 'CON_CONDITIONAL',
+        # 'CON_TYPE_ACCESS',
+        # 'CON_VAR_ACCESS',
+        # 'CON_PACKAGE',
+        # 'CON_TYPED_ELEMENTS',
+        # 'CON_FIELD_ACCESS',
+        # 'CON_ASSIGN',
+        # # 'NUM_SWITCH',
+        # # 'NUM_CONDITIONAL',
+        # 'NUM_PACKAGE',
+        # 'NUM_COMMENTS',
+        # 'NUM_IF',
+        # 'NUM_LOCAL',
+        # 'NUM_LOC',
+        # 'NUM_TYPED_ELEMENTS',
+        # # 'NUM_TYPE_ACCESS',
+        # 'NUM_INVOCATION',
+        # 'NUM_ASSIGN',
+        # 'LOC_RATIO',
+        # 'CON_IF',
+        # # 'FIELD_ACCESS_COUPLING',
+        # # 'FIELD_ACCESS_COHESION',
+        # # 'FIELD_ACCESS_COUPLING_2',
+        # 'FIELD_ACCESS_COHESION_2',
+        # 'VAR_ACCESS_COUPLING',
+        # 'VAR_ACCESS_COUPLING_2',
+        # 'VAR_ACCESS_COHESION',
+        # 'VAR_ACCESS_COHESION_2',
+        # # 'TYPE_ACCESS_COUPLING',
+        # 'TYPE_ACCESS_COUPLING_2',
+        # 'TYPE_ACCESS_COHESION',
+        # 'TYPE_ACCESS_COHESION_2',
+        # 'TYPED_ELEMENTS_COUPLING',
+        # 'TYPED_ELEMENTS_COHESION',
+        # # 'PACKAGE_COUPLING',
+        # 'PACKAGE_COUPLING_2',
+        # 'PACKAGE_COHESION',
+        # 'PACKAGE_COHESION_2',
+        # # 'INVOCATION_COUPLING',
+        # 'INVOCATION_COHESION',
+        # 'MEAN_NESTING_DEPTH',
+        # 'METHOD_MEAN_NESTING_DEPTH',
     ], dataset)
     classes = np.repeat(a=_class, repeats=dataset.shape[0])
     classes = pd.DataFrame(data=classes, columns=['CLASSES'])
@@ -56,6 +138,18 @@ def make_train_and_eval_ds(coef: float):
     return train_dataset, train_classes, eval_dataset, eval_classes, column_names
 
 
+def make_input_fn(X, y, n_epochs=None, shuffle=True):
+    NUM_EXAMPLES = 128
+
+    def input_fn():
+        dataset = tf.data.Dataset.from_tensor_slices((X.to_dict(orient='list'), y))
+        if shuffle:
+          dataset = dataset.shuffle(X.shape[0])
+        dataset = (dataset.repeat(n_epochs).batch(NUM_EXAMPLES))
+        return dataset
+    return input_fn
+
+
 def train_model(coef=1.0):
 
     train_dataset, train_classes, eval_dataset, eval_classes, column_names = \
@@ -67,21 +161,24 @@ def train_model(coef=1.0):
             tf.feature_column.numeric_column(feature_name, dtype=tf.float64)
         )
 
-    train_input_fn = tf.estimator.inputs.pandas_input_fn(
-        train_dataset,
-        train_classes['CLASSES'],
-        shuffle=True,
-        batch_size=128,
-        num_epochs=2
-    )
+    # train_input_fn = tf.estimator.inputs.pandas_input_fn(
+    #     train_dataset,
+    #     train_classes['CLASSES'],
+    #     shuffle=True,
+    #     batch_size=128,
+    #     num_epochs=2
+    # )
 
-    est = tf.estimator.BoostedTreesRegressor(feature_columns, n_batches_per_layer=1)
-    est.train(train_input_fn, max_steps=90)
+    train_input_fn = make_input_fn(train_ds, train_classes['CLASSES'])
 
-    eval_dataset = eval_dataset.fillna(value=0)
-    eval_input_fn = tf.estimator.inputs.pandas_input_fn(
-        eval_dataset, eval_classes['CLASSES'], shuffle=False, batch_size=1
-    )
+    est = tf.estimator.BoostedTreesRegressor(feature_columns, n_batches_per_layer=1, max_depth=2,
+                                             n_trees=90)
+    est.train(train_input_fn, max_steps=180)
+
+    # eval_dataset = eval_dataset.fillna(value=0)
+    # eval_input_fn = tf.estimator.inputs.pandas_input_fn(
+    #     eval_dataset, eval_classes['CLASSES'], shuffle=False, batch_size=1
+    # )
     # proba = est.evaluate(eval_input_fn)
     # print(f'Coef : {coef}')
     # pprint(list(proba.items()))
@@ -128,22 +225,16 @@ def save_model(est, train_dataset, column_names):
 if __name__ == "__main__":
     tf.random.set_random_seed(123)
 
-    # DATASET_REAL_POSITIVE = pathlib.Path('pos_real.csv')
-    # DATASET_REAL_NEGATIVE = pathlib.Path('neg_real.csv')
-    # DATASET_AUGMENTED_POSITIVE = pathlib.Path('pos_aug.csv')
-    # DATASET_AUGMENTED_NEGATIVE = pathlib.Path('neg_aug.csv')
     EVALUATION = pathlib.Path('candidates.csv')
 
-    base_path = '../../../train_dataset4/'  # intellij-community
+    base_path = ""  #'../../../train_dataset4/'
 
-    DATASET_REAL_POSITIVE = pathlib.Path(base_path + "pos_filtered.csv")#('../GemsDataset/real_set/con_pos404.csv')
-    DATASET_REAL_NEGATIVE = pathlib.Path(base_path + "neg_filtered.csv")#('../GemsDataset/real_set/con_neg404.csv')
-    # DATASET_AUGMENTED_POSITIVE = pathlib.Path#('../GemsDataset/augmented_set/con_pos404.csv')
-    # DATASET_AUGMENTED_NEGATIVE = pathlib.Path#('../GemsDataset/augmented_set/con_neg404.csv')
+    DATASET_REAL_POSITIVE = pathlib.Path(base_path + "pos_filtered.csv")
+    DATASET_REAL_NEGATIVE = pathlib.Path(base_path + "neg_filtered.csv")
 
     train_ds, train_classes, eval_ds, eval_classes, column_names = make_train_and_eval_ds(coef=1.0)
     est, _ = train_model(coef=1.0)
-    predict_test_candidates(est)
+    # predict_test_candidates(est)
     save_model(est, train_ds, column_names)
 
     # test_results = []

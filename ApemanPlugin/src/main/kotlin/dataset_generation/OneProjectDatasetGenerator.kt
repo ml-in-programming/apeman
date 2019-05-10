@@ -15,6 +15,7 @@ import handleException
 import proof_of_concept.OracleParser
 import java.util.*
 import java.util.logging.Logger
+import kotlin.math.min
 
 class OneProjectDatasetGenerator(
         private val pathToProject: String
@@ -86,6 +87,7 @@ class OneProjectDatasetGenerator(
 
     private fun generatePositiveCandidates(offset: Int, limit: Int) {
         val entries = OracleParser(pathToProject, project!!).parseOracle()
+        log.info("with offset $offset")
         positiveCandidates.addAll(
                 entries.asSequence()
                 .map { it.candidate }
@@ -135,35 +137,22 @@ class OneProjectDatasetGenerator(
                     val methodCandidates = CandidatesOfMethod(method, project!!).candidates
                     if (methodCandidates.isEmpty())
                         return
-                        val candIndex = random.nextInt(methodCandidates.count())
-                    negativeCandidates.add(methodCandidates[candIndex].also { it.positive = false })
+                    val indices = arrayListOf<Int>()
+                    while (indices.count() < min(methodCandidates.count(), 10)) {
+                        val index = if (methodCandidates.count() < 10)
+                            indices.count()
+                        else
+                            random.nextInt(methodCandidates.count())
+
+                        if (!indices.contains(index)) {
+                            indices.add(index)
+                            negativeCandidates.add(methodCandidates[index].also { it.positive = false })
+                        }
+                    }
                 }
             }
         })
     }
-
-//    private fun generateNegativeCandidateForBlock(method: PsiMethod, block: PsiCodeBlock, random: Random): Boolean {
-//        val n = block.statementCount
-//        if (n == 0) return false
-//
-//        var tries = 0
-//        while (tries < 2) {
-//            val startInclusive = random.nextInt(n)
-//            val endInclusive = random.nextInt(n - startInclusive) + startInclusive
-//            val candidate = ExtractionCandidate(
-//                    Arrays.copyOfRange(block.statements, startInclusive, endInclusive + 1),
-//                    method,
-//                    isSourceCandidate = false,
-//                    positive = false
-//            )
-//            if (CandidateValidation.isValid(candidate, project!!)) {
-//                negativeCandidates.add(candidate)
-//                return true
-//            }
-//            tries++
-//        }
-//        return false
-//    }
 
     private fun getFeaturesAndMakeCsv(outerOffset: Int) {
         var offset = 0
@@ -186,14 +175,6 @@ class OneProjectDatasetGenerator(
             offset += limit
         }
 
-    }
-
-    private fun getFeatures(): List<CandidateWithFeatures> {
-        val candidates = listOf(
-                positiveCandidates, sourceCandidates, negativeCandidates
-        ).flatten()
-
-        return FeaturesForEveryCandidate(candidates).getCandidatesWithFeatures()
     }
 
     private fun makeCsv(featureCandidates: List<CandidateWithFeatures>, offset: Int) {

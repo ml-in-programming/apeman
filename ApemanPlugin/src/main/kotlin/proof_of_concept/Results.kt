@@ -37,7 +37,7 @@ data class Results(
                 val (same, notSame) = cand.toString()
                         .split("\n")
                         .partition { line -> oracleLines.contains(line) }
-                val maxDiff = 2 * tolerance
+                val maxDiff = tolerance
                 return@firstOrNull notSame.count() <= maxDiff && same.count() > oracleLines.count() - maxDiff
 
             }
@@ -48,7 +48,7 @@ data class Results(
     }
 
     override fun toString(): String {
-        return "tolerance = $tolerance,\n" +
+        return "\n\ntolerance = $tolerance,\n" +
                 "oracle = $oracleSize,\n" +
                 "apeman = $apemanSize,\n" +
                 "true positives = ${truePositives.count()},\n" +

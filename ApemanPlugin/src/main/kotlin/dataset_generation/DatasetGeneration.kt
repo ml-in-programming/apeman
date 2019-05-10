@@ -1,6 +1,8 @@
 package dataset_generation
 
 import com.intellij.openapi.application.ApplicationStarter
+import handleError
+import handleException
 import java.util.logging.Logger
 
 class DatasetGeneration : ApplicationStarter {
@@ -17,16 +19,16 @@ class DatasetGeneration : ApplicationStarter {
 //                "deeplearning4j"
 //                "elasticsearch-6.6.0",
 //                    "intellij-community"
-//                "guava"
-//                "mockito",
+//                "guava",
+//                "mockito"
 //                "presto",
 //                "RxJava"
             ).map { BASE_PATH + it })
 
             log.info("inlining success!")
 
-            val antlr4 = OneProjectDatasetGenerator(BASE_PATH + "antlr4")
-            val buck = OneProjectDatasetGenerator(BASE_PATH + "buck")
+//            val antlr4 = OneProjectDatasetGenerator(BASE_PATH + "antlr4")
+//            val buck = OneProjectDatasetGenerator(BASE_PATH + "buck")
 //        val deeplearning4j = OneProjectDatasetGenerator(BASE_PATH + "deeplearning4j")
 //        val elasticsearch = OneProjectDatasetGenerator(BASE_PATH + "elasticsearch")
 //        val facebookAndroidSdk = OneProjectDatasetGenerator(BASE_PATH + "facebook-android-sdk")
@@ -36,11 +38,23 @@ class DatasetGeneration : ApplicationStarter {
 //        val pocketHub = OneProjectDatasetGenerator(BASE_PATH + "PocketHub")
 //        val presto = OneProjectDatasetGenerator(BASE_PATH + "presto")
 //        val rxJava = OneProjectDatasetGenerator(BASE_PATH + "RxJava")
+//
+//          val BASE_PATH_TEST = "/home/snyss/Prog/mm/diploma/main/apeman/GemsDataset/subjects/"
+//            listOf(
+//                    "junit3.8",
+//                    "JHotDraw5.2",
+//                    "MyWebMarket",
+//                    "wikidev-filters",
+//                    "myplanner-data-src"
+//            ).forEach {
+//                OneProjectDatasetGenerator(BASE_PATH_TEST + it)
+//            }
+
             log.info("generation success overall!")
         } catch (e: Exception) {
-            print(e.stackTrace)
+            handleException(e)
         } catch (e: Error) {
-            print(e.stackTrace)
+            handleError(e)
         }
     }
 }

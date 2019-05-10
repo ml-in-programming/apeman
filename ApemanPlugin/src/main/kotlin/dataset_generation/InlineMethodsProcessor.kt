@@ -43,7 +43,8 @@ class InlineMethodsProcessor(
             log.info("inner methods")
             innerMethods()
 
-            ProjectManager.getInstance().closeProject(project!!)
+            if (project != null)
+                ProjectManager.getInstance().closeProject(project!!)
 
         } catch (e: Exception) {
             print(e)
@@ -62,7 +63,7 @@ class InlineMethodsProcessor(
         val overallLength = getJavaFilesFromProject().count()
 //        ProjectManager.getInstance().closeProject(project!!)
 
-        var offset = 63000 // 5500 for buck
+        var offset = 0// for intellij 63000 // 5500 for buck
         val limit = 500
 
         while (offset < overallLength) {

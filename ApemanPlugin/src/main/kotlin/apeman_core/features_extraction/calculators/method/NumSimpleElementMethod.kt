@@ -27,7 +27,7 @@ abstract class NumSimpleElementMethod(
             nestingDepth--
             if (nestingDepth == 0) {
                 for (cand in methodCandidates) {
-                    results.set(cand, firstFeature, elementsCounter.toDouble())
+                    results.set(cand, firstFeature, getResultElementCounter(method))
                 }
             }
         }
@@ -35,5 +35,7 @@ abstract class NumSimpleElementMethod(
         protected open fun initElementsCounter(method: PsiMethod) {
             elementsCounter = 0
         }
+
+        protected open fun getResultElementCounter(method: PsiMethod) = elementsCounter.toDouble()
     }
 }

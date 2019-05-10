@@ -194,6 +194,7 @@ public class Domain implements Serializable, Cloneable, CrystalObject {
         int i = 0;
         interval[0] = -1;
         interval[1] = -1;
+        /*{*/
         while (temp.getTime().compareTo(end.getTime()) < 0) {
             if (temp.getTime().compareTo(startD) == 0)
                 interval[0] = i;
@@ -211,6 +212,7 @@ public class Domain implements Serializable, Cloneable, CrystalObject {
 
             prev = temp.getTime();
         }
+        /*}*/
         if (interval[0] == -1 && startD.compareTo(start.getTime()) <= 0 &&
             start.getTime().compareTo(end.getTime()) <= 0) {
             interval[0] = 0;

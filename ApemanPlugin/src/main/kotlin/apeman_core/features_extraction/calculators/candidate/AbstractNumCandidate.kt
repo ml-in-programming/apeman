@@ -32,30 +32,33 @@ abstract class AbstractNumCandidate(candidates: List<ExtractionCandidate>, featu
 
             if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
                 for ((i, cand) in methodCandidates.withIndex()) {
-                    results.set(cand, firstFeature, getCounterForCand(i).toDouble())
+                    results.set(cand, firstFeature, getCounterForCand(i))
                 }
                 isInsideMethod = false
-            }
-        }
-
-        protected open fun initCounters() {
-            counts.clear()
-            repeat(methodCandidates.size) { counts.add(0) }
-        }
-
-        protected open fun getCounterForCand(i: Int) = counts[i]
-
-        protected open fun updateCounters() = methodCandidates.indices.forEach { updateCounter(it) }
-        protected open fun updateCounter(i: Int) {
-            if (methodCandidates[i].isInCandidate) {
-                counts[i]++
             }
         }
 
         override fun visitStatement(statement: PsiStatement) {
             CandidateUtils.checkStartOfCandidates(statement, methodCandidates)
             super.visitStatement(statement)
+            abstractVisitStatement(statement)
             CandidateUtils.checkEndOfCandidates(statement, methodCandidates)
+        }
+
+        protected open fun abstractVisitStatement(statement: PsiStatement) {}
+
+        protected open fun initCounters() {
+            counts.clear()
+            repeat(methodCandidates.size) { counts.add(0) }
+        }
+
+        protected open fun getCounterForCand(i: Int): Double = counts[i].toDouble()
+        protected open fun updateCounters() = methodCandidates.indices.forEach { updateCounter(it) }
+
+        protected open fun updateCounter(i: Int) {
+            if (methodCandidates[i].isInCandidate) {
+                counts[i]++
+            }
         }
     }
 }

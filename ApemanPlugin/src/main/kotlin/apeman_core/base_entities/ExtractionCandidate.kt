@@ -22,7 +22,18 @@ class ExtractionCandidate(statements: Array<PsiStatement>,
         get() = block.lastStatement
 
     override fun toString(): String {
-        val statementsRange = (0 until block.statementsCount)
-        return statementsRange.joinToString(separator = "\n") { i -> block[i].text }
+        val start = block.firstStatement.textRange.startOffset
+        val end = block.lastStatement.textRange.endOffset
+
+        val sourceText = sourceMethod.text
+        val sourceStart = sourceMethod.textRange.startOffset
+        val sourceEnd = sourceMethod.textRange.endOffset
+
+        return sourceText
+                .substring(0, start - sourceStart) +
+                "\n////BEGIN\n" +
+                sourceText.substring(start - sourceStart, end - sourceStart) +
+                "\n////END\n" +
+                sourceText.substring(end - sourceStart)
     }
 }

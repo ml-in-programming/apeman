@@ -7,6 +7,10 @@ enum class FeatureType {
     LOC_RATIO,
     CON_LOC,
 
+    MEAN_NESTING_DEPTH,
+    METHOD_MEAN_NESTING_DEPTH,
+    NUM_COMMENTS,
+
     NUM_LITERAL,
     NUM_CONDITIONAL,
     NUM_SWITCH,

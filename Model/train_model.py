@@ -1,18 +1,35 @@
+import itertools
 import pathlib
 from pprint import pprint
 
 import pandas as pd
 import numpy as np
+from imblearn.under_sampling import RandomUnderSampler, TomekLinks, NearMiss, \
+    AllKNN, CondensedNearestNeighbour, InstanceHardnessThreshold
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import Ridge
-from sklearn.model_selection import validation_curve
+from sklearn.model_selection import validation_curve, GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import GradientBoostingClassifier, VotingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, average_precision_score, \
+    roc_auc_score
+from sklearn.model_selection import cross_val_score
+from sklearn.naive_bayes import GaussianNB
 
 from model import Classifier, Dataset, GRADIENT_BOOSTING
 
 
-DATASET_AUGMENTED_NEGATIVE = pathlib.Path('../../../train_dataset4/neg_filtered.csv')#'../GemsDataset/real_set/con_neg404.csv')
-DATASET_AUGMENTED_POSITIVE = pathlib.Path('../../../train_dataset4/pos_filtered.csv')#'../GemsDataset/real_set/con_pos404.csv')
+# DATASET_AUGMENTED_NEGATIVE = pathlib.Path('../../../train_dataset4/neg_filtered.csv')#'../GemsDataset/real_set/con_neg404.csv')
+# DATASET_AUGMENTED_POSITIVE = pathlib.Path('../../../train_dataset4/pos_filtered.csv')#'../GemsDataset/real_set/con_pos404.csv')
+# DATASET_AUGMENTED_NEGATIVE = pathlib.Path('../../../train_dataset4/dataset_neg_overall.csv')#'../GemsDataset/real_set/con_neg404.csv')
+# DATASET_AUGMENTED_POSITIVE = pathlib.Path('../../../train_dataset4/dataset_pos_overall.csv')#'../GemsDataset/real_set/con_pos404.csv')
+DATASET_AUGMENTED_NEGATIVE = pathlib.Path('./neg_filtered.csv')#'../GemsDataset/real_set/con_neg404.csv')
+DATASET_AUGMENTED_POSITIVE = pathlib.Path('./pos_filtered.csv')#'../GemsDataset/real_set/con_pos404.csv')
+
+# DATASET_TEST_NEGATIVE = pathlib.Path('../GemsDataset/subjects/dataset_neg_overall.csv')
+# DATASET_TEST_POSITIVE = pathlib.Path('../GemsDataset/subjects/dataset_pos_overall.csv')
 # DATASET_REAL_NEGATIVE = pathlib.Path('../GemsDataset/real_set/con_neg404.csv')
 # DATASET_REAL_POSITIVE = pathlib.Path('../GemsDataset/real_set/con_pos404.csv')
 #
@@ -81,59 +98,91 @@ def make_train_and_eval_ds(coef: float):
     return train_dataset, train_classes, eval_dataset, eval_classes, column_names, train_df, eval_df
 
 
-def predict_something():
-    from sklearn.ensemble import GradientBoostingClassifier
-    from sklearn.metrics import accuracy_score, average_precision_score, roc_auc_score
-    from sklearn.model_selection import cross_val_score
-    from sklearn.linear_model import SGDClassifier
-
+def predict(train_df: pd.DataFrame, eval_df: pd.DataFrame):
     np.random.seed(123)
+    np.random.shuffle(train_df.values)
 
-    for coef in np.arange(0.1, 1, 0.1):
+    train_ds = train_df.values[:, :-1]
+    train_cls = train_df.values[:, -1]  # .reshape((train_cls.shape[0], 1))
+    eval_ds = eval_df.values[:, :-1]
+    eval_cls = eval_df.values[:, -1]
+
+    est = RandomForestClassifier(n_estimators=90, max_depth=10)
+    est.fit(train_ds, train_cls)
+    train_proba = est.predict_proba(train_ds)
+    eval_proba = est.predict_proba(eval_ds)
+
+    est = GradientBoostingClassifier(n_estimators=100, max_depth=8)
+    est.fit(np.concatenate((train_ds, train_proba), axis=1), train_cls)
+    return est, eval_cls, eval_proba, est.predict_proba(np.concatenate((eval_ds, eval_proba), axis=1))
+
+
+def resample(sampler, X, y):
+    X, y = sampler.fit_resample(X, y)
+    vals, counts = np.unique(y, return_counts=True)
+    print(f"{vals}, {counts}")
+    return X, y
+
+
+def predict_something():
+    coef = 0.9
+
+    for samplers in [1]: #itertools.combinations((
+            # TomekLinks(sampling_strategy='majority'),
+            # TomekLinks(sampling_strategy='majority'),
+            # TomekLinks(sampling_strategy='majority'),
+            # AllKNN(sampling_strategy='majority'),
+            # CondensedNearestNeighbour(sampling_strategy='majority'),
+            # InstanceHardnessThreshold(sampling_strategy='majority'),
+            # NearMiss(version=1, sampling_strategy='majority')), r=2):
         train_ds, train_cls, eval_ds, eval_cls, _, train_df, eval_df = make_train_and_eval_ds(coef)
 
         eval_ds = eval_ds.fillna(0.0)
         train_ds = train_ds.fillna(0.0)
+        eval_cls = eval_cls.values.reshape((eval_cls.values.shape[0],))
 
-        is_label = train_df['CLASSES'] == 1
-        eval_df1 = eval_df[eval_df['CLASSES'] == 1]
-        eval_df0 = eval_df[eval_df['CLASSES'] == 0]
-        print(pd.concat((eval_df0.mean(), eval_df1.mean()), axis=1))
-        print(pd.concat((eval_df0.median(), eval_df1.median()), axis=1))
-        print(pd.concat((eval_df0.max(), eval_df1.max()), axis=1))
+        # eval_df1 = eval_df[eval_df['CLASSES'] == 1]
+        # eval_df0 = eval_df[eval_df['CLASSES'] == 0]
+        # print(pd.concat((eval_df0.mean(), eval_df1.mean()), axis=1))
+        # print(pd.concat((eval_df0.median(), eval_df1.median()), axis=1))
+        # print(pd.concat((eval_df0.max(), eval_df1.max()), axis=1))
 
-        features = range(46)#np.random.choice(range(46), 10, replace=False)
-        train_ds = train_ds.values[:, features]
-        eval_ds = eval_ds.values[:, features]
+        # pprint(samplers)
+        # for sampler in samplers:
+        #     train_ds, train_cls = resample(sampler, train_ds, train_cls)
 
-        # train_indices = np.random.choice(range(len(train_ds)), 4200, replace=False)
-        # train_ds = train_ds[train_indices, :]
-        train_cls = train_cls.values#[train_indices, :]
-        eval_cls = eval_cls.values
+        vals, counts = np.unique(train_cls, return_counts=True)
+        print(f"{vals}, {counts}")
 
-        est = GradientBoostingClassifier()#SGDClassifier(loss="modified_huber")#max_depth=4)
-        est = est.fit(train_ds, train_cls)
+        # pos_ds = train_ds[np.where(train_cls == 1)]
+        # neg_ds = train_ds[np.where(train_cls == 0)]
+        # pd.DataFrame(pos_ds, columns=eval_ds.columns).to_csv("pos_filtered.csv", index=False)
+        # pd.DataFrame(neg_ds, columns=eval_ds.columns).to_csv("neg_filtered.csv", index=False)
+
+        est = GradientBoostingClassifier(max_depth=3, n_estimators=80)
+        est.fit(train_ds, train_cls)
         eval_pred = est.predict(eval_ds)
         eval_proba = est.predict_proba(eval_ds)
 
         print(f"Coef: {coef}")
+        print(f"{2}")
         print(f"mean acc: {est.score(eval_ds, eval_cls)}")
-        print(f"cross_val {cross_val_score(est, train_ds, train_cls)}")
+        print(f"cross_val {cross_val_score(est, train_ds, train_cls, cv=5)}")
         print(f'accuracy: {accuracy_score(eval_cls, eval_pred)}')
         print(f'aver_precision: {average_precision_score(eval_cls, eval_pred)}')
         print(f'roc_auc: {roc_auc_score(eval_cls, eval_proba[:, 1])}')
         print()
 
-        train_scores, valid_scores = validation_curve(
-            est,
-            np.concatenate((train_ds, eval_ds), axis=0),
-            np.concatenate((train_cls, eval_cls), axis=0),
-            "n_estimators", np.linspace(50, 200, num=3, dtype=np.int_),
-            cv=5, n_jobs=-1
-        )
-
-        pprint(f"Validation_curve train: \n{train_scores}")
-        pprint(f"Validation_curve valid: \n{valid_scores}")
+        # train_scores, valid_scores = validation_curve(
+        #     est,
+        #     np.concatenate((train_ds, eval_ds), axis=0),
+        #     np.concatenate((train_cls, eval_cls), axis=0),
+        #     "n_estimators", np.linspace(10, 200, num=5, dtype=np.int_),
+        #     cv=5, n_jobs=-1
+        # )
+        #
+        # pprint(f"Validation_curve train: \n{train_scores}")
+        # pprint(f"Validation_curve valid: \n{valid_scores}")
 
 
 if __name__ == "__main__":

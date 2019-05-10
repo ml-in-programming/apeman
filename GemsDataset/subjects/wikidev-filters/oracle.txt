@@ -13,11 +13,18 @@ ca.ualberta.cs.serl.wikidev.clustering.MatrixOperator	public static double[] get
 ca.ualberta.cs.serl.wikidev.clustering.MatrixOperator	public static double[] getFiedlerVector(double[][])
 ca.ualberta.cs.serl.wikidev.clustering.MatrixOperator	public static double[] getFiedlerVector(double[][])
 ca.ualberta.cs.serl.wikidev.clustering.MatrixOperator	public static TreeMap<Integer,ArrayList<Integer>> getConnectedComponents()
+ca.ualberta.cs.serl.wikidev.TextParser	public void parseURL(String)
+ca.ualberta.cs.serl.wikidev.TextParser	public void parseURL(String)
 ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws SQLException
 ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws SQLException
 ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws SQLException
 ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws SQLException
 ca.ualberta.cs.serl.wikidev.DataManager	private static ca.ualberta.cs.serl.wikidev.artifacts.IArtifact getArtifactByTypeAndID(ca.ualberta.cs.serl.wikidev.artifacts.IArtifact, int) throws SQLException
+ca.ualberta.cs.serl.wikidev.DataManager	public static ArrayList<IArtifact> getArtifactsAfterTimestamp(String) throws SQLException
+ca.ualberta.cs.serl.wikidev.DataManager	public static ArrayList<IArtifact> getArtifactsAfterTimestamp(String) throws SQLException
+ca.ualberta.cs.serl.wikidev.DataManager	public static ArrayList<IArtifact> getArtifactsBetweenDates(String, String, int) throws SQLException
+ca.ualberta.cs.serl.wikidev.DataManager	public static ArrayList<IArtifact> getArtifactsBetweenDates(String, String, int) throws SQLException
+ca.ualberta.cs.serl.wikidev.DataManager	public static ArrayList<IArtifact> getArtifactsBetweenDates(String, String, int) throws SQLException
 ca.ualberta.cs.serl.wikidev.ClusteringMain	public static void main(String[])
 ca.ualberta.cs.serl.wikidev.ClusteringMain	public static void main(String[])
 ca.ualberta.cs.serl.wikidev.RelationshipMiner	public void getRelationships() throws SQLException

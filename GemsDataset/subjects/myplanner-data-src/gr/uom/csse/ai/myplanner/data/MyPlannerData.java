@@ -393,7 +393,7 @@ public class MyPlannerData implements Serializable, Cloneable, CrystalObject {
                                                       consts[i].type()));
 
             } else if (t1.isPeriodic() && t2.isPeriodic()) {
-                periodicPartsOfT1 = tasks.getPeriodicPartsOf(t1, expandedTasks);
+                /*{*/periodicPartsOfT1 = tasks.getPeriodicPartsOf(t1, expandedTasks);
                 periodicPartsOfT2 = tasks.getPeriodicPartsOf(t2, expandedTasks);
                 if (!t1.periodicPrefs().period().equals(t2.periodicPrefs().
                         period()))
@@ -424,8 +424,7 @@ public class MyPlannerData implements Serializable, Cloneable, CrystalObject {
                     expandedList.add(new BinaryConstraint(periodicPartsOfT1[
                             com[0] - 1].id(),
                             periodicPartsOfT2[com[1] - 1].id(),
-                            consts[i].getDistance(), consts[i].type()));
-
+                            consts[i].getDistance(), consts[i].type()));/*}*/
             } else
                 expandedList.add(consts[i]);
         }
@@ -465,7 +464,7 @@ public class MyPlannerData implements Serializable, Cloneable, CrystalObject {
                                                       prefs[i].type()));
 
             } else if (t1.isPeriodic() && t2.isPeriodic()) {
-                periodicPartsOfT1 = tasks.getPeriodicPartsOf(t1, expandedTasks);
+                /*{*/periodicPartsOfT1 = tasks.getPeriodicPartsOf(t1, expandedTasks);
                 periodicPartsOfT2 = tasks.getPeriodicPartsOf(t2, expandedTasks);
                 if (!t1.periodicPrefs().period().equals(t2.periodicPrefs().
                         period()))
@@ -496,7 +495,7 @@ public class MyPlannerData implements Serializable, Cloneable, CrystalObject {
                     expandedList.add(new BinaryPreference(periodicPartsOfT1[
                             com[0] - 1].id(),
                             periodicPartsOfT2[com[1] - 1].id(), prefs[i].utility(),
-                            prefs[i].getDistance(), prefs[i].type()));
+                            prefs[i].getDistance(), prefs[i].type()));/*}*/
 
             } else
                 expandedList.add(prefs[i]);

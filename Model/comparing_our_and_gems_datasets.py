@@ -51,9 +51,12 @@ def compare_datasets(
 
 
 if __name__ == "__main__":
-    OUR_BASE = "../../../train_dataset4/"
-    OUR_POS = OUR_BASE + "pos_filtered.csv"  #"dataset_pos_overall.csv"
-    OUR_NEG = OUR_BASE + "neg_filtered.csv"  #"dataset_neg_overall.csv"
+    # OUR_BASE = "../../../train_dataset4/"
+    OUR_BASE = "../GemsDataset/subjects/"
+    # OUR_POS = OUR_BASE + "pos_filtered.csv"
+    OUR_POS = OUR_BASE + "dataset_pos_overall.csv"
+    # OUR_NEG = OUR_BASE + "neg_filtered.csv"
+    OUR_NEG = OUR_BASE + "dataset_neg_overall.csv"
     GEMS_POS = "../GemsDataset/augmented_set/con_pos404.csv"
     GEMS_NEG = "../GemsDataset/augmented_set/con_neg404.csv"
 

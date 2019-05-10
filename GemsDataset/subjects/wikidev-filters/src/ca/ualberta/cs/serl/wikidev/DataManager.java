@@ -766,7 +766,7 @@ public class DataManager {
 			ResultSet res = null;
 			res = statement.executeQuery(sqlStmt);
 			while (res.next()) {
-				if (entityType.equals("wikidev_changesets")) {
+				/*{*/if (entityType.equals("wikidev_changesets")) {
 					artifact = new ChangeSet(res.getInt("id"), res
 							.getString("comment"), res
 							.getString("externalauthor"), res
@@ -790,12 +790,12 @@ public class DataManager {
 							res.getInt("deleted"), res.getString("mid_header"), 
 							res.getInt("project_id"),  res.getString("subject"), res.getTimestamp("date"), res.getString("user_name"), res.getString("refid_header"));;
                 	artifacts.add(artifact);
-                }
+                }/*}*/
 			}
 			if(res !=null) res.close();
 			
 		}
-    	for (IArtifact anArtifact : artifacts) {
+    	/*{*/for (IArtifact anArtifact : artifacts) {
 			if (anArtifact instanceof ChangeSet) {
 				ChangeSet changeSet = (ChangeSet)anArtifact;
 				changeSet.setOwner(getUserByUserName(changeSet.getExternalAuthorUserName()));
@@ -827,7 +827,7 @@ public class DataManager {
             	wiki.setRevisions(getRevisionsByWikiID(wiki.getPage_id()));
             	wiki.setProject(DataManager.getProjectByName(getProjectNamespaceByNamespaceID(wiki.getPage_namespace_id())));
             }
-		}
+		}/*}*/
     	allArtifacts.addAll(finalArtifacts);
     	return finalArtifacts;
     }
@@ -963,12 +963,12 @@ public class DataManager {
 			res = statement.executeQuery(sqlStmt);
 			while (res.next()) {
 				if (entityType.equals("wikidev_changesets")) {
-					artifact = new ChangeSet(res.getInt("id"), res
+					/*{*/artifact = new ChangeSet(res.getInt("id"), res
 							.getString("comment"), res
 							.getString("externalauthor"), res
 							.getInt("externalsystem_id"), res
 							.getTimestamp("timestamp"), res.getInt("rev"),
-							res.getInt("project_id"));
+							res.getInt("project_id"));/*}*/
 					artifacts.add(artifact);
 				} else if (entityType.equals("wikidev_tickets")) {
 					artifact = new Ticket(res.getTimestamp("created"), res
@@ -993,7 +993,7 @@ public class DataManager {
 		}
     	for (IArtifact anArtifact : artifacts) {
     		if (anArtifact instanceof ChangeSet) {
-				ChangeSet changeSet = (ChangeSet)anArtifact;
+				/*{*/ChangeSet changeSet = (ChangeSet)anArtifact;
 				changeSet.setOwner(getUserByUserName(changeSet.getExternalAuthorUserName()));
 				changeSet.setProject(project);
 				changeSet.setChangesetDetails(getChangeSetDetailsByRevAndProject(changeSet.getRevision(), changeSet.getExternalSystemID()));
@@ -1002,9 +1002,9 @@ public class DataManager {
 				}
 				changeSet.setAuthorForChangeSetDetails();
 				finalArtifacts.add(changeSet);
-				project.addChangeset(changeSet);
+				project.addChangeset(changeSet);/*}*/
 			} else if (anArtifact instanceof Ticket) {
-				Ticket ticket = (Ticket)anArtifact;
+				/*{*/Ticket ticket = (Ticket)anArtifact;
 				ticket.setOwner(getUserByUserName(ticket.getOwnerName()));
 				ticket.setReporter(getUserByUserName(ticket.getReporterName()));
 				ticket.setTicketChanges(getTicketChangesByTicketID(ticket
@@ -1013,7 +1013,7 @@ public class DataManager {
 				project.addTicket(ticket);
 				ticketids.put(ticket.getDr_id(), ticket.getProjectID());
 				tickets.add(ticket);
-				finalArtifacts.add(ticket);
+				finalArtifacts.add(ticket);/*}*/
 			} else if (anArtifact instanceof Message) {
 				Message communication = (Message)anArtifact;
 				User user = getUserByUserName(communication

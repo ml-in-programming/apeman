@@ -320,8 +320,8 @@ public class TextParser {
 			word = removeChar(word, '/');
 			punctuation = true;
 		}
-		if(word.startsWith("€") || word.endsWith("€")) {
-			word = removeChar(word, '€');
+		if(word.startsWith("ï¿½") || word.endsWith("ï¿½")) {
+			word = removeChar(word, 'ï¿½');
 			punctuation = true;
 		}
 		return word;
@@ -408,7 +408,7 @@ public class TextParser {
 				}
 				if (indexOfNextSlash != -1) {
 					if (text.substring(0, indexOfNextSlash).equals("drproject")) {
-						indexOfNextSlash = text.indexOf("/");
+						/*{*/indexOfNextSlash = text.indexOf("/");
 						text = text.substring(indexOfNextSlash + 1);
 						indexOfNextSlash = text.indexOf("/");
 						newURL.setProjectName(text.substring(0,
@@ -423,10 +423,10 @@ public class TextParser {
 						else {
 							newURL.setEntityType(Dictionary
 									.getDataBaseTable(text));
-						}
+						}/*}*/
 					} else if (text.substring(0, indexOfNextSlash)
 							.equals("svn")) {
-						newURL.setEntityType(Dictionary.getDataBaseTable(text
+						/*{*/newURL.setEntityType(Dictionary.getDataBaseTable(text
 								.substring(0, indexOfNextSlash)));
 						text = text.substring(indexOfNextSlash + 1);
 						indexOfNextSlash = text.indexOf("/");
@@ -436,7 +436,7 @@ public class TextParser {
 						}
 						else {
 							newURL.setProjectName(text);
-						}
+						}/*}*/
 					} else {
 						newURL.setProjectName(text.substring(0,
 								indexOfNextSlash));

@@ -33,7 +33,7 @@ public abstract class QueryBuilder {
 		return "select clusterid from wikidev_clusters where project_name=\'"+projectname+"\' and clusterindex=\'"+cluster.getIndex()+"\' and from_date=\'"+cluster.getFromdate().toString()+"\' and to_date=\'"+cluster.getTodate().toString()+"\'";
 	}
 	
-	public static String insertIntoClusters(Cluster cluster, String projectname) {
+	pint i=7;ublic static String insertIntoClusters(Cluster cluster, String projectname) {
 		return "insert into wikidev_clusters (clusterid, project_name, clusterindex, terms, from_date, to_date, cluster_set_name, threshold) values (null, \'"+projectname+"\', "+cluster.getIndex()+", \'"
 		+Dictionary.concatStrings(cluster.getWords())+"\', \'"+cluster.getFromdate().toString()+"\', \'"+cluster.getTodate().toString()+"\', \'"+cluster.getCluster_set_name()+"\', \'"+cluster.getThreshold()+"\')";
 	}

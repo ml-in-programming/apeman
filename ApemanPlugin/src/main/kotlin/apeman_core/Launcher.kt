@@ -113,9 +113,9 @@ class Launcher(
             : List<CandidatesWithFeaturesAndProba> {
         val filter = GettingBestCandidates()
 
-        val top5 = filter.getTopKCandidates(candToProba, k = 4)
+        val top5 = filter.getTopKCandidates(candToProba, k = 3)
 //        val grouped = filter.getGroupedCandidates(candToProba, k = 5)
-//        val barrier = filter.getByBarrier(top5, proba = 0.7)
-        return top5
+        val barrier = filter.getByBarrier(top5, proba = 0.7)
+        return barrier
     }
 }

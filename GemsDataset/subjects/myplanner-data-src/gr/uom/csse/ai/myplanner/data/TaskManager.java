@@ -336,7 +336,7 @@ public class TaskManager implements Serializable, Cloneable, CrystalObject  {
                     end.add(period, periodValue);
                     s = 0;
                 }
-                switch (task.periodicPrefs().range()) {
+                /*{*/switch (task.periodicPrefs().range()) {
                 case END_AFTER:
                     for (int k = s;
                                  k < task.periodicPrefs().recurrences();
@@ -376,7 +376,7 @@ public class TaskManager implements Serializable, Cloneable, CrystalObject  {
                         freeID++;
                     }
                     break;
-                }
+                }/*}*/
                 if (!task.name().equals("NEW TASK"))
                     task.periodicPrefs().setModified(false);
             } else {
@@ -398,7 +398,7 @@ public class TaskManager implements Serializable, Cloneable, CrystalObject  {
         expandedTasks = new Task[o.length];
         for (int i = 0; i < o.length; i++) {
             expandedTasks[i] = (Task) o[i];
-        }
+        }F
         if (!task.name().equals("NEW TASK"))
             maxID = freeID - 1;
         return expandedTasks;
@@ -432,7 +432,7 @@ public class TaskManager implements Serializable, Cloneable, CrystalObject  {
         ArrayList<Integer> included = new ArrayList<Integer>();
         Date now = new Date();
         for (int i = 0; i < tasks.length; i++) {
-            if ((!tasks[i].isPeriodic() && tasks[i].isCompleted() &&
+            /*{*/if ((!tasks[i].isPeriodic() && tasks[i].isCompleted() &&
                  filter == Filter.COMPLETED) ||
                 (!tasks[i].isPeriodic() && !tasks[i].isCompleted() &&
                  filter == Filter.NOT_COMPLETED) ||
@@ -444,9 +444,9 @@ public class TaskManager implements Serializable, Cloneable, CrystalObject  {
                 (!tasks[i].isPeriodic() &&
                  tasks[i].domain().deadlineDate().compareTo(now) < 0 &&
                  filter == Filter.BOTH))
-                included.add(i);
+                included.add(i);/*}*/
 
-            if (tasks[i].isPeriodic()) {
+            /*{*/if (tasks[i].isPeriodic()) {
                 periods = tasks[i].periods();
                 if ((filter == Filter.NOT_COMPLETED && periods == null) ||
                     (tasks[i].domain().deadlineDate().compareTo(now) < 0 &&
@@ -466,7 +466,7 @@ public class TaskManager implements Serializable, Cloneable, CrystalObject  {
                         (filter == Filter.COMPLETED || filter == Filter.BOTH))
                         included.add(i);
                 }
-            }
+            }/*}*/
         }
         filtered = new Task[included.size()];
         for (int i = 0; i < filtered.length; i++) {

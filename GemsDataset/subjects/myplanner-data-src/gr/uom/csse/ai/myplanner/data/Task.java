@@ -263,7 +263,7 @@ public class Task implements Serializable, Cloneable, CrystalObject {
                 DomainAction.ActionAffects.INTERVALS);
         lookForEnd = false;
         for (i = 0; i < domainActs.length; i++) {
-            if (!lookForEnd &&
+            /*{*/if (!lookForEnd &&
                 (domainActs[i] == DomainAction.Action.INC ||
                  domainActs[i] == DomainAction.Action.UNDEF)) {
                 lookForEnd = true;
@@ -276,7 +276,7 @@ public class Task implements Serializable, Cloneable, CrystalObject {
                     fin.add(i);
                 else
                     beg.remove(beg.size() - 1);
-            }
+            }/*}*/
         }
         if (beg.size() == 0) return null;
         if (((i - 1) - beg.get(beg.size() - 1)) >= (dur - 1))

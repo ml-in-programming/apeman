@@ -49,7 +49,10 @@ class FeaturesForEveryCandidate(
                 NumAssertCandidate(candidates),
                 LocCandidate(candidates),
 
-                RatioLocCandidate(candidates)
+                RatioLocCandidate(candidates),
+                MeanNestingDepthCandidate(candidates),
+                MeanNestingDepthMethod(candidates),
+                NumCommentsCandidate(candidates)
         )
 
         val complementCalculators = listOf(

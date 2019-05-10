@@ -55,8 +55,9 @@ def merge_overall(base, projects):
 
 if __name__ == "__main__":
     base = '../../../train_dataset4/'
-    projects = ['antlr4', 'buck', "intellij-community"]  #, 'guava', 'intellij-community']
-
+    # base = "../GemsDataset/subjects/"
+    projects = ['antlr4', 'buck', "intellij-community", 'guava', 'presto', 'mockito', 'RxJava']  #, 'guava', 'intellij-community']
+    # projects = ["junit3.8", "JHotDraw5.2", "MyWebMarket", "wikidev-filters", "myplanner-data-src"]
     for proj_dir in projects:
         merge_inside_basepath(base + proj_dir)
 
