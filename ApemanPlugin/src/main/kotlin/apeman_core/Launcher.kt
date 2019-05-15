@@ -80,7 +80,7 @@ class Launcher(
             handleError(e)
             return listOf()
         } catch (e: Exception) {
-            val log = Logger.getLogger("exception")
+            val log  = Logger.getLogger("exception")
             log.severe("Exception: $e")
             handleException(e)
             return listOf()

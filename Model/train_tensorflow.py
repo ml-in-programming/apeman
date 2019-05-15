@@ -173,7 +173,7 @@ def train_model(coef=1.0):
 
     est = tf.estimator.BoostedTreesRegressor(feature_columns, n_batches_per_layer=1, max_depth=2,
                                              n_trees=90)
-    est.train(train_input_fn, max_steps=180)
+    est.train(, train_input_fn,
 
     # eval_dataset = eval_dataset.fillna(value=0)
     # eval_input_fn = tf.estimator.inputs.pandas_input_fn(

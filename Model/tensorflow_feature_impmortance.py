@@ -225,7 +225,7 @@ def train_model():
 
     est = tf.estimator.BoostedTreesClassifier(#BoostedTreesRegressor(
         feature_columns, n_batches_per_layer=1, max_depth=2, n_trees=90)
-    est.train(train_input_fn, max_steps=200)
+    est.train(, train_input_fn,
 
     pprint(est.evaluate(input_fn=eval_input_fn))
     # lol = list(est.predict(tf.estimator.inputs.pandas_input_fn(eval_ds, shuffle=False, batch_size=1)))
